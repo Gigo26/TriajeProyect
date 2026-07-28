@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Triaje+</string>
+    <string name="restarting_app">Restarting to apply changes...</string>
+    <string name="preferences">Preferences</string>
+    <string name="dark_mode">Light / Dark Theme</string>
+    <string name="language">Language (Spanish / English)</string>
+    <string name="data_saver">Data Saver</string>
+    <string name="my_profile">My Profile</string>
+    <string name="view_info">View Information</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="notifications">Notifications</string>
+    <string name="about_app">About App</string>
+    <string name="logout">Logout</string>
+    <string name="personal_info">Personal Information</string>
+    <string name="full_name">Full Name</string>
+    <string name="surnames">Surnames</string>
+    <string name="dni">ID (DNI)</string>
+    <string name="email">Email Address</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="birth_date">Birth Date</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="password">Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_password">Confirm New Password</string>
+    <string name="notif_push">Push Notifications</string>
+    <string name="notif_email">Email Notifications</string>
+    <string name="notif_updates">App Updates</string>
+    <string name="notif_messages">New Messages</string>
+    <string name="notif_offers">Offers and Promotions</string>
+</resources>

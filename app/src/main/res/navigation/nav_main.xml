@@ -100,7 +100,53 @@
         <action
             android:id="@+id/action_perfilFragment_to_infoAppFragment"
             app:destination="@id/navInfoAppFragment" />
+        <action
+            android:id="@+id/action_perfilFragment_to_verInformacionFragment"
+            app:destination="@id/navVerInformacionFragment" />
+        <action
+            android:id="@+id/action_perfilFragment_to_editarPerfilFragment"
+            app:destination="@id/navEditarPerfilFragment" />
+        <action
+            android:id="@+id/action_perfilFragment_to_preferenciasFragment"
+            app:destination="@id/navPreferenciasFragment" />
+        <action
+            android:id="@+id/action_perfilFragment_to_notificacionesFragment"
+            app:destination="@id/navNotificacionesFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/navNotificacionesFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.NotificacionesFragment"
+        android:label="fragment_notificaciones"
+        tools:layout="@layout/fragment_notificaciones" />
+
+    <fragment
+        android:id="@+id/navPreferenciasFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.PreferenciasFragment"
+        android:label="fragment_preferencias"
+        tools:layout="@layout/fragment_preferencias" />
+
+    <fragment
+        android:id="@+id/navVerInformacionFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.VerInformacionFragment"
+        android:label="fragment_ver_informacion"
+        tools:layout="@layout/fragment_ver_informacion" />
+
+    <fragment
+        android:id="@+id/navEditarPerfilFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.EditarPerfilFragment"
+        android:label="fragment_editar_perfil"
+        tools:layout="@layout/fragment_editar_perfil">
+        <action
+            android:id="@+id/action_editarPerfilFragment_to_cambiarPasswordFragment"
+            app:destination="@id/navCambiarPasswordFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navCambiarPasswordFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.CambiarPasswordFragment"
+        android:label="fragment_cambiar_password"
+        tools:layout="@layout/fragment_cambiar_password" />
 
     <fragment
         android:id="@+id/navInfoAppFragment"

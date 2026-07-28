@@ -36,6 +36,23 @@ class FirestoreService {
             }
     }
 
+    fun obtenerUsuarioPorUid(uid: String, callback: Callback<Usuario>) {
+        firebaseFirestore.collection("usuarios")
+            .document(uid)
+            .get()
+            .addOnSuccessListener { result ->
+                if (result.exists()) {
+                    val usuario = result.toObject(Usuario::class.java)
+                    callback.onSuccess(usuario)
+                } else {
+                    callback.onSuccess(null)
+                }
+            }
+            .addOnFailureListener { exception ->
+                callback.onFailed(exception)
+            }
+    }
+
 // NUEVO: Consulta para validar unicidad de DNI
     fun verificarDniExistente(dni: String, callback: Callback<Boolean>) {
         firebaseFirestore.collection("usuarios")

@@ -11,12 +11,23 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.moviles.triaje.R
+import com.moviles.triaje.utils.PreferenceManager
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        //  1. Forzar tema claro ANTES de super.onCreate
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        val prefManager = PreferenceManager(this)
+
+        // Aplicar Tema
+        if (prefManager.isDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+
+        // Aplicar Idioma
+        setAppLocale(prefManager.language)
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -40,5 +51,13 @@ class MainActivity : AppCompatActivity() {
             val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
             bottomNav?.setupWithNavController(navController)
         }
+    }
+
+    private fun setAppLocale(language: String) {
+        val locale = Locale(language)
+        Locale.setDefault(locale)
+        val config = resources.configuration
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.displayMetrics)
     }
 }

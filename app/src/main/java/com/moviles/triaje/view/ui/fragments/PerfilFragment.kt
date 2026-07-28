@@ -54,16 +54,16 @@ class PerfilFragment : Fragment() {
 
     private fun setupClickListeners() {
         cvVerInformacion.setOnClickListener {
-            Toast.makeText(requireContext(), "Ver Información", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_perfilFragment_to_verInformacionFragment)
         }
         cvEditarPerfil.setOnClickListener {
-            Toast.makeText(requireContext(), "Editar Perfil", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_perfilFragment_to_editarPerfilFragment)
         }
         cvPreferencias.setOnClickListener {
-            Toast.makeText(requireContext(), "Preferencias", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_perfilFragment_to_preferenciasFragment)
         }
         cvNotificaciones.setOnClickListener {
-            Toast.makeText(requireContext(), "Notificaciones", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_perfilFragment_to_notificacionesFragment)
         }
 
         // AQUÍ ESTÁ LA MAGIA DE LA NAVEGACIÓN
