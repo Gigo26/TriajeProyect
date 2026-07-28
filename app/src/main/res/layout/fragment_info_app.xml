@@ -11,27 +11,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_margin="20dp">
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            tools:ignore="UseCompoundDrawables">
-            <ImageView
-                android:id="@+id/ivInfoRegresar"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_regresar"
-                tools:ignore="ContentDescription" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginEnd="30dp"
-                android:text="Información"
-                android:textStyle="bold"
-                android:textSize="22sp"
-                tools:ignore="HardcodedText" />
-        </LinearLayout>
+            android:gravity="center"
+            android:text="Información"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            tools:ignore="HardcodedText" />
         <ImageView
             android:layout_width="245dp"
             android:layout_height="191dp"

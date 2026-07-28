@@ -29,7 +29,7 @@ class BasicQuestionsViewModel : ViewModel() {
         val noRespiraNormal = (respuestaRespira == 1)      // Seleccionó "No"
         val tieneSangrado = (respuestaSangrado == 0)       // Seleccionó "Sí"
 
-        return estaInconsciente || noRespiraNormal || tieneSangrado
+        return estaInconsciente && noRespiraNormal && tieneSangrado
     }
 
     /**

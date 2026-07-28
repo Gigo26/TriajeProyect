@@ -39,6 +39,48 @@
                 android:textColor="@color/black"
                 tools:ignore="HardcodedText" />
 
+            <!-- Campo: DNI -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilDni"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="DNI"
+                    android:textColorHint="@color/black"
+                    app:hintTextColor="#757575"
+                    android:layout_marginTop="15dp"
+                    app:expandedHintEnabled="false"
+                    app:boxStrokeWidth="2dp"
+                    app:boxStrokeWidthFocused="2dp"
+                    app:boxStrokeColor="#757575"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    tools:ignore="HardcodedText,Width">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etDni"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Ingrese su DNI"
+                        android:textColorHint="@color/black"
+                        android:textColor="@color/black"
+                        android:maxLength="8"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnBuscarDni"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_gravity="center"
+                    android:text="Buscar"
+                    android:textColor="@color/white"
+                    app:backgroundTint="#1565D8"
+                    app:cornerRadius="8dp"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
             <!-- Campo: Nombre Completo -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilName"
@@ -62,32 +104,6 @@
                     android:textColorHint="@color/black"
                     android:textColor="@color/black"
                 android:inputType="textPersonName" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Campo: DNI -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilDni"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="DNI"
-                android:textColorHint="@color/black"
-                app:hintTextColor="#757575"
-                android:layout_marginTop="15dp"
-                app:expandedHintEnabled="false"
-                app:boxStrokeWidth="2dp"
-                app:boxStrokeWidthFocused="2dp"
-                app:boxStrokeColor="#757575"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                tools:ignore="HardcodedText,Width">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etDni"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Ingrese su DNI"
-                    android:textColorHint="@color/black"
-                    android:textColor="@color/black"
-                    android:maxLength="8"
-                    android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Campo: Correo Electrónico -->

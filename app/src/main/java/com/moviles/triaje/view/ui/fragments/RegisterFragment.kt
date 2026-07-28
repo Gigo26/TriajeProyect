@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.moviles.triaje.R
+import com.moviles.triaje.network.ApiDniService
 import com.moviles.triaje.onTextChanged
 import com.moviles.triaje.viewmodel.RegisterViewModel
 
@@ -29,7 +30,8 @@ class RegisterFragment : Fragment() {
 
         // Enlazamos componentes
         val etName = view.findViewById<TextInputEditText>(R.id.etName)
-        val etDni = view.findViewById<TextInputEditText>(R.id.etDni) // Nuevo campo
+        val etDni = view.findViewById<TextInputEditText>(R.id.etDni)
+        val btnBuscarDni = view.findViewById<MaterialButton>(R.id.btnBuscarDni) // Botón de búsqueda DNI
         val etEmail = view.findViewById<TextInputEditText>(R.id.etEmail)
         val etPassword = view.findViewById<TextInputEditText>(R.id.etPassword)
         val etConfirmPassword = view.findViewById<TextInputEditText>(R.id.etConfirmPassword)
@@ -52,12 +54,43 @@ class RegisterFragment : Fragment() {
             }
         }
 
-        // Observador del botón
+        // Observador del botón Registrarse
         viewModel.isButtonEnabled.observe(viewLifecycleOwner) { infoValida ->
             btnRegister.isEnabled = infoValida
         }
 
-        // Escuchadores en tiempo real (Incluyendo DNI)
+        // -----------------------------------------------------------
+        // LÓGICA DE BÚSQUEDA DE DNI
+        // -----------------------------------------------------------
+        btnBuscarDni.setOnClickListener {
+            val dni = etDni.text.toString().trim()
+
+            if (dni.length != 8) {
+                etDni.error = "Ingrese un DNI válido de 8 dígitos"
+                return@setOnClickListener
+            }
+
+            etDni.error = null
+            btnBuscarDni.isEnabled = false // Deshabilitamos temporalmente
+            Toast.makeText(requireContext(), "Buscando...", Toast.LENGTH_SHORT).show()
+
+            ApiDniService().buscarDni(dni) { esExito, resultado ->
+                requireActivity().runOnUiThread {
+                    btnBuscarDni.isEnabled = true // Volvemos a habilitar
+                    if (esExito) {
+                        etName.setText(resultado)
+                        Toast.makeText(requireContext(), "Datos encontrados", Toast.LENGTH_SHORT).show()
+                    } else {
+                        etName.setText("") // Limpiamos si hay error
+                        Toast.makeText(requireContext(), resultado, Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+
+        // -----------------------------------------------------------
+        // ESCUCHADORES EN TIEMPO REAL
+        // -----------------------------------------------------------
         etName.onTextChanged { inputName ->
             viewModel.verificarCampos(inputName, etDni.text.toString(), etEmail.text.toString(), etPassword.text.toString(), etConfirmPassword.text.toString())
         }
@@ -78,7 +111,9 @@ class RegisterFragment : Fragment() {
             viewModel.verificarCampos(etName.text.toString(), etDni.text.toString(), etEmail.text.toString(), etPassword.text.toString(), inputConfirmPassword)
         }
 
-        // Click del botón Registrarse
+        // -----------------------------------------------------------
+        // ACCIÓN REGISTRAR
+        // -----------------------------------------------------------
         btnRegister.setOnClickListener {
             val name = etName.text.toString().trim()
             val dni = etDni.text.toString().trim()
@@ -86,10 +121,21 @@ class RegisterFragment : Fragment() {
             val password = etPassword.text.toString().trim()
             val confirmPassword = etConfirmPassword.text.toString().trim()
 
-            // Separamos Nombre y Apellidos de forma lógica y sencilla para Firestore
-            val parts = name.split(" ", limit = 2)
-            val usNombre = parts.getOrNull(0) ?: ""
-            val usApellidos = parts.getOrNull(1) ?: ""
+            // Lógica ajustada para tomar SIEMPRE las dos últimas palabras como apellidos
+            val words = name.split("\\s+".toRegex()) // Divide por cualquier cantidad de espacios
+            val usNombre: String
+            val usApellidos: String
+
+            if (words.size >= 3) {
+                // Toma todas las palabras excepto las últimas 2 para el Nombre
+                usNombre = words.dropLast(2).joinToString(" ")
+                // Toma estrictamente las últimas 2 para los Apellidos
+                usApellidos = words.takeLast(2).joinToString(" ")
+            } else {
+                // Fallback por si alguien edita y deja solo 2 o 1 palabra
+                usNombre = words.firstOrNull() ?: ""
+                usApellidos = words.drop(1).joinToString(" ")
+            }
 
             viewModel.registrarUsuarioConVerificacion(usNombre, usApellidos, dni, email, password, confirmPassword)
         }

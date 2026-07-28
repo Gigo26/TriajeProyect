@@ -26,11 +26,7 @@ class InfoAppFragment : Fragment() {
         val btnPrioridades = view.findViewById<CardView>(R.id.cvInfoIndPrioridad)
         val btnTerminos = view.findViewById<CardView>(R.id.cvInfoTermCond)
         val btnPrivacidad = view.findViewById<CardView>(R.id.cvInfoPolPriv)
-        val btnRegresar = view.findViewById<ImageView>(R.id.ivRegresar)
 
-        btnRegresar.setOnClickListener {
-            findNavController().popBackStack()
-        }
 
         btnGuia?.setOnClickListener {
             findNavController().navigate(R.id.action_infoAppFragment_to_guiaFragment)
