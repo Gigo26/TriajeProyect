@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Opción de Inicio -->
+    <item
+        android:id="@+id/navHomeFragment"
+        android:icon="@drawable/ic_home"
+        android:title="Inicio"
+        tools:ignore="HardcodedText" />
+
+    <!-- Opción de Historial/Mis Triajes -->
+    <item
+        android:id="@+id/navHospitalesFragment"
+        android:icon="@drawable/ic_hospital"
+        android:title="Hospitales"
+        tools:ignore="HardcodedText" />
+
+    <!-- Opción de Historial/Mis Triajes -->
+    <item
+        android:id="@+id/navHistorialFragment"
+        android:icon="@drawable/ic_historial"
+        android:title="Historial"
+        tools:ignore="HardcodedText" />
+
+    <!-- Opción de Perfil -->
+    <item
+        android:id="@+id/navPerfilFragment"
+        android:icon="@drawable/ic_perfil"
+        android:title="Perfil"
+        tools:ignore="HardcodedText" />
+
+</menu>

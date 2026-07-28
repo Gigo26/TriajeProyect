@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ColorPrimary">
+
+    <!-- El scroll respeta el espacio del botón y no permite que se tapen las opciones -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nsvAyuda"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btnConsultaContinuar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="¿Quién necesita ayuda?"
+                android:textSize="26sp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                tools:ignore="HardcodedText"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Seleccione la opción que mejor lo describe."
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:gravity="center"
+                tools:ignore="HardcodedText"/>
+
+            <!-- CARD NIÑO -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvConsultaNino"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:checkable="true"
+                app:cardCornerRadius="16dp"
+                app:strokeColor="@color/ColorPrimary"
+                app:strokeWidth="0dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/ic_nino"
+                        android:layout_marginStart="15dp"
+                        android:layout_gravity="center"
+                        tools:ignore="ContentDescription" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="15dp"
+                        android:layout_gravity="center">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Niño / Niña"
+                            android:textSize="22sp"
+                            android:textColor="@color/black"
+                            android:gravity="center"
+                            tools:ignore="HardcodedText"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="(0 - 12 años)"
+                            android:textColor="#454141"
+                            android:textSize="14sp"
+                            android:gravity="center"
+                            tools:ignore="HardcodedText"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- CARD ADULTO -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvConsultaAdulto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:checkable="true"
+                app:cardCornerRadius="16dp"
+                app:strokeColor="@color/ColorPrimary"
+                app:strokeWidth="0dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/ic_adulto"
+                        android:layout_marginStart="15dp"
+                        android:layout_gravity="center"
+                        tools:ignore="ContentDescription" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="15dp"
+                        android:layout_gravity="center">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Adulto"
+                            android:textSize="22sp"
+                            android:textColor="@color/black"
+                            android:gravity="center"
+                            tools:ignore="HardcodedText"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="(13-59 años)"
+                            android:textColor="#454141"
+                            android:textSize="14sp"
+                            android:gravity="center"
+                            tools:ignore="HardcodedText"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- CARD ADULTO MAYOR -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvConsultaAdultoMayor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:checkable="true"
+                app:cardCornerRadius="16dp"
+                app:strokeColor="@color/ColorPrimary"
+                app:strokeWidth="0dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/ic_adulto_mayor"
+                        android:layout_marginStart="15dp"
+                        android:layout_gravity="center"
+                        tools:ignore="ContentDescription" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="15dp"
+                        android:layout_gravity="center">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Adulto Mayor"
+                            android:textColor="@color/black"
+                            android:textSize="22sp"
+                            android:gravity="center"
+                            tools:ignore="HardcodedText"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="(60 años a más)"
+                            android:textColor="#454141"
+                            android:textSize="14sp"
+                            android:gravity="center"
+                            tools:ignore="HardcodedText"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- CARD GESTANTE -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvConsultaGestante"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:checkable="true"
+                app:cardCornerRadius="16dp"
+                app:strokeColor="@color/ColorPrimary"
+                app:strokeWidth="0dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/ic_gestante"
+                        android:layout_marginStart="15dp"
+                        android:layout_gravity="center"
+                        tools:ignore="ContentDescription" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="15dp"
+                        android:layout_gravity="center">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Gestante"
+                            android:textColor="@color/black"
+                            android:textSize="22sp"
+                            android:gravity="center"
+                            tools:ignore="HardcodedText"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="(Embarazada)"
+                            android:textColor="#454141"
+                            android:textSize="14sp"
+                            android:gravity="center"
+                            tools:ignore="HardcodedText"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Botón con las restricciones correctas y ancho optimizado -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnConsultaContinuar"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_margin="20dp"
+        android:text="Continuar"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        app:backgroundTint="#1565D8"
+        app:cornerRadius="28dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_max="320dp"
+        tools:ignore="HardcodedText" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_intro"
+    app:startDestination="@id/introFragment">
+
+    <!-- 1. Primer Fragment: Pantalla de Introducción -->
+    <fragment
+        android:id="@+id/introFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.IntroFragment"
+        android:label="IntroFragment"
+        tools:layout="@layout/fragment_intro">
+        <action
+            android:id="@+id/action_introFragment_to_welcomeFragment"
+            app:destination="@id/welcomeFragment" />
+    </fragment>
+
+    <!-- 2. Segundo Fragment: Pantalla de características (Bienvenida) -->
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.WelcomeFragment"
+        android:label="WelcomeFragment"
+        tools:layout="@layout/fragment_welcome">
+        <action
+            android:id="@+id/action_welcomeFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+
+    <!-- 3. Tercer Fragment: Pantalla de Inicio de Sesión -->
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.LoginFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login">
+
+        <!-- AGREGADO: Acción para saltar del Login al Registro -->
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+    </fragment>
+
+    <!-- 4. Cuarto Fragment: Pantalla de Registro de Cuenta -->
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.RegisterFragment"
+        android:label="RegisterFragment"
+        tools:layout="@layout/fragment_register" />
+
+</navigation>

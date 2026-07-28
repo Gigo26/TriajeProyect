@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Cuando el botón está deshabilitado (isEnabled = false) -> Gris apagado -->
+    <item android:state_enabled="false" android:color="#A6B4C0" />
+
+    <!-- Cuando el botón está activo (isEnabled = true) -> Tu azul fuerte original -->
+    <item android:color="#1565D8" />
+</selector>

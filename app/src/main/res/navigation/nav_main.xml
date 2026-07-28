@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/navHomeFragment">
+
+    <fragment
+        android:id="@+id/navHomeFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_symptomFragment"
+            app:destination="@id/navSymptompsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navSymptompsFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.SymptomsFragment"
+        android:label="fragment_symptoms"
+        tools:layout="@layout/fragment_symptoms">
+        <action
+            android:id="@+id/action_symptomsFragment_to_basicQuestionsFragment"
+            app:destination="@id/navBasicQuestionsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navBasicQuestionsFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.BasicQuestionsFragment"
+        android:label="fragment_basic_questions"
+        tools:layout="@layout/fragment_basic_questions">
+        <action
+            android:id="@+id/action_basicQuestionsFragment_to_analisisImageFragment"
+            app:destination="@id/navImageAnalysisFragment" />
+        <action
+            android:id="@+id/action_basicQuestionsFragment_to_symptompsQuestionFragment"
+            app:destination="@id/navSymptompsQuestionFragment" />
+        <action
+            android:id="@+id/action_basicQuestionsFragment_to_fragmentResult"
+            app:destination="@id/navResultFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navImageAnalysisFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.ImageAnalysisFragment"
+        android:label="fragment_image_analysis"
+        tools:layout="@layout/fragment_image_analysis">
+        <action
+            android:id="@+id/action_analisisImagenFragment_to_symptompsQuestionFragment"
+            app:destination="@id/navSymptompsQuestionFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navSymptompsQuestionFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.SymptompsQuestionFragment"
+        android:label="fragment_symptoms_questions"
+        tools:layout="@layout/fragment_symptoms_questions">
+        <action
+            android:id="@+id/action_symptompsQuestionFragment_to_resultFragment"
+            app:destination="@id/navResultFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navResultFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.ResultFragment"
+        android:label="fragment_result"
+        tools:layout="@layout/fragment_result">
+        <action
+            android:id="@+id/action_resultFragment_to_recomendacionesFragment"
+            app:destination="@id/navRecommendationsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navFirstAidFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.FirstAidFragment"
+        android:label="fragment_first_aid"
+        tools:layout="@layout/fragment_first_aid" />
+
+    <fragment
+        android:id="@+id/navRecommendationsFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.RecommendationsFragment"
+        android:label="fragment_recommendations"
+        tools:layout="@layout/fragment_recommendations">
+        <action
+            android:id="@+id/action_recommendationsFragment_to_homeFragment"
+            app:destination="@id/navHomeFragment"
+            app:popUpTo="@id/nav_main"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_recommendationsFragment_to_firstAidFragment"
+            app:destination="@+id/navFirstAidFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navPerfilFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.PerfilFragment"
+        android:label="fragment_perfil"
+        tools:layout="@layout/fragment_perfil" >
+        <action
+            android:id="@+id/action_perfilFragment_to_infoAppFragment"
+            app:destination="@id/navInfoAppFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navInfoAppFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.InfoAppFragment"
+        android:label="fragment_info_app"
+        tools:layout="@layout/fragment_info_app" >
+        <action
+            android:id="@+id/action_infoAppFragment_to_guiaFragment"
+            app:destination="@+id/navGuiaFragment" />
+        <action
+            android:id="@+id/action_infoAppFragment_to_prioridadesFragment"
+            app:destination="@+id/navPrioridadesFragment" />
+        <action
+            android:id="@+id/action_infoAppFragment_to_termsCondFragment"
+            app:destination="@+id/navTermsCondFragment" />
+        <action
+            android:id="@+id/action_infoAppFragment_to_polPrivFragment"
+            app:destination="@+id/navPolPrivFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navGuiaFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.GuiaFragment"
+        android:label="fragment_guia"
+        tools:layout="@layout/fragment_guia"/>
+
+    <fragment
+        android:id="@+id/navPrioridadesFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.PrioridadesFragment"
+        android:label="fragment_prioridades"
+        tools:layout="@layout/fragment_prioridades"/>
+
+    <fragment
+        android:id="@+id/navTermsCondFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.TermsCondFragment"
+        android:label="fragment_terms_cond"
+        tools:layout="@layout/fragment_terms_cond"/>
+
+    <fragment
+        android:id="@+id/navPolPrivFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.PolPrivFragment"
+        android:label="fragment_pol_priv"
+        tools:layout="@layout/fragment_pol_priv"/>
+
+    <fragment
+        android:id="@+id/navHospitalesFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.HospitalesFragment"
+        android:label="fragment_hospitales"
+        tools:layout="@layout/fragment_hospitales" />
+
+    <fragment
+        android:id="@+id/navHistorialFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.HistorialFragment"
+        android:label="fragment_historial"
+        tools:layout="@layout/fragment_historial" />
+
+</navigation>

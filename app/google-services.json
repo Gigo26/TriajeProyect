@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "897530098150",
+    "project_id": "triajeplus",
+    "storage_bucket": "triajeplus.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:897530098150:android:b26c451797159343166627",
+        "android_client_info": {
+          "package_name": "com.moviles.triaje"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5B4taqVHbXVTUWt1-Ma9q1my0E_BX41c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
