@@ -5,6 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.moviles.triaje.model.Question
 import com.moviles.triaje.model.Usuario
 import com.moviles.triaje.model.Sintoma
+import com.moviles.triaje.model.Hospital
 
 class FirestoreService {
 
@@ -118,6 +119,22 @@ class FirestoreService {
                     listaPreguntas.add(pregunta)
                 }
                 callback.onSuccess(listaPreguntas)
+            }
+            .addOnFailureListener { exception ->
+                callback.onFailed(exception)
+            }
+    }
+
+    fun obtenerHospitales(callback: Callback<List<Hospital>>) {
+        firebaseFirestore.collection("hospitales")
+            .get()
+            .addOnSuccessListener { result ->
+                val listaHospitales = mutableListOf<Hospital>()
+                for (document in result) {
+                    val hospital = document.toObject(Hospital::class.java).copy(id = document.id)
+                    listaHospitales.add(hospital)
+                }
+                callback.onSuccess(listaHospitales)
             }
             .addOnFailureListener { exception ->
                 callback.onFailed(exception)
