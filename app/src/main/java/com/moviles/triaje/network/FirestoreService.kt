@@ -5,6 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.moviles.triaje.model.Question
 import com.moviles.triaje.model.Usuario
 import com.moviles.triaje.model.Sintoma
+import com.moviles.triaje.model.Hospital
 
 class FirestoreService {
 
@@ -79,14 +80,27 @@ class FirestoreService {
             }
     }
 
+    // ACTUALIZAR AVATAR: Guarda el link de la foto en el documento del usuario
+    fun actualizarAvatar(uid: String, avatarUrl: String, callback: Callback<Boolean>) {
+        firebaseFirestore.collection("usuarios")
+            .document(uid)
+            .update("us_avatar", avatarUrl)
+            .addOnSuccessListener {
+                callback.onSuccess(true)
+            }
+            .addOnFailureListener { exception ->
+                callback.onFailed(exception)
+            }
+    }
+
     fun obtenerSintomas(callback: Callback<List<Sintoma>>) {
         firebaseFirestore.collection("sintomas")
             .get()
             .addOnSuccessListener { result ->
                 val listaSintomas = mutableListOf<Sintoma>()
                 for (document in result) {
-                    val sintoma = document.toObject(Sintoma::class.java).copy(id = document.id)
-                    listaSintomas.add(sintoma)
+                    val sintoma = document.toObject(Sintoma::class.java)?.copy(id = document.id)
+                    if (sintoma != null) listaSintomas.add(sintoma)
                 }
                 callback.onSuccess(listaSintomas)
             }
@@ -122,5 +136,74 @@ class FirestoreService {
             .addOnFailureListener { exception ->
                 callback.onFailed(exception)
             }
+    }
+
+    fun obtenerHospitales(callback: Callback<List<Hospital>>) {
+        firebaseFirestore.collection("hospitales")
+            .get()
+            .addOnSuccessListener { result ->
+                val listaHospitales = mutableListOf<Hospital>()
+                for (document in result) {
+                    val hospital = document.toObject(Hospital::class.java)?.copy(id = document.id)
+                    if (hospital != null) listaHospitales.add(hospital)
+                }
+                callback.onSuccess(listaHospitales)
+            }
+            .addOnFailureListener { exception ->
+                callback.onFailed(exception)
+            }
+    }
+
+    // NUEVO: Obtener utilidades comunitarias (versión, políticas, términos)
+    fun obtenerUtilidadesComunitarias(callback: Callback<Map<String, Any>>) {
+        firebaseFirestore.collection("configuracion_app")
+            .document("utilidades_comunitarias")
+            .get()
+            .addOnSuccessListener { result ->
+                if (result != null && result.exists()) {
+                    // Retornamos todos los campos del documento como un Mapa
+                    callback.onSuccess(result.data ?: emptyMap())
+                } else {
+                    callback.onSuccess(emptyMap())
+                }
+            }
+            .addOnFailureListener { exception ->
+                callback.onFailed(exception)
+            }
+    }
+
+    /**
+     * Procesa un objeto Usuario para devolver solo el primer nombre y el primer apellido
+     * en formato Tipo Título (ej: AYRTON PALOMINO -> Ayrton Palomino).
+     */
+    fun obtenerNombreFormateado(usuario: Usuario): String {
+        val primerNombreCrudo = usuario.us_nombre.trim().split(" ").firstOrNull() ?: ""
+        val primerApellidoCrudo = usuario.us_apellidos.trim().split(" ").firstOrNull() ?: ""
+
+        // Convertir a minúsculas y capitalizar la primera letra
+        val nombreFormateado = primerNombreCrudo.lowercase().replaceFirstChar { it.uppercase() }
+        val apellidoFormateado = primerApellidoCrudo.lowercase().replaceFirstChar { it.uppercase() }
+
+        return "$nombreFormateado $apellidoFormateado".trim()
+    }
+
+    /**
+     * Devuelve el primer nombre y todos los apellidos formateados en Tipo Título.
+     * Ejemplo: "AYRTON", "PALOMINO TOTIMURA" -> "Ayrton Palomino Totimura"
+     */
+    fun obtenerNombreCompletoFormateado(usuario: Usuario): String {
+        val primerNombreCrudo = usuario.us_nombre.trim().split(" ").firstOrNull() ?: ""
+        val apellidosCrudos = usuario.us_apellidos.trim()
+
+        val nombreFormateado = primerNombreCrudo.lowercase().replaceFirstChar { it.uppercase() }
+        
+        // Formatear cada palabra de los apellidos
+        val apellidosFormateados = apellidosCrudos.split(" ")
+            .filter { it.isNotBlank() }
+            .joinToString(" ") { word ->
+                word.lowercase().replaceFirstChar { it.uppercase() }
+            }
+
+        return "$nombreFormateado $apellidosFormateados".trim()
     }
 }

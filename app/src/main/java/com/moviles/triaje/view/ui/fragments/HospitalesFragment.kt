@@ -27,7 +27,6 @@ class HospitalesFragment : Fragment() {
 
     private lateinit var rvHospitales: RecyclerView
     private lateinit var ivRegresar: ImageView
-    private lateinit var btnContactosImportantes: MaterialButton
     private lateinit var progressBar: ProgressBar
     private lateinit var tvEmptyState: TextView
 
@@ -40,7 +39,6 @@ class HospitalesFragment : Fragment() {
         // 1. Vincular componentes de la interfaz
         rvHospitales = view.findViewById(R.id.rvHospitales)
         ivRegresar = view.findViewById(R.id.ivHospitalesRegresar)
-        btnContactosImportantes = view.findViewById(R.id.btnContactosImportantes)
         progressBar = view.findViewById(R.id.progressBar)
         tvEmptyState = view.findViewById(R.id.tvEmptyState)
 
@@ -56,11 +54,6 @@ class HospitalesFragment : Fragment() {
         // 5. Configurar Eventos de Clic
         ivRegresar.setOnClickListener {
             findNavController().navigateUp()
-        }
-
-        btnContactosImportantes.setOnClickListener {
-            // Navega a Primeros Auxilios / Contactos si está disponible
-            findNavController().navigate(R.id.navFirstAidFragment)
         }
 
         // 6. Cargar datos desde Firebase Firestore
