@@ -26,7 +26,7 @@ class HospitalesViewModel : ViewModel() {
             override fun onSuccess(result: List<Hospital>?) {
                 _isLoading.value = false
                 if (!result.isNullOrEmpty()) {
-                    _listaHospitales.value = result
+                    _listaHospitales.value = result!!
                 } else {
                     // Datos de ejemplo predeterminados iguales a los de la imagen
                     _listaHospitales.value = obtenerHospitalesEjemplo()
