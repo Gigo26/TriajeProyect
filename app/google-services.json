@@ -12,7 +12,20 @@
           "package_name": "com.moviles.triaje"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "897530098150-afo90l8ps4kuj7iqhsp1rcl5qdu7vpm8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.moviles.triaje",
+            "certificate_hash": "d82bfd84444afcf83d63f3602abc192ac9b3216a"
+          }
+        },
+        {
+          "client_id": "897530098150-p8b1qu80hnigavtach9ol2dr6ddtcot2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyA5B4taqVHbXVTUWt1-Ma9q1my0E_BX41c"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "897530098150-p8b1qu80hnigavtach9ol2dr6ddtcot2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

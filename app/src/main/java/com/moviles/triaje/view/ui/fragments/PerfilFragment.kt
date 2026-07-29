@@ -1,22 +1,30 @@
 package com.moviles.triaje.view.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import com.moviles.triaje.R
+import com.moviles.triaje.view.ui.activities.IntroActivity
+import com.moviles.triaje.viewmodel.PerfilViewModel
 
 // Pasamos el layout directamente al constructor
 class PerfilFragment : Fragment() {
 
+    private lateinit var viewModel: PerfilViewModel
     private lateinit var tvNombrePerfil: TextView
     private lateinit var tvCorreoPerfil: TextView
+    private lateinit var ivAvatarPerfil: ImageView
     private lateinit var cvVerInformacion: CardView
     private lateinit var cvEditarPerfil: CardView
     private lateinit var cvPreferencias: CardView
@@ -31,14 +39,19 @@ class PerfilFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel = ViewModelProvider(this)[PerfilViewModel::class.java]
+
         initViews(view)
-        loadUserData()
+        observarDatos()
         setupClickListeners()
+
+        viewModel.cargarDatosUsuario()
     }
 
     private fun initViews(view: View) {
         tvNombrePerfil = view.findViewById(R.id.tvNombrePerfil)
         tvCorreoPerfil = view.findViewById(R.id.tvCorreoPerfil)
+        ivAvatarPerfil = view.findViewById(R.id.ivAvatarPerfil)
         cvVerInformacion = view.findViewById(R.id.cvVerInformacion)
         cvEditarPerfil = view.findViewById(R.id.cvEditarPerfil)
         cvPreferencias = view.findViewById(R.id.cvPreferencias)
@@ -47,9 +60,23 @@ class PerfilFragment : Fragment() {
         btnCerrarSesion = view.findViewById(R.id.btnCerrarSesion)
     }
 
-    private fun loadUserData() {
-        tvNombrePerfil.text = "José Núñez"
-        tvCorreoPerfil.text = "josenunez@gmail.com"
+    private fun observarDatos() {
+        viewModel.usuario.observe(viewLifecycleOwner) { usuario ->
+            usuario?.let {
+                tvNombrePerfil.text = viewModel.getNombreCompletoFormateado(it)
+                tvCorreoPerfil.text = it.us_email
+
+                // Cargar foto de perfil
+                val photoUrl = viewModel.getAvatarUrl(it)
+                if (photoUrl != null) {
+                    Glide.with(this)
+                        .load(photoUrl)
+                        .circleCrop()
+                        .placeholder(R.drawable.ic_perfil)
+                        .into(ivAvatarPerfil)
+                }
+            }
+        }
     }
 
     private fun setupClickListeners() {
@@ -77,7 +104,12 @@ class PerfilFragment : Fragment() {
     }
 
     private fun cerrarSesion() {
-        Toast.makeText(requireContext(), "Cerrando sesión...", Toast.LENGTH_SHORT).show()
-        // Tu lógica de cierre de sesión
+        viewModel.cerrarSesion()
+        
+        val intent = Intent(requireContext(), IntroActivity::class.java)
+        intent.putExtra("START_AT_LOGIN", true)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        requireActivity().finish()
     }
 }

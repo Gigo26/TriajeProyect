@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.moviles.triaje.network.Callback
 import com.moviles.triaje.network.FirestoreService
+import com.moviles.triaje.model.Usuario
 
 class LoginViewModel : ViewModel() {
 
@@ -114,6 +115,55 @@ class LoginViewModel : ViewModel() {
                     }
                 } else {
                     callback.onFailed(Exception("Credenciales incorrectas."))
+                }
+            }
+    }
+
+    // 🔥 NUEVO: Función para autenticar con Google y crear perfil si es nuevo
+    fun autenticarConGoogle(idToken: String) {
+        _loginState.value = LoginState.Loading
+
+        val credential = com.google.firebase.auth.GoogleAuthProvider.getCredential(idToken, null)
+
+        firebaseAuth.signInWithCredential(credential)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val firebaseUser = firebaseAuth.currentUser
+                    if (firebaseUser != null) {
+                        // 1. Revisamos si el usuario ya existe en Firestore
+                        db.collection("usuarios").document(firebaseUser.uid).get()
+                            .addOnSuccessListener { document ->
+                                if (document != null && document.exists()) {
+                                    // ES USUARIO ANTIGUO: Lo dejamos entrar normal
+                                    val nombre = document.getString("us_nombre") ?: firebaseUser.displayName ?: "Usuario"
+                                    _loginState.value = LoginState.Success(nombre)
+                                } else {
+                                    // ES USUARIO NUEVO: Le creamos un documento básico (Perfilamiento progresivo)
+                                    // OJO: Asegúrate de importar tu modelo Usuario correcto en la parte superior
+                                    val nuevoUsuario = Usuario(
+                                        us_nombre = firebaseUser.displayName ?: "Usuario",
+                                        us_email = firebaseUser.email ?: "",
+                                        us_dni = "",         // Vacío por ahora, lo llenará luego
+                                        us_celular = "",    // Vacío por ahora
+                                        us_fecha_nac = null
+                                    )
+
+                                    db.collection("usuarios").document(firebaseUser.uid)
+                                        .set(nuevoUsuario)
+                                        .addOnSuccessListener {
+                                            _loginState.value = LoginState.Success(nuevoUsuario.us_nombre)
+                                        }
+                                        .addOnFailureListener { e ->
+                                            _loginState.value = LoginState.Error("Error al registrar datos iniciales: ${e.message}")
+                                        }
+                                }
+                            }
+                            .addOnFailureListener { exception ->
+                                _loginState.value = LoginState.Error("Error de sincronización con base de datos: ${exception.message}")
+                            }
+                    }
+                } else {
+                    _loginState.value = LoginState.Error("Error en autenticación de Google: ${task.exception?.message}")
                 }
             }
     }

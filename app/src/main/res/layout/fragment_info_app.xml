@@ -11,14 +11,27 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_margin="20dp">
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Información"
-            android:textStyle="bold"
-            android:textSize="22sp"
-            tools:ignore="HardcodedText" />
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
+            <ImageView
+                android:id="@+id/ivRegresar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_regresar"
+                tools:ignore="ContentDescription" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginEnd="30dp"
+                android:text="Información de la Aplicación"
+                android:textStyle="bold"
+                android:textSize="22sp"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
         <ImageView
             android:layout_width="245dp"
             android:layout_height="191dp"
@@ -26,14 +39,30 @@
             android:layout_gravity="center"
             android:src="@drawable/logo_triaje"
             tools:ignore="ContentDescription" />
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginTop="10dp"
-            android:text="Version 1.0.0"
-            android:textSize="16sp"
-            tools:ignore="HardcodedText" />
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:layout_marginTop="10dp"
+                android:text="Version "
+                android:textSize="16sp"
+                tools:ignore="HardcodedText" />
+            <TextView
+                android:id="@+id/tvVersionApp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:layout_marginTop="10dp"
+                android:text="1.0.0"
+                android:textSize="16sp"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -67,6 +96,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="20dp"
                     android:text="Guía rápida de uso"
+                    android:textColor="@color/black"
                     android:layout_gravity="center"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -104,6 +134,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="20dp"
                     android:text="Índice de prioridades"
+                    android:textColor="@color/black"
                     android:layout_gravity="center"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -141,6 +172,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="20dp"
                     android:text="Términos y condiciones"
+                    android:textColor="@color/black"
                     android:layout_gravity="center"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -178,6 +210,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="20dp"
                     android:text="Política de privacidad"
+                    android:textColor="@color/black"
                     android:layout_gravity="center"
                     android:textSize="16sp"
                     android:textStyle="bold"

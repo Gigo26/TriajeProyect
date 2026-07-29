@@ -53,4 +53,7 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.gson)
     implementation(libs.glide)
+
+    //noinspection LoginCredentials
+    implementation(libs.play.services.auth)
 }

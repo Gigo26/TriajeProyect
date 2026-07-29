@@ -143,24 +143,6 @@
                 app:iconTint="@null"
                 tools:ignore="HardcodedText" />
 
-            <!-- Botón: Apple -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnLoginApple"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="10dp"
-                android:text="Continuar con Apple"
-                android:textSize="18sp"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:backgroundTint="#1565D8"
-                app:cornerRadius="24dp"
-                app:icon="@drawable/ic_apple"
-                app:iconGravity="textStart"
-                app:iconPadding="12dp"
-                app:iconTint="@null"
-                tools:ignore="HardcodedText" />
-
             <!-- Footer: Registro -->
             <LinearLayout
                 android:layout_width="wrap_content"
