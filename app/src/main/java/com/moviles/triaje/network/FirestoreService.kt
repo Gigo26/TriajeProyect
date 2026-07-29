@@ -18,7 +18,7 @@ class FirestoreService {
         firebaseFirestore.firestoreSettings = settings
     }
 
-// Consulta de autenticación
+    // Consulta de autenticación
     fun buscarUsuarioPorEmail(email: String, callback: Callback<Usuario>) {
         firebaseFirestore.collection("usuarios")
             .whereEqualTo("us_email", email)
@@ -53,7 +53,7 @@ class FirestoreService {
             }
     }
 
-// NUEVO: Consulta para validar unicidad de DNI
+    // NUEVO: Consulta para validar unicidad de DNI
     fun verificarDniExistente(dni: String, callback: Callback<Boolean>) {
         firebaseFirestore.collection("usuarios")
             .whereEqualTo("us_dni", dni)
@@ -66,7 +66,7 @@ class FirestoreService {
             }
     }
 
-// MODIFICADO: Ahora recibe el UID seguro de Firebase Auth y guarda los datos en él
+    // MODIFICADO: Ahora recibe el UID seguro de Firebase Auth y guarda los datos en él
     fun registrarNuevoUsuario(uid: String, usuario: Usuario, callback: Callback<String>) {
         firebaseFirestore.collection("usuarios")
             .document(uid)
