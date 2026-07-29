@@ -19,10 +19,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Mi Perfil"
+            android:text="@string/my_profile"
             android:textSize="22sp"
-            android:textStyle="bold"
-            tools:ignore="HardcodedText" />
+            android:textStyle="bold" />
 
         <com.google.android.material.imageview.ShapeableImageView
             android:layout_width="120dp"
@@ -83,11 +82,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="12dp"
-                    android:text="Ver Información"
+                    android:text="@string/view_info"
                     android:textColor="@color/black"
                     android:textSize="16sp"
-                    android:textStyle="bold"
-                    tools:ignore="HardcodedText" />
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:layout_width="24dp"
@@ -129,11 +127,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="12dp"
-                    android:text="Editar Perfil"
+                    android:text="@string/edit_profile"
                     android:textColor="@color/black"
                     android:textSize="16sp"
-                    android:textStyle="bold"
-                    tools:ignore="HardcodedText" />
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:layout_width="24dp"
@@ -175,11 +172,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="12dp"
-                    android:text="Preferencias"
+                    android:text="@string/preferences"
                     android:textColor="@color/black"
                     android:textSize="16sp"
-                    android:textStyle="bold"
-                    tools:ignore="HardcodedText" />
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:layout_width="24dp"
@@ -221,11 +217,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="12dp"
-                    android:text="Notificaciones"
+                    android:text="@string/notifications"
                     android:textColor="@color/black"
                     android:textSize="16sp"
-                    android:textStyle="bold"
-                    tools:ignore="HardcodedText" />
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:layout_width="24dp"
@@ -267,11 +262,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="12dp"
-                    android:text="Acerca de la App"
+                    android:text="@string/about_app"
                     android:textColor="@color/black"
                     android:textSize="16sp"
-                    android:textStyle="bold"
-                    tools:ignore="HardcodedText" />
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:layout_width="24dp"
@@ -288,12 +282,11 @@
             android:layout_height="52dp"
             android:layout_marginTop="40dp"
             android:layout_marginBottom="20dp"
-            android:text="Cerrar Sesión"
+            android:text="@string/logout"
             android:textSize="16sp"
             android:textStyle="bold"
             app:backgroundTint="#BC0B0B"
-            app:cornerRadius="26dp"
-            tools:ignore="HardcodedText" />
+            app:cornerRadius="26dp" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
