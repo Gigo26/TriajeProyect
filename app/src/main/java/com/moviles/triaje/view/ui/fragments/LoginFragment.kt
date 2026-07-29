@@ -23,6 +23,8 @@ import com.moviles.triaje.viewmodel.LoginViewModel.LoginState
 class LoginFragment : Fragment() {
 
     private lateinit var viewModel: LoginViewModel
+    private lateinit var etEmail: TextInputEditText
+    private lateinit var etPassword: TextInputEditText
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,12 +39,11 @@ class LoginFragment : Fragment() {
         val btnLoginGoogle = view.findViewById<MaterialButton>(R.id.btnLoginGoogle)
         val btnLoginApple = view.findViewById<MaterialButton>(R.id.btnLoginApple)
         val tvRegistrateAqui = view.findViewById<TextView>(R.id.tvRegistrateAqui)
-        val etEmail = view.findViewById<TextInputEditText>(R.id.etEmail)
-        val etPassword = view.findViewById<TextInputEditText>(R.id.etPassword)
+        etEmail = view.findViewById(R.id.etEmail)
+        etPassword = view.findViewById(R.id.etPassword)
 
         btnLogin.isEnabled = false
 
-        // OBSERVADOR DE ESTADO: Ahora reacciona al inicio seguro mediante Firebase Auth
         viewModel.loginState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is LoginState.Loading -> {
@@ -53,38 +54,32 @@ class LoginFragment : Fragment() {
                     startActivity(intent)
                     requireActivity().finish()
                 }
+                is LoginState.RequirePasswordRecovery -> {
+                    // NUEVO ESTADO: Se activó por fallar 3 veces
+                    Toast.makeText(requireContext(), "Demasiados intentos. Te ayudaremos a recuperar tu cuenta.", Toast.LENGTH_LONG).show()
+                    abrirDialogoRecuperacion()
+                }
                 is LoginState.Error -> {
                     val mensajeAmigable = when {
-                        // 1. Correo no verificado
                         state.mensaje.contains("verificar tu cuenta", ignoreCase = true) -> {
                             mostrarAlertaReenvio(etEmail.text.toString().trim(), etPassword.text.toString().trim())
-                            null // No mostramos toast si abrimos el diálogo modal
+                            null
                         }
-                        // 2. Credenciales incorrectas (Contraseña mal escrita, etc.)
-                        state.mensaje.contains("incorrect", ignoreCase = true) ||
-                                state.mensaje.contains("invalid-credential", ignoreCase = true) ||
-                                state.mensaje.contains("wrong-password", ignoreCase = true) -> {
-                            "El correo electrónico o la contraseña son incorrectos."
-                        }
-                        // 3. Usuario no encontrado
                         state.mensaje.contains("user-not-found", ignoreCase = true) -> {
                             "No existe ninguna cuenta registrada con este correo."
                         }
-                        // 4. Formato de correo inválido
                         state.mensaje.contains("invalid-email", ignoreCase = true) -> {
                             "El formato del correo electrónico no es válido."
                         }
-                        // 5. Demasiados intentos fallidos (Bloqueo temporal por seguridad)
                         state.mensaje.contains("too-many-requests", ignoreCase = true) -> {
-                            "Demasiados intentos fallidos. Tu cuenta ha sido bloqueada temporalmente por seguridad."
+                            "Tu cuenta ha sido bloqueada temporalmente por seguridad."
                         }
-                        // 6. Error genérico de respaldo por si falla la conexión
                         else -> {
-                            "Ocurrió un problema de red. Por favor, inténtalo de nuevo."
+                            // Aquí entrará el mensaje de "Intento X de 3"
+                            state.mensaje
                         }
                     }
 
-                    // Si el mensaje procesado no es nulo, lo mostramos en el Toast
                     if (mensajeAmigable != null) {
                         Toast.makeText(requireContext(), mensajeAmigable, Toast.LENGTH_LONG).show()
                     }
@@ -112,7 +107,10 @@ class LoginFragment : Fragment() {
             viewModel.autenticarUsuario(email, password)
         }
 
-        tvOlvidePassword.setOnClickListener { mostrarDialogoCustom() }
+        tvOlvidePassword.setOnClickListener {
+            abrirDialogoRecuperacion()
+        }
+
         btnLoginGoogle.setOnClickListener { Toast.makeText(requireContext(), "Flujo de Google", Toast.LENGTH_SHORT).show() }
         btnLoginApple.setOnClickListener { Toast.makeText(requireContext(), "Flujo de Apple", Toast.LENGTH_SHORT).show() }
 
@@ -123,7 +121,17 @@ class LoginFragment : Fragment() {
         return view
     }
 
-    // NUEVO: Alerta por si el usuario no encuentra el correo en su Spam y quiere reenviarlo
+    // Método extraído para no repetir código (se usa al hacer clic y al fallar 3 veces)
+    private fun abrirDialogoRecuperacion() {
+        val correoIngresado = etEmail.text.toString().trim()
+        val dialog = ForgotPasswordDialog().apply {
+            arguments = Bundle().apply {
+                putString("CORREO", correoIngresado)
+            }
+        }
+        dialog.show(parentFragmentManager, "ForgotPasswordDialog")
+    }
+
     private fun mostrarAlertaReenvio(email: String, pass: String) {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Cuenta no verificada")
@@ -141,23 +149,5 @@ class LoginFragment : Fragment() {
             }
             .setNegativeButton("Entendido") { dialog, _ -> dialog.dismiss() }
             .show()
-    }
-
-    private fun mostrarDialogoCustom() {
-        val builder = MaterialAlertDialogBuilder(requireContext())
-        val dialogView = layoutInflater.inflate(R.layout.detail_forget_password, null)
-        builder.setView(dialogView)
-        val alertDialog = builder.create()
-        alertDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-
-        val btnDialogOk = dialogView.findViewById<MaterialButton>(R.id.btnDialogOk)
-        val btnDialogVolverEnviar = dialogView.findViewById<MaterialButton>(R.id.btnDialogVolverEnviar)
-
-        btnDialogOk.setOnClickListener { alertDialog.dismiss() }
-        btnDialogVolverEnviar.setOnClickListener {
-            Toast.makeText(requireContext(), "Código reenviado", Toast.LENGTH_SHORT).show()
-            alertDialog.dismiss()
-        }
-        alertDialog.show()
     }
 }
