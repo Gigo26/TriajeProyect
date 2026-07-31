@@ -30,20 +30,19 @@
 
         <!-- 2. Texto de bienvenida (Ocupa el centro dinámicamente) -->
         <TextView
-            android:id="@+id/tvWelcomeUser"
+            android:id="@+id/tvGreeting"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
-            android:text="Hola, José Núñez"
+            android:text="@string/hello_user"
             android:textColor="@android:color/white"
             android:textSize="26sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/ivToolbarLogo"
             app:layout_constraintStart_toEndOf="@+id/ivUserAvatar"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="HardcodedText" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- 3. Logo TRIAJE+ (Pegado completamente a la derecha) -->
         <ImageView

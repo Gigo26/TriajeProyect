@@ -32,12 +32,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Crear Cuenta"
+                android:text="@string/create_account"
                 android:textSize="32sp"
                 android:gravity="center"
                 android:textStyle="bold"
-                android:textColor="@color/black"
-                tools:ignore="HardcodedText" />
+                android:textColor="@color/black" />
 
             <!-- Campo: DNI -->
             <LinearLayout
@@ -49,7 +48,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="DNI"
+                    android:hint="@string/dni"
                     android:textColorHint="@color/black"
                     app:hintTextColor="#757575"
                     android:layout_marginTop="15dp"
@@ -57,13 +56,12 @@
                     app:boxStrokeWidth="2dp"
                     app:boxStrokeWidthFocused="2dp"
                     app:boxStrokeColor="#757575"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    tools:ignore="HardcodedText,Width">
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etDni"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Ingrese su DNI"
+                        android:hint="@string/enter_dni"
                         android:textColorHint="@color/black"
                         android:textColor="@color/black"
                         android:maxLength="8"
@@ -75,18 +73,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_gravity="center"
-                    android:text="Buscar"
+                    android:text="@string/search"
                     android:textColor="@color/white"
                     app:backgroundTint="#1565D8"
-                    app:cornerRadius="8dp"
-                    tools:ignore="HardcodedText" />
+                    app:cornerRadius="8dp" />
             </LinearLayout>
-            <!-- Campo: Nombre Completo -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nombre Completo"
+                android:hint="@string/full_name"
                 android:textColorHint="@color/black"
                 app:hintTextColor="#757575"
                 android:layout_marginTop="15dp"
@@ -94,24 +90,22 @@
                 app:boxStrokeWidth="2dp"
                 app:boxStrokeWidthFocused="2dp"
                 app:boxStrokeColor="#757575"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                tools:ignore="HardcodedText,Width">
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ingrese nombres y apellidos completos"
+                    android:hint="@string/enter_full_name"
                     android:textColorHint="@color/black"
                     android:textColor="@color/black"
                 android:inputType="textPersonName" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Campo: Correo Electrónico -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Correo Electrónico"
+                android:hint="@string/email"
                 android:textColorHint="@color/black"
                 app:hintTextColor="#757575"
                 android:layout_marginTop="15dp"
@@ -119,73 +113,65 @@
                 app:boxStrokeWidth="2dp"
                 app:boxStrokeWidthFocused="2dp"
                 app:boxStrokeColor="#757575"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                tools:ignore="HardcodedText,Width"> <!-- Agregado Ignore Width -->
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ingrese su correo"
+                    android:hint="@string/enter_email"
                     android:textColorHint="@color/black"
                     android:textColor="@color/black"
                 android:inputType="textEmailAddress" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Campo: Contraseña -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:hint="Contraseña"
+                android:hint="@string/password"
                 android:textColorHint="@color/black"
                 app:hintTextColor="#757575"
                 app:expandedHintEnabled="false"
                 app:boxStrokeWidth="2dp"
                 app:boxStrokeWidthFocused="2dp"
                 app:boxStrokeColor="#757575"
-                app:helperText="ebe contener al menos 8 caracteres, una mayúscula y números"
                 app:endIconMode="password_toggle"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                tools:ignore="HardcodedText,Width">
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ingrese su contraseña"
+                    android:hint="@string/enter_password"
                     android:textColorHint="@color/black"
                     android:textColor="@color/black"
                 android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Campo: Confirmar Contraseña -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilConfirmPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:hint="Confirme su contraseña"
+                android:hint="@string/confirm_your_password"
                 android:textColorHint="@color/black"
                 app:hintTextColor="#757575"
                 app:expandedHintEnabled="false"
                 app:boxStrokeWidth="2dp"
                 app:boxStrokeWidthFocused="2dp"
                 app:boxStrokeColor="#757575"
-                app:helperText="Debe contener al menos 8 caracteres, una mayúscula y números"
                 app:endIconMode="password_toggle"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                tools:ignore="HardcodedText,Width">
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etConfirmPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Confirmar contraseña"
+                    android:hint="@string/confirm_your_password"
                     android:textColorHint="@color/black"
                     android:textColor="@color/black"
                 android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Botón Registrarse -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnRegister"
                 android:layout_width="match_parent"
@@ -193,13 +179,12 @@
                 android:maxWidth="320dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="35dp"
-                android:text="Registrarse"
+                android:text="@string/register"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:backgroundTint="@color/btn_selector_login"
-                app:cornerRadius="24dp"
-                tools:ignore="HardcodedText,Width" />
+                app:cornerRadius="24dp" />
 
             <!-- Footer Enlace de Retorno -->
             <LinearLayout
@@ -212,20 +197,18 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="¿Ya tienes una cuenta?"
+                    android:text="@string/already_have_account"
                     android:textSize="14sp"
-                    android:textColor="@color/black"
-                    tools:ignore="HardcodedText" />
+                    android:textColor="@color/black" />
                 <TextView
                     android:id="@+id/tvIniciaSesionAqui"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
-                    android:text="Iniciar Sesión"
+                    android:text="@string/login"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:textColor="#1565D8"
-                    tools:ignore="HardcodedText" />
+                    android:textColor="#1565D8" />
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

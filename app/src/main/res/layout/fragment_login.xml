@@ -31,19 +31,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Iniciar Sesión"
+                android:text="@string/login"
                 android:textSize="32sp"
                 android:gravity="center"
                 android:textStyle="bold"
-                android:textColor="@color/black"
-                tools:ignore="HardcodedText" />
+                android:textColor="@color/black" />
 
-            <!-- Campo: Correo Electrónico -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Correo Electrónico"
+                android:hint="@string/email"
                 android:textColorHint="@color/black"
                 app:hintTextColor="#757575"
                 android:layout_marginTop="15dp"
@@ -51,40 +49,36 @@
                 app:boxStrokeWidth="2dp"
                 app:boxStrokeWidthFocused="2dp"
                 app:boxStrokeColor="#757575"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                tools:ignore="HardcodedText">
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ingrese su correo"
+                    android:hint="@string/enter_email"
                     android:textColorHint="@color/black"
                     android:textColor="@color/black"
                     android:inputType="textEmailAddress" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Campo: Contraseña -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:hint="Contraseña"
+                android:hint="@string/password"
                 android:textColorHint="@color/black"
                 app:hintTextColor="#757575"
                 app:expandedHintEnabled="false"
                 app:boxStrokeWidth="2dp"
                 app:boxStrokeWidthFocused="2dp"
                 app:boxStrokeColor="#757575"
-                app:helperText="Debe contener al menos 8 caracteres"
                 app:endIconMode="password_toggle"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                tools:ignore="HardcodedText">
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Ingrese su contraseña"
+                    android:hint="@string/enter_password"
                     android:textColorHint="@color/black"
                     android:textColor="@color/black"
                     android:inputType="textPassword" />
@@ -95,43 +89,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:text="¿Olvidaste tu contraseña?"
+                android:text="@string/forgot_password"
                 android:textSize="16sp"
                 android:gravity="end"
-                android:textColor="@color/black"
-                tools:ignore="HardcodedText" />
+                android:textColor="@color/black" />
 
-            <!-- CORREGIDO: Cambiado a MaterialButton para control total de esquinas -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="15dp"
-                android:text="Iniciar Sesión"
+                android:text="@string/login"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@color/white"
                 app:backgroundTint="@color/btn_selector_login"
-                app:cornerRadius="24dp"
-                tools:ignore="HardcodedText" />
+                app:cornerRadius="24dp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="17dp"
-                android:text="o continua con"
+                android:text="@string/or_login_with"
                 android:textSize="14sp"
                 android:gravity="center"
-                android:textColor="@color/black"
-                tools:ignore="HardcodedText" />
+                android:textColor="@color/black" />
 
-            <!-- Botón: Google -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLoginGoogle"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="17dp"
-                android:text="Continuar con Google"
+                android:text="@string/continue_google"
                 android:textSize="18sp"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
@@ -140,16 +129,14 @@
                 app:icon="@drawable/ic_google"
                 app:iconGravity="textStart"
                 app:iconPadding="12dp"
-                app:iconTint="@null"
-                tools:ignore="HardcodedText" />
+                app:iconTint="@null" />
 
-            <!-- Botón: Apple -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLoginApple"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="10dp"
-                android:text="Continuar con Apple"
+                android:text="@string/continue_apple"
                 android:textSize="18sp"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
@@ -158,8 +145,7 @@
                 app:icon="@drawable/ic_apple"
                 app:iconGravity="textStart"
                 app:iconPadding="12dp"
-                app:iconTint="@null"
-                tools:ignore="HardcodedText" />
+                app:iconTint="@null" />
 
             <!-- Footer: Registro -->
             <LinearLayout
@@ -172,20 +158,18 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="¿No posees cuenta?"
+                    android:text="@string/no_account"
                     android:textSize="14sp"
-                    android:textColor="@color/black"
-                    tools:ignore="HardcodedText" />
+                    android:textColor="@color/black" />
                 <TextView
                     android:id="@+id/tvRegistrateAqui"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
-                    android:text="Registrate Aquí"
+                    android:text="@string/register_here"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:textColor="#1565D8"
-                    tools:ignore="HardcodedText" />
+                    android:textColor="#1565D8" />
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

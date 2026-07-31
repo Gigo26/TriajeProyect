@@ -11,6 +11,12 @@
     <string name="notifications">Notifications</string>
     <string name="about_app">About App</string>
     <string name="logout">Logout</string>
+    <string name="hello_user">Hello, %1$s</string>
+    <string name="nearby_hospitals">Nearby Hospitals</string>
+    <string name="consultation_history">Consultation History</string>
+    <string name="select_consultation_desc">Select a consultation to view details.</string>
+    <string name="symptoms_title">What symptoms do you have?</string>
+    <string name="select_symptoms_desc">Select one or more options.</string>
     <string name="personal_info">Personal Information</string>
     <string name="full_name">Full Name</string>
     <string name="surnames">Surnames</string>
@@ -27,4 +33,38 @@
     <string name="notif_updates">App Updates</string>
     <string name="notif_messages">New Messages</string>
     <string name="notif_offers">Offers and Promotions</string>
+
+    <!-- Home -->
+    <string name="who_needs_help">Who needs help?</string>
+    <string name="select_option_desc">Select the option that best describes you.</string>
+    <string name="child">Boy / Girl</string>
+    <string name="child_age">(0 - 12 years)</string>
+    <string name="adult">Adult</string>
+    <string name="adult_age">(13 - 59 years)</string>
+    <string name="senior">Senior Citizen</string>
+    <string name="senior_age">(60 years and up)</string>
+    <string name="pregnant">Pregnant</string>
+    <string name="pregnant_desc">(Expecting)</string>
+    <string name="continue_button">Continue</string>
+
+    <!-- Login -->
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="login_desc">Sign in to your account to continue.</string>
+    <string name="forgot_password">Forgot your password?</string>
+    <string name="login">Login</string>
+    <string name="or_login_with">or continue with</string>
+    <string name="continue_google">Continue with Google</string>
+    <string name="continue_apple">Continue with Apple</string>
+    <string name="no_account">Don\'t have an account?</string>
+    <string name="register_here">Register here</string>
+    <!-- Register -->
+    <string name="create_account">Create Account</string>
+    <string name="enter_dni">Enter your ID (DNI)</string>
+    <string name="search">Search</string>
+    <string name="enter_full_name">Enter full name and surnames</string>
+    <string name="enter_email">Enter your email</string>
+    <string name="enter_password">Enter your password</string>
+    <string name="confirm_your_password">Confirm your password</string>
+    <string name="register">Register</string>
+    <string name="already_have_account">Already have an account?</string>
 </resources>

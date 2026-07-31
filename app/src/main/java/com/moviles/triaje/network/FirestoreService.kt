@@ -107,13 +107,18 @@ class FirestoreService {
                 for (document in result) {
                     // Mapeamos manualmente los campos de Firestore a tu modelo Question
                     val textoPregunta = document.getString("pr_pregunta") ?: ""
+                    val textoPreguntaEn = document.getString("pr_pregunta_en")
                     @Suppress("UNCHECKED_CAST")
                     val opciones = document.get("valores_opciones") as? List<String> ?: emptyList()
+                    @Suppress("UNCHECKED_CAST")
+                    val opcionesEn = document.get("valores_opciones_en") as? List<String>
 
                     val pregunta = Question(
                         id = idContador++, // ID numérico incremental para el control del RadioGroup
                         text = textoPregunta,
-                        options = opciones
+                        text_en = textoPreguntaEn,
+                        options = opciones,
+                        options_en = opcionesEn
                     )
                     listaPreguntas.add(pregunta)
                 }

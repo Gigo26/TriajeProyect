@@ -22,20 +22,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Historial de Consultas"
+                android:text="@string/consultation_history"
                 android:textSize="26sp"
                 android:textColor="@color/black"
                 android:gravity="center"
-                android:textStyle="bold"
-                tools:ignore="HardcodedText"/>
+                android:textStyle="bold" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="Seleccionar la consulta para ver información."
+                android:text="@string/select_consultation_desc"
                 android:textSize="16sp"
-                android:gravity="center"
-                tools:ignore="HardcodedText"/>
+                android:gravity="center" />
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvQuestions"
                 android:layout_width="match_parent"

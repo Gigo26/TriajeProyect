@@ -11,6 +11,12 @@
     <string name="notifications">Notificaciones</string>
     <string name="about_app">Acerca de la App</string>
     <string name="logout">Cerrar Sesión</string>
+    <string name="hello_user">Hola, %1$s</string>
+    <string name="nearby_hospitals">Hospitales Cercanos</string>
+    <string name="consultation_history">Historial de Consultas</string>
+    <string name="select_consultation_desc">Seleccionar la consulta para ver información.</string>
+    <string name="symptoms_title">¿Qué síntomas tiene?</string>
+    <string name="select_symptoms_desc">Seleccione una o más opciones.</string>
     <string name="personal_info">Información Personal</string>
     <string name="full_name">Nombre Completo</string>
     <string name="surnames">Apellidos</string>
@@ -27,4 +33,38 @@
     <string name="notif_updates">Actualizaciones de la App</string>
     <string name="notif_messages">Nuevos Mensajes</string>
     <string name="notif_offers">Ofertas y Promociones</string>
+
+    <!-- Home -->
+    <string name="who_needs_help">¿Quién necesita ayuda?</string>
+    <string name="select_option_desc">Seleccione la opción que mejor lo describe.</string>
+    <string name="child">Niño / Niña</string>
+    <string name="child_age">(0 - 12 años)</string>
+    <string name="adult">Adulto</string>
+    <string name="adult_age">(13 - 59 años)</string>
+    <string name="senior">Adulto Mayor</string>
+    <string name="senior_age">(60 años a más)</string>
+    <string name="pregnant">Gestante</string>
+    <string name="pregnant_desc">(Embarazada)</string>
+    <string name="continue_button">Continuar</string>
+
+    <!-- Login -->
+    <string name="welcome_back">¡Bienvenido de nuevo!</string>
+    <string name="login_desc">Ingresa a tu cuenta para continuar.</string>
+    <string name="forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="login">Iniciar Sesión</string>
+    <string name="or_login_with">o continua con</string>
+    <string name="continue_google">Continuar con Google</string>
+    <string name="continue_apple">Continuar con Apple</string>
+    <string name="no_account">¿No posees cuenta?</string>
+    <string name="register_here">Registrate Aquí</string>
+    <!-- Register -->
+    <string name="create_account">Crear Cuenta</string>
+    <string name="enter_dni">Ingrese su DNI</string>
+    <string name="search">Buscar</string>
+    <string name="enter_full_name">Ingrese nombres y apellidos completos</string>
+    <string name="enter_email">Ingrese su correo</string>
+    <string name="enter_password">Ingrese su contraseña</string>
+    <string name="confirm_your_password">Confirme su contraseña</string>
+    <string name="register">Registrarse</string>
+    <string name="already_have_account">¿Ya tienes una cuenta?</string>
 </resources>

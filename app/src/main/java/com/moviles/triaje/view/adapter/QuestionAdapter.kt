@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.radiobutton.MaterialRadioButton
 import com.moviles.triaje.R
 import com.moviles.triaje.model.Question
+import com.moviles.triaje.utils.PreferenceManager
 
 class QuestionAdapter(
     private val questionListener: QuestionListener
@@ -33,15 +34,21 @@ class QuestionAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val pregunta = listPreguntas[position]
         val context = holder.itemView.context
+        val prefManager = PreferenceManager(context)
 
-        holder.tvQuestion.text = pregunta.text
+        // Lógica de traducción dinámica
+        val isEnglish = prefManager.language == "en"
+        val questionText = if (isEnglish && !pregunta.text_en.isNullOrBlank()) pregunta.text_en else pregunta.text
+        val optionsList = if (isEnglish && pregunta.options_en != null) pregunta.options_en else pregunta.options
+
+        holder.tvQuestion.text = questionText
 
         // 1. Limpiamos cualquier RadioButton previo para evitar bugs visuales al reciclar vistas
         holder.rgOptions.removeAllViews()
         holder.rgOptions.setOnCheckedChangeListener(null) // Quitamos el listener temporalmente
 
         // 2. Creamos los RadioButtons dinámicamente según las opciones del banco de preguntas
-        pregunta.options.forEachIndexed { index, optionText ->
+        optionsList.forEachIndexed { index, optionText ->
             val radioButton = MaterialRadioButton(context).apply {
                 id = View.generateViewId() // Genera ID dinámico y seguro
                 text = optionText
