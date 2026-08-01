@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_bottom_sheet"
+    android:paddingHorizontal="24dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="24dp">
+
+    <!-- Indicador de Arrastre superior (Drag Handle) -->
+    <View
+        android:id="@+id/dragHandle"
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:background="#D0D0D0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Barra de Título y Cierre -->
+    <TextView
+        android:id="@+id/tvDialogTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Detalle del Centro de Salud"
+        android:textColor="#1A1A1A"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/ivCloseDialog"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dragHandle" />
+
+    <ImageView
+        android:id="@+id/ivCloseDialog"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="4dp"
+        android:src="@drawable/ic_close"
+        app:layout_constraintBottom_toBottomOf="@id/tvDialogTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvDialogTitle"
+        app:tint="#666666"
+        tools:ignore="ContentDescription" />
+
+    <!-- Imagen del Hospital -->
+    <ImageView
+        android:id="@+id/ivDetailHospitalImage"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="20dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_hospital"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvDialogTitle"
+        tools:ignore="ContentDescription" />
+
+    <!-- Nombre del Hospital -->
+    <TextView
+        android:id="@+id/tvDetailHospitalName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:textColor="#1A1A1A"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/ivDetailHospitalImage"
+        tools:text="Hospital Regional" />
+
+    <!-- Etiqueta de Atención 24/7 -->
+    <TextView
+        android:id="@+id/tvEmergencyTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="#E8F5E9"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="4dp"
+        android:text="🚑 Atención de Emergencia 24/7"
+        android:textColor="#2E7D32"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvDetailHospitalName" />
+
+    <!-- Separador -->
+    <View
+        android:id="@+id/divider1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:background="#E0E0E0"
+        app:layout_constraintTop_toBottomOf="@id/tvEmergencyTag" />
+
+    <!-- Fila 1: Dirección -->
+    <LinearLayout
+        android:id="@+id/llAddressRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/divider1">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_location"
+            app:tint="#1976D2"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tvDetailHospitalAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:textColor="#424242"
+            android:textSize="15sp"
+            tools:text="Av. Principal 123, San Isidro" />
+    </LinearLayout>
+
+    <!-- Fila 2: Distancia y Tiempo -->
+    <LinearLayout
+        android:id="@+id/llTravelRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/llAddressRow">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_car"
+            app:tint="#1976D2"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tvDetailHospitalDistanceAndTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:textColor="#424242"
+            android:textSize="15sp"
+            tools:text="2.3 KM · Aprox. 30 min en auto" />
+    </LinearLayout>
+
+    <!-- Fila 3: Teléfono -->
+    <LinearLayout
+        android:id="@+id/llPhoneRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/llTravelRow">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_telefono"
+            app:tint="#1976D2"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tvDetailHospitalPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:textColor="#424242"
+            android:textSize="15sp"
+            tools:text="(01) 456-7890 / Emergencias" />
+    </LinearLayout>
+
+    <!-- Botones de Acción -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCallHospital"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="#1976D2"
+        android:text="Llamar al Centro de Salud"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:cornerRadius="26dp"
+        app:icon="@drawable/ic_telefono"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:iconTint="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/llPhoneRow" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnOpenMap"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginTop="8dp"
+        android:text="Ver Ubicación en Mapa"
+        android:textAllCaps="false"
+        android:textColor="#1976D2"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:cornerRadius="26dp"
+        app:icon="@drawable/ic_location"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:iconTint="#1976D2"
+        app:layout_constraintTop_toBottomOf="@id/btnCallHospital"
+        app:strokeColor="#1976D2"
+        app:strokeWidth="1.5dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
