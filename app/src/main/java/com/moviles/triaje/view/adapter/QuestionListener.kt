@@ -1,6 +1,6 @@
 package com.moviles.triaje.view.adapter
 
-import com.moviles.triaje.model.Question
+import com.moviles.triaje.model.Pregunta
 
 interface QuestionListener {
     /**
@@ -9,5 +9,5 @@ interface QuestionListener {
      * @param optionIndex El índice numérico de la opción seleccionada.
      * @param position La posición de la tarjeta dentro del RecyclerView.
      */
-    fun onOptionSelected(question: Question, optionIndex: Int, position: Int)
+    fun onOptionSelected(question: Pregunta, optionIndex: Int, position: Int)
 }

@@ -15,13 +15,15 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.radiobutton.MaterialRadioButton
 import com.moviles.triaje.R
-import com.moviles.triaje.model.Question
+import com.moviles.triaje.model.Pregunta
+import com.moviles.triaje.utils.PreferenceManager
+import com.moviles.triaje.utils.TranslationManager
 
 class QuestionAdapter(
     private val questionListener: QuestionListener
 ) : RecyclerView.Adapter<QuestionAdapter.ViewHolder>() {
 
-    var listPreguntas = ArrayList<Question>()
+    var listPreguntas = ArrayList<Pregunta>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(
@@ -33,18 +35,35 @@ class QuestionAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val pregunta = listPreguntas[position]
         val context = holder.itemView.context
+        val prefManager = PreferenceManager(context)
 
-        holder.tvQuestion.text = pregunta.text
+        // Lógica de traducción dinámica
+        val isEnglish = prefManager.language == "en"
+        
+        if (isEnglish) {
+            // Traducir Título de la Pregunta
+            if (!pregunta.text_en.isNullOrBlank()) {
+                holder.tvQuestion.text = pregunta.text_en
+            } else {
+                TranslationManager.translate(pregunta.text) { translated ->
+                    holder.tvQuestion.text = translated
+                }
+            }
+        } else {
+            holder.tvQuestion.text = pregunta.text
+        }
 
-        // 1. Limpiamos cualquier RadioButton previo para evitar bugs visuales al reciclar vistas
+        // 1. Limpiamos cualquier RadioButton previo
         holder.rgOptions.removeAllViews()
-        holder.rgOptions.setOnCheckedChangeListener(null) // Quitamos el listener temporalmente
+        holder.rgOptions.setOnCheckedChangeListener(null)
 
-        // 2. Creamos los RadioButtons dinámicamente según las opciones del banco de preguntas
-        pregunta.options.forEachIndexed { index, optionText ->
+        // 2. Obtener lista de opciones (Prioriza BD, si no hay usa la de español para traducir)
+        val rawOptions = if (isEnglish && !pregunta.options_en.isNullOrEmpty()) pregunta.options_en else pregunta.options
+
+        rawOptions.forEachIndexed { index, optionText ->
             val radioButton = MaterialRadioButton(context).apply {
-                id = View.generateViewId() // Genera ID dinámico y seguro
-                text = optionText
+                id = View.generateViewId()
+                text = optionText // Texto inicial
                 textSize = 16f
                 setTextColor(Color.BLACK)
                 setTypeface(null, Typeface.BOLD)
@@ -56,14 +75,18 @@ class QuestionAdapter(
                 )
                 params.setMargins(0, 0, 0, 8.toPx(context))
                 layoutParams = params
-
-                // Estilo púrpura por defecto para tus controles de selección
                 buttonTintList = ColorStateList.valueOf(Color.parseColor("#6200EE"))
+            }
+
+            // Si es inglés y no hay traducción en BD, traducimos dinámicamente
+            if (isEnglish && (pregunta.options_en == null || pregunta.options_en.isEmpty())) {
+                TranslationManager.translate(optionText) { translated ->
+                    radioButton.text = translated
+                }
             }
 
             holder.rgOptions.addView(radioButton)
 
-            // 3. Restaurar el estado si el usuario ya había marcado una opción
             if (index == pregunta.selectedOptionIndex) {
                 radioButton.isChecked = true
             }
@@ -80,7 +103,7 @@ class QuestionAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateData(data: List<Question>) {
+    fun updateData(data: List<Pregunta>) {
         listPreguntas.clear()
         listPreguntas.addAll(data)
         notifyDataSetChanged()

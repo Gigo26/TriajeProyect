@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.moviles.triaje.R
 import com.moviles.triaje.model.Sintoma
-import com.moviles.triaje.model.Question
+import com.moviles.triaje.model.Pregunta
 import com.moviles.triaje.view.adapter.QuestionListener
 import com.moviles.triaje.view.adapter.QuestionAdapter
 import com.moviles.triaje.viewmodel.SymptompsQuestionsViewModel
@@ -70,7 +70,7 @@ class SymptompsQuestionFragment : Fragment() {
 
     private fun setupRecyclerView() {
         questionsAdapter = QuestionAdapter(object : QuestionListener {
-            override fun onOptionSelected(question: Question, optionIndex: Int, position: Int) {
+            override fun onOptionSelected(question: Pregunta, optionIndex: Int, position: Int) {
                 viewModel.actualizarRespuestaPregunta(question.id, optionIndex)
             }
         })

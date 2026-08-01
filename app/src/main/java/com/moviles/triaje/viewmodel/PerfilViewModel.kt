@@ -63,19 +63,49 @@ class PerfilViewModel : ViewModel() {
         return firestoreService.obtenerNombreCompletoFormateado(usuario)
     }
 
-    // MODIFICADO: Genera un avatar con iniciales si el usuario no tiene foto
     fun getAvatarUrl(usuario: Usuario?): String {
-        val authPhoto = firebaseAuth.currentUser?.photoUrl?.toString()
-        if (!authPhoto.isNullOrEmpty()) return authPhoto
-
+        // 1. Prioridad: Avatar en Firestore (puede ser Base64 o URL)
         val firestorePhoto = usuario?.us_avatar
         if (!firestorePhoto.isNullOrEmpty()) return firestorePhoto
 
+        // 2. Foto de Firebase Auth (Google/etc)
+        val authPhoto = firebaseAuth.currentUser?.photoUrl?.toString()
+        if (!authPhoto.isNullOrEmpty()) return authPhoto
+
+        // 3. Fallback: Iniciales
         val nombre = usuario?.us_nombre ?: "U"
         val apellidos = usuario?.us_apellidos ?: ""
         val nombreCompleto = "$nombre $apellidos".trim().replace(" ", "+")
 
         return "https://ui-avatars.com/api/?name=$nombreCompleto&background=1E60D5&color=fff&size=128&bold=true"
+    }
+
+    fun actualizarPerfil(
+        dni: String,
+        nombre: String,
+        apellidos: String,
+        celular: String,
+        fechaNac: java.util.Date?,
+        avatarBase64: String?,
+        callback: Callback<Boolean>
+    ) {
+        val uid = firebaseAuth.currentUser?.uid ?: return
+        val updates = mutableMapOf<String, Any>(
+            "us_dni" to dni,
+            "us_nombre" to nombre,
+            "us_apellidos" to apellidos,
+            "us_celular" to celular
+        )
+        
+        fechaNac?.let { updates["us_fecha_nac"] = it }
+        avatarBase64?.let { updates["us_avatar"] = it }
+
+        com.google.firebase.firestore.FirebaseFirestore.getInstance()
+            .collection("usuarios")
+            .document(uid)
+            .update(updates)
+            .addOnSuccessListener { callback.onSuccess(true) }
+            .addOnFailureListener { callback.onFailed(it) }
     }
 
     fun cerrarSesion() {

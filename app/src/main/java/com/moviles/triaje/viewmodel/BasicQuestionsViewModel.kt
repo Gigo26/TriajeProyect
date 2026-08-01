@@ -26,10 +26,10 @@ class BasicQuestionsViewModel : ViewModel() {
      */
     fun evaluarCriterioEmergencia(): Boolean {
         val estaInconsciente = (respuestaConsciente == 1) // Seleccionó "No"
-        val noRespiraNormal = (respuestaRespira == 1)      // Seleccionó "No"
+        val noRespiraNormal = (respuestaRespira == 0)      // Seleccionó "Si"
         val tieneSangrado = (respuestaSangrado == 0)       // Seleccionó "Sí"
 
-        return estaInconsciente && noRespiraNormal && tieneSangrado
+        return estaInconsciente || noRespiraNormal || tieneSangrado
     }
 
     /**

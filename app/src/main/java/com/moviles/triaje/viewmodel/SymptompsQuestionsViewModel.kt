@@ -3,7 +3,7 @@ package com.moviles.triaje.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.moviles.triaje.model.Question
+import com.moviles.triaje.model.Pregunta
 import com.moviles.triaje.model.Sintoma
 import com.moviles.triaje.network.Callback
 import com.moviles.triaje.network.FirestoreService
@@ -12,8 +12,8 @@ class SymptompsQuestionsViewModel : ViewModel() {
 
     private val firestoreService = FirestoreService()
 
-    private val _listaPreguntas = MutableLiveData<List<Question>>(emptyList())
-    val listaPreguntas: LiveData<List<Question>> get() = _listaPreguntas
+    private val _listaPreguntas = MutableLiveData<List<Pregunta>>(emptyList())
+    val listaPreguntas: LiveData<List<Pregunta>> get() = _listaPreguntas
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
@@ -28,13 +28,13 @@ class SymptompsQuestionsViewModel : ViewModel() {
         }
 
         _isLoading.value = true
-        val preguntasConsolidadas = mutableListOf<Question>()
+        val preguntasConsolidadas = mutableListOf<Pregunta>()
         var peticionesCompletadas = 0
 
         // Recorremos cada síntoma seleccionado para traer sus preguntas de su subcolección
         sintomas.forEach { sintoma ->
-            firestoreService.obtenerPreguntasPorSintoma(sintoma.id, object : Callback<List<Question>> {
-                override fun onSuccess(result: List<Question>?) {
+            firestoreService.obtenerPreguntasPorSintoma(sintoma.id, object : Callback<List<Pregunta>> {
+                override fun onSuccess(result: List<Pregunta>?) {
                     if (result != null) {
                         preguntasConsolidadas.addAll(result)
                     }

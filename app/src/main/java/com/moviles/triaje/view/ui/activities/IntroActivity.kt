@@ -7,12 +7,23 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.fragment.NavHostFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.moviles.triaje.R
+import com.moviles.triaje.utils.PreferenceManager
+import java.util.Locale
 
 class IntroActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        //  1. Forzar tema claro ANTES de super.onCreate
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        val prefManager = PreferenceManager(this)
+
+        // 1. Aplicar Idioma ANTES de super.onCreate
+        setAppLocale(prefManager.language)
+
+        // 2. Aplicar Tema ANTES de super.onCreate
+        if (prefManager.isDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_intro)
@@ -35,5 +46,13 @@ class IntroActivity : AppCompatActivity() {
                 .findFragmentById(R.id.fcvIntroContainer) as? NavHostFragment
             navHostFragment?.navController?.navigate(R.id.loginFragment)
         }
+    }
+
+    private fun setAppLocale(language: String) {
+        val locale = Locale(language)
+        Locale.setDefault(locale)
+        val config = resources.configuration
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.displayMetrics)
     }
 }

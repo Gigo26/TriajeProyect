@@ -22,11 +22,9 @@ class GuiaFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_guia, container, false)
     }
 
-    // 2. Usamos onViewCreated en lugar de onCreate para buscar e interactuar con las vistas
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Usamos 'view.findViewById' en lugar de 'findViewById' directamente
         val btnPrimerosAuxilios = view.findViewById<MaterialCardView>(R.id.cvPrimerosAuxilios)
         val btnSignosVitales = view.findViewById<MaterialCardView>(R.id.cvSignosVitales)
         val btnEmergencias = view.findViewById<MaterialCardView>(R.id.cvEmergencias)
@@ -40,32 +38,49 @@ class GuiaFragment : Fragment() {
         }
 
         btnPrimerosAuxilios.setOnClickListener {
-            mostrarVentana("Guía de 1eros A", "Protocolo de Actuación:\n1. Evaluación primaria (ABCDE).\n2. Asegurar vía aérea y control de columna cervical.\n3. Evaluación de ventilación y circulación.\n4. Identificación de déficit neurológico.\n*Priorice el soporte vital básico ante colapso.*")
+            mostrarVentana(
+                getString(R.string.guide_1st_aid_title),
+                getString(R.string.guide_1st_aid_info)
+            )
         }
 
         btnSignosVitales.setOnClickListener {
-            mostrarVentana("Signos Vitales", "Valores de referencia (Adulto):\n• Presión Arterial: 120/80 mmHg (Normal).\n• Frecuencia Cardíaca: 60-100 lpm.\n• Frecuencia Respiratoria: 12-20 rpm.\n• Temperatura: 36.5°C - 37.5°C.\n• SatO2: >95% aire ambiente.")
+            mostrarVentana(
+                getString(R.string.guide_vital_signs_title),
+                getString(R.string.guide_vital_signs_info)
+            )
         }
 
         btnEmergencias.setOnClickListener {
-            mostrarVentana("Triaje - Priorización", "Clasificación de Emergencia:\n• Rojo: Reanimación inmediata.\n• Naranja: Muy urgente (10 min).\n• Amarillo: Urgente (60 min).\n• Verde: Menos urgente.\n• Azul: No urgente (atención diferida).")
+            mostrarVentana(
+                getString(R.string.guide_emergency_triage_title),
+                getString(R.string.guide_emergency_triage_info)
+            )
         }
 
         btnPrevencion.setOnClickListener {
-            mostrarVentana("Protocolos Prevención", "Normas de Bioseguridad:\n1. Higiene de manos (técnica OMS).\n2. Uso estricto de EPP (guantes, mascarilla, mandil).\n3. Clasificación de residuos (Bolsa roja para biocontaminados).\n4. Desinfección de superficies tras cada paciente.")
+            mostrarVentana(
+                getString(R.string.guide_prevention_title),
+                getString(R.string.guide_prevention_info)
+            )
         }
 
         btnMedicamentos.setOnClickListener {
-            mostrarVentana("Seguridad Farmacológica", "Regla de los 5 Correctos:\n1. Paciente correcto.\n2. Medicamento correcto.\n3. Dosis correcta.\n4. Vía de administración correcta.\n5. Hora correcta.\n*Verificar siempre alergias previas en historia clínica.*")
+            mostrarVentana(
+                getString(R.string.guide_meds_safety_title),
+                getString(R.string.guide_meds_safety_info)
+            )
         }
 
         btnContactos.setOnClickListener {
-            mostrarVentana("Directorio Interno", "Unidades de Emergencia:\n• Médico de Guardia: #501\n• Enfermería Triaje: #502\n• Laboratorio Clínico: #505\n• Banco de Sangre: #508\n• Admisión/Seguridad: #500")
+            mostrarVentana(
+                getString(R.string.guide_contacts_title),
+                getString(R.string.guide_contacts_info)
+            )
         }
     }
 
     private fun mostrarVentana(titulo: String, informacion: String) {
-        // 3. Usamos 'requireContext()' porque 'this' referenciaría al Fragment, no al contexto de la app
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_guia)

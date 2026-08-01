@@ -30,6 +30,13 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    androidResources {
+        noCompress += "tflite"
+    }
+    buildFeatures {
+        mlModelBinding = true
+    }
 }
 
 dependencies {
@@ -56,4 +63,17 @@ dependencies {
 
     //noinspection LoginCredentials
     implementation(libs.play.services.auth)
+    implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
+    implementation(libs.places)
+
+    // ML - TensorFlow Lite
+    implementation(libs.tensorflow.lite)
+    implementation(libs.tensorflow.lite.support) {
+        exclude(group = "com.google.ai.edge.litert", module = "litert-support-api")
+        exclude(group = "org.tensorflow", module = "tensorflow-lite-support-api")
+    }
+
+    // ML Kit Translation
+    implementation(libs.mlkit.translate)
 }

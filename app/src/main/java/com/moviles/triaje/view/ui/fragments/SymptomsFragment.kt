@@ -71,11 +71,16 @@ class SymptomsFragment : Fragment(), SymptomListener {
                 putSerializable("sintomas_seleccionados", ArrayList(seleccionados))
             }
 
-            // Navegamos pasando el bundle con los datos salvaguardados
-            findNavController().navigate(
-                R.id.action_symptomsFragment_to_basicQuestionsFragment,
-                bundle
-            )
+            // Lógica de Enrutamiento según el tipo de síntoma
+            // Si algún síntoma requiere imagen (ej: cortes, quemaduras), vamos a ImageAnalysis
+            val requiereImagen = seleccionados.any { it.sin_requiere_imagen }
+
+            if (requiereImagen) {
+                findNavController().navigate(R.id.action_symptomsFragment_to_analisisImageFragment, bundle)
+            } else {
+                // Si son solo síntomas internos (fiebre, dolor abdominal), vamos directo al cuestionario
+                findNavController().navigate(R.id.action_symptomsFragment_to_symptompsQuestionFragment, bundle)
+            }
         }
 
         return view

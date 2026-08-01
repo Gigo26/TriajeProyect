@@ -9,9 +9,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.moviles.triaje.R
+import com.moviles.triaje.model.Usuario
 import com.moviles.triaje.viewmodel.VerInformacionViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -51,9 +51,8 @@ class VerInformacionFragment : Fragment() {
         tvFechaNacimiento = view.findViewById(R.id.tvFechaNacimiento)
         ivPerfil = view.findViewById(R.id.ivPerfil)
 
-        val btnBack = view.findViewById<ImageView>(R.id.btnBack)
-        btnBack.setOnClickListener {
-            findNavController().navigateUp()
+        view.findViewById<ImageView>(R.id.btnBack).setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
     }
 
@@ -72,20 +71,40 @@ class VerInformacionFragment : Fragment() {
                 } ?: run {
                     tvFechaNacimiento.text = "No registrada"
                 }
+
+                // Cargar foto de perfil mejorada
+                val avatar = getAvatarUrl(it)
+                if (avatar.startsWith("data:image")) {
+                    val base64String = avatar.substringAfter(",")
+                    val imageBytes = android.util.Base64.decode(base64String, android.util.Base64.DEFAULT)
+                    val bitmap = android.graphics.BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                    ivPerfil.setImageBitmap(bitmap)
+                } else {
+                    Glide.with(this)
+                        .load(avatar)
+                        .circleCrop()
+                        .placeholder(R.drawable.ic_perfil)
+                        .into(ivPerfil)
+                }
             }
         }
 
         viewModel.error.observe(viewLifecycleOwner) { errorMsg ->
             Toast.makeText(requireContext(), errorMsg, Toast.LENGTH_SHORT).show()
         }
+    }
 
-        // Cargar foto de perfil
-        val photoUrl = viewModel.getPhotoUrl()
-        if (photoUrl != null) {
-            Glide.with(this)
-                .load(photoUrl)
-                .placeholder(R.drawable.ic_perfil)
-                .into(ivPerfil)
-        }
+    private fun getAvatarUrl(usuario: Usuario?): String {
+        val firestorePhoto = usuario?.us_avatar
+        if (!firestorePhoto.isNullOrEmpty()) return firestorePhoto
+
+        val authPhoto = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.photoUrl?.toString()
+        if (!authPhoto.isNullOrEmpty()) return authPhoto
+
+        val nombre = usuario?.us_nombre ?: "U"
+        val apellidos = usuario?.us_apellidos ?: ""
+        val nombreCompleto = "$nombre $apellidos".trim().replace(" ", "+")
+
+        return "https://ui-avatars.com/api/?name=$nombreCompleto&background=1E60D5&color=fff&size=128&bold=true"
     }
 }

@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_marginEnd="30dp"
-                android:text="Índice de Prioridades"
+                android:text="@string/priority_index"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="22sp"
@@ -55,7 +55,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="ROJO"
+                    android:text="@string/priority_red"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="@color/white"
@@ -63,14 +63,14 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Reanimación."
+                    android:text="@string/priority_red_desc"
                     android:textSize="14sp"
                     android:textColor="@color/white"
                     tools:ignore="HardcodedText" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Atención inmediata"
+                    android:text="@string/priority_red_action"
                     android:textSize="14sp"
                     android:textColor="@color/white"
                     tools:ignore="HardcodedText" />
@@ -98,7 +98,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="NARANJA"
+                    android:text="@string/priority_orange"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="@color/white"
@@ -106,14 +106,14 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Urgente."
+                    android:text="@string/priority_orange_desc"
                     android:textSize="14sp"
                     android:textColor="@color/white"
                     tools:ignore="HardcodedText" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Atención muy pronta"
+                    android:text="@string/priority_orange_action"
                     android:textSize="14sp"
                     android:textColor="@color/white"
                     tools:ignore="HardcodedText" />
@@ -141,7 +141,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="AMARILLO"
+                    android:text="@string/priority_yellow"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="@color/white"
@@ -149,14 +149,14 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Menos Urgente."
+                    android:text="@string/priority_yellow_desc"
                     android:textSize="14sp"
                     android:textColor="@color/white"
                     tools:ignore="HardcodedText" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Atención puede esperar"
+                    android:text="@string/priority_yellow_action"
                     android:textSize="14sp"
                     android:textColor="@color/white"
                     tools:ignore="HardcodedText" />
@@ -184,7 +184,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="VERDE"
+                    android:text="@string/priority_green"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="@color/white"
@@ -192,14 +192,14 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="No urgente."
+                    android:text="@string/priority_green_desc"
                     android:textSize="14sp"
                     android:textColor="@color/white"
                     tools:ignore="HardcodedText" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Atención ambulatoria"
+                    android:text="@string/priority_green_action"
                     android:textSize="14sp"
                     android:textColor="@color/white"
                     tools:ignore="HardcodedText" />
@@ -227,7 +227,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="AZUL"
+                    android:text="@string/priority_blue"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="@color/white"
@@ -235,14 +235,14 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Sin Emergencia"
+                    android:text="@string/priority_blue_desc"
                     android:textSize="14sp"
                     android:textColor="@color/white"
                     tools:ignore="HardcodedText" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Alta administrativa"
+                    android:text="@string/priority_blue_action"
                     android:textSize="14sp"
                     android:textColor="@color/white"
                     tools:ignore="HardcodedText" />

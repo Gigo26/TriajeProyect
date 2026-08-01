@@ -1,5 +1,7 @@
 package com.moviles.triaje.view.ui.fragments
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,12 +10,13 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.button.MaterialButton
 import com.moviles.triaje.R
 import com.moviles.triaje.model.Hospital
 import com.moviles.triaje.view.adapter.HospitalAdapter
@@ -29,6 +32,22 @@ class HospitalesFragment : Fragment() {
     private lateinit var ivRegresar: ImageView
     private lateinit var progressBar: ProgressBar
     private lateinit var tvEmptyState: TextView
+
+    // Manejo de permisos de ubicación
+    private val locationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val fineLocationGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false
+        val coarseLocationGranted = permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false
+
+        if (fineLocationGranted || coarseLocationGranted) {
+            viewModel.cargarHospitalesCercanos()
+        } else {
+            Toast.makeText(requireContext(), "Se requiere permiso de ubicación para ver hospitales cercanos", Toast.LENGTH_LONG).show()
+            tvEmptyState.visibility = View.VISIBLE
+            tvEmptyState.text = "Sin acceso a la ubicación"
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,16 +75,30 @@ class HospitalesFragment : Fragment() {
             findNavController().navigateUp()
         }
 
-        // 6. Cargar datos desde Firebase Firestore
-        viewModel.cargarHospitales()
+        // 6. Verificar permisos y cargar datos
+        checkLocationPermissions()
 
         return view
+    }
+
+    private fun checkLocationPermissions() {
+        when {
+            ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED -> {
+                viewModel.cargarHospitalesCercanos()
+            }
+            else -> {
+                locationPermissionLauncher.launch(
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+                )
+            }
+        }
     }
 
     private fun setupRecyclerView() {
         hospitalAdapter = HospitalAdapter(object : HospitalListener {
             override fun onHospitalClick(hospital: Hospital) {
-                Toast.makeText(requireContext(), "Seleccionado: ${hospital.nombre}", Toast.LENGTH_SHORT).show()
+                // Toast.makeText(requireContext(), "Seleccionado: ${hospital.hos_name}", Toast.LENGTH_SHORT).show()
+                // Aquí podrías abrir detalles o mapas
             }
         })
 

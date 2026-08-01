@@ -11,17 +11,7 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_homeFragment_to_symptomFragment"
-            app:destination="@id/navSymptompsFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/navSymptompsFragment"
-        android:name="com.moviles.triaje.view.ui.fragments.SymptomsFragment"
-        android:label="fragment_symptoms"
-        tools:layout="@layout/fragment_symptoms">
-        <action
-            android:id="@+id/action_symptomsFragment_to_basicQuestionsFragment"
+            android:id="@+id/action_homeFragment_to_basicQuestionsFragment"
             app:destination="@id/navBasicQuestionsFragment" />
     </fragment>
 
@@ -31,6 +21,9 @@
         android:label="fragment_basic_questions"
         tools:layout="@layout/fragment_basic_questions">
         <action
+            android:id="@+id/action_basicQuestionsFragment_to_symptomFragment"
+            app:destination="@id/navSymptompsFragment" />
+        <action
             android:id="@+id/action_basicQuestionsFragment_to_analisisImageFragment"
             app:destination="@id/navImageAnalysisFragment" />
         <action
@@ -39,6 +32,19 @@
         <action
             android:id="@+id/action_basicQuestionsFragment_to_fragmentResult"
             app:destination="@id/navResultFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navSymptompsFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.SymptomsFragment"
+        android:label="fragment_symptoms"
+        tools:layout="@layout/fragment_symptoms">
+        <action
+            android:id="@+id/action_symptomsFragment_to_analisisImageFragment"
+            app:destination="@id/navImageAnalysisFragment" />
+        <action
+            android:id="@+id/action_symptomsFragment_to_symptompsQuestionFragment"
+            app:destination="@id/navSymptompsQuestionFragment" />
     </fragment>
 
     <fragment

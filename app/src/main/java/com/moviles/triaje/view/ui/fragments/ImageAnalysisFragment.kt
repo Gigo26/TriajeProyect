@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.moviles.triaje.R
 import com.moviles.triaje.model.Sintoma
 import com.moviles.triaje.viewmodel.ImageAnalysisViewModel
@@ -74,11 +75,14 @@ class ImageAnalysisFragment : Fragment() {
             if (uri != null) {
                 ivFotoLesion.setPadding(0, 0, 0, 0) // Quitamos el padding del icono por defecto
                 ivFotoLesion.setImageURI(uri)
+            }
+        }
 
-                // Una vez cargada la foto, avanzamos automáticamente tras un pequeño delay
-                view.postDelayed({
-                    irAlCuestionario(uri.toString())
-                }, 800)
+        // 4.1 Observar resultados de la IA
+        viewModel.analysisResult.observe(viewLifecycleOwner) { result ->
+            if (result != null) {
+                val recommendation = viewModel.recommendation.value ?: ""
+                mostrarResultadoIA(result, recommendation)
             }
         }
 
@@ -107,6 +111,20 @@ class ImageAnalysisFragment : Fragment() {
             file
         )
         takePicture.launch(temporalCameraUri!!)
+    }
+
+    private fun mostrarResultadoIA(result: String, recommendation: String) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Resultado del Análisis")
+            .setMessage("La IA ha detectado: $result\n\nRecomendación: $recommendation")
+            .setPositiveButton("Continuar al Cuestionario") { _, _ ->
+                irAlCuestionario(viewModel.imageUri.value?.toString())
+            }
+            .setNegativeButton("Reintentar") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setCancelable(false)
+            .show()
     }
 
     private fun irAlCuestionario(imagePath: String?) {

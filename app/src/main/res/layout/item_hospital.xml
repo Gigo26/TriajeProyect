@@ -19,7 +19,7 @@
 
         <!-- Imagen 3D del Hospital -->
         <ImageView
-            android:id="@+id/ivHospitalImage"
+            android:id="@+id/ivHospitalIcon"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:scaleType="fitCenter"
@@ -39,7 +39,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ivHospitalImage"
+            app:layout_constraintStart_toEndOf="@id/ivHospitalIcon"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Hospital Regional" />
 
@@ -53,7 +53,7 @@
             android:textColor="#666666"
             android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ivHospitalImage"
+            app:layout_constraintStart_toEndOf="@id/ivHospitalIcon"
             app:layout_constraintTop_toBottomOf="@id/tvHospitalName"
             tools:text="2.3 KM" />
 
@@ -67,7 +67,7 @@
             android:textColor="#666666"
             android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ivHospitalImage"
+            app:layout_constraintStart_toEndOf="@id/ivHospitalIcon"
             app:layout_constraintTop_toBottomOf="@id/tvHospitalDistance"
             tools:text="Av. Principal 123" />
 
@@ -80,7 +80,7 @@
             android:layout_marginTop="8dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            app:layout_constraintStart_toEndOf="@id/ivHospitalImage"
+            app:layout_constraintStart_toEndOf="@id/ivHospitalIcon"
             app:layout_constraintTop_toBottomOf="@id/tvHospitalAddress">
 
             <ImageView

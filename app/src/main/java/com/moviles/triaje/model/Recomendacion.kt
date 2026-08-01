@@ -4,5 +4,7 @@ import java.io.Serializable
 
 data class Recomendacion (
     val step: Int = 0,
-    val recomendacion: String = ""
+    val titulo: String = "",
+    val recomendacion: String = "",
+    val iconResId: Int = 0
 ) : Serializable

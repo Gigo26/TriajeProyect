@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.moviles.triaje.R
 import com.moviles.triaje.utils.PreferenceManager
+import com.moviles.triaje.utils.TranslationManager
 import com.moviles.triaje.viewmodel.MainViewModel
 import java.util.Locale
 
@@ -33,6 +34,17 @@ class MainActivity : AppCompatActivity() {
 
         // Aplicar Idioma
         setAppLocale(prefManager.language)
+
+        // Inicializar Traductor si el idioma es Inglés
+        if (prefManager.language == "en") {
+            TranslationManager.init(this) { success ->
+                if (success) {
+                    android.util.Log.d("TRADUCCION", "Modelo de traducción descargado con éxito")
+                } else {
+                    android.util.Log.e("TRADUCCION", "Error al descargar el modelo de traducción")
+                }
+            }
+        }
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -78,20 +90,37 @@ class MainActivity : AppCompatActivity() {
     private fun observarUsuario() {
         viewModel.usuario.observe(this) { usuario ->
             usuario?.let {
-                val tvWelcome = findViewById<android.widget.TextView>(R.id.tvWelcomeUser)
-                tvWelcome.text = "Hola, ${viewModel.getNombreFormateado(it)}"
+                val tvWelcome = findViewById<android.widget.TextView>(R.id.tvGreeting)
+                tvWelcome.text = getString(R.string.hello_user, viewModel.getNombreFormateado(it))
 
                 // Cargar foto de perfil
                 val ivAvatar = findViewById<android.widget.ImageView>(R.id.ivUserAvatar)
-                val photoUrl = viewModel.getAvatarUrl(it)
-                if (photoUrl != null) {
+                val avatar = viewModel.getAvatarUrl(it)
+                
+                if (avatar.startsWith("data:image")) {
+                    try {
+                        val base64String = avatar.substringAfter(",")
+                        val imageBytes = android.util.Base64.decode(base64String, android.util.Base64.DEFAULT)
+                        val bitmap = android.graphics.BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                        ivAvatar.setImageBitmap(bitmap)
+                        // Opcional: Aplicar recorte circular al bitmap si el XML no lo hace
+                        // (puedes usar un ShapeableImageView en el XML para facilitar esto)
+                    } catch (e: Exception) {
+                        ivAvatar.setImageResource(R.drawable.ic_adulto)
+                    }
+                } else {
                     Glide.with(this)
-                        .load(photoUrl)
+                        .load(avatar)
                         .circleCrop()
                         .placeholder(R.drawable.ic_adulto)
                         .into(ivAvatar)
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        TranslationManager.close()
     }
 }

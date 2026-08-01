@@ -17,11 +17,13 @@ import com.google.android.material.button.MaterialButton
 import com.moviles.triaje.R
 import com.moviles.triaje.view.ui.activities.IntroActivity
 import com.moviles.triaje.viewmodel.PerfilViewModel
+import com.moviles.triaje.viewmodel.VerInformacionViewModel
 
 // Pasamos el layout directamente al constructor
 class PerfilFragment : Fragment() {
 
-    private lateinit var viewModel: PerfilViewModel
+    private lateinit var perfilViewModel: PerfilViewModel
+    private lateinit var verInformacionViewModel: VerInformacionViewModel
     private lateinit var tvNombrePerfil: TextView
     private lateinit var tvCorreoPerfil: TextView
     private lateinit var ivAvatarPerfil: ImageView
@@ -33,19 +35,23 @@ class PerfilFragment : Fragment() {
     private lateinit var btnCerrarSesion: MaterialButton
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_perfil, container, false)
+        val view = inflater.inflate(R.layout.fragment_perfil, container, false)
+        verInformacionViewModel = ViewModelProvider(this)[VerInformacionViewModel::class.java]
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this)[PerfilViewModel::class.java]
+        perfilViewModel = ViewModelProvider(this)[PerfilViewModel::class.java]
 
         initViews(view)
         observarDatos()
+        setupObservers()
+        verInformacionViewModel.cargarDatosUsuario()
         setupClickListeners()
 
-        viewModel.cargarDatosUsuario()
+        perfilViewModel.cargarDatosUsuario()
     }
 
     private fun initViews(view: View) {
@@ -61,13 +67,13 @@ class PerfilFragment : Fragment() {
     }
 
     private fun observarDatos() {
-        viewModel.usuario.observe(viewLifecycleOwner) { usuario ->
+        perfilViewModel.usuario.observe(viewLifecycleOwner) { usuario ->
             usuario?.let {
-                tvNombrePerfil.text = viewModel.getNombreCompletoFormateado(it)
+                tvNombrePerfil.text = perfilViewModel.getNombreCompletoFormateado(it)
                 tvCorreoPerfil.text = it.us_email
 
                 // Cargar foto de perfil
-                val photoUrl = viewModel.getAvatarUrl(it)
+                val photoUrl = perfilViewModel.getAvatarUrl(it)
                 if (photoUrl != null) {
                     Glide.with(this)
                         .load(photoUrl)
@@ -77,6 +83,23 @@ class PerfilFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun setupObservers() {
+        verInformacionViewModel.usuario.observe(viewLifecycleOwner) { usuario ->
+            usuario?.let {
+                tvNombrePerfil.text = "${it.us_nombre} ${it.us_apellidos}"
+                tvCorreoPerfil.text = it.us_email
+            }
+        }
+
+        // Cargar foto de perfil
+        val photoUrl = verInformacionViewModel.getPhotoUrl()
+        Glide.with(this)
+            .load(photoUrl)
+            .placeholder(R.drawable.ic_perfil)
+            .error(R.drawable.ic_perfil)
+            .into(ivAvatarPerfil)
     }
 
     private fun setupClickListeners() {
@@ -93,7 +116,6 @@ class PerfilFragment : Fragment() {
             findNavController().navigate(R.id.action_perfilFragment_to_notificacionesFragment)
         }
 
-        // AQUÍ ESTÁ LA MAGIA DE LA NAVEGACIÓN
         cvInfoApp.setOnClickListener {
             findNavController().navigate(R.id.action_perfilFragment_to_infoAppFragment)
         }
@@ -104,7 +126,7 @@ class PerfilFragment : Fragment() {
     }
 
     private fun cerrarSesion() {
-        viewModel.cerrarSesion()
+        perfilViewModel.cerrarSesion()
         
         val intent = Intent(requireContext(), IntroActivity::class.java)
         intent.putExtra("START_AT_LOGIN", true)

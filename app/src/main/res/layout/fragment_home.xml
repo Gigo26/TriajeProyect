@@ -28,22 +28,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="¿Quién necesita ayuda?"
+                android:text="@string/who_needs_help"
                 android:textSize="26sp"
                 android:gravity="center"
                 android:textStyle="bold"
-                android:textColor="@color/black"
-                tools:ignore="HardcodedText"/>
+                android:textColor="@color/black" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="Seleccione la opción que mejor lo describe."
+                android:text="@string/select_option_desc"
                 android:textSize="16sp"
                 android:textColor="@color/black"
-                android:gravity="center"
-                tools:ignore="HardcodedText"/>
+                android:gravity="center" />
 
             <!-- CARD NIÑO -->
             <com.google.android.material.card.MaterialCardView
@@ -77,19 +75,17 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Niño / Niña"
+                            android:text="@string/child"
                             android:textSize="22sp"
                             android:textColor="@color/black"
-                            android:gravity="center"
-                            tools:ignore="HardcodedText"/>
+                            android:gravity="center" />
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="(0 - 12 años)"
+                            android:text="@string/child_age"
                             android:textColor="#454141"
                             android:textSize="14sp"
-                            android:gravity="center"
-                            tools:ignore="HardcodedText"/>
+                            android:gravity="center" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -126,19 +122,17 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Adulto"
+                            android:text="@string/adult"
                             android:textSize="22sp"
                             android:textColor="@color/black"
-                            android:gravity="center"
-                            tools:ignore="HardcodedText"/>
+                            android:gravity="center" />
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="(13-59 años)"
+                            android:text="@string/adult_age"
                             android:textColor="#454141"
                             android:textSize="14sp"
-                            android:gravity="center"
-                            tools:ignore="HardcodedText"/>
+                            android:gravity="center" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -175,19 +169,17 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Adulto Mayor"
+                            android:text="@string/senior"
                             android:textColor="@color/black"
                             android:textSize="22sp"
-                            android:gravity="center"
-                            tools:ignore="HardcodedText"/>
+                            android:gravity="center" />
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="(60 años a más)"
+                            android:text="@string/senior_age"
                             android:textColor="#454141"
                             android:textSize="14sp"
-                            android:gravity="center"
-                            tools:ignore="HardcodedText"/>
+                            android:gravity="center" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -224,19 +216,17 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Gestante"
+                            android:text="@string/pregnant"
                             android:textColor="@color/black"
                             android:textSize="22sp"
-                            android:gravity="center"
-                            tools:ignore="HardcodedText"/>
+                            android:gravity="center" />
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="(Embarazada)"
+                            android:text="@string/pregnant_desc"
                             android:textColor="#454141"
                             android:textSize="14sp"
-                            android:gravity="center"
-                            tools:ignore="HardcodedText"/>
+                            android:gravity="center" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -250,7 +240,7 @@
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_margin="20dp"
-        android:text="Continuar"
+        android:text="@string/continue_button"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/white"
@@ -259,7 +249,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_max="320dp"
-        tools:ignore="HardcodedText" />
+        app:layout_constraintWidth_max="320dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

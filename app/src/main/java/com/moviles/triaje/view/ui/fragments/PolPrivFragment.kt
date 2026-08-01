@@ -34,11 +34,18 @@ class PolPrivFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        // Observamos los términos y actualizamos el texto
-        viewModel.terminosApp.observe(viewLifecycleOwner) { politicas ->
-            // Reemplazamos el texto literal "\n" por un salto de línea real de programación
-            val textoFormateado = politicas.replace("\\n", "\n")
-            tvPoliticasPrivacidad.text = textoFormateado
+        // Observamos las políticas y actualizamos el texto
+        viewModel.politicasApp.observe(viewLifecycleOwner) { politicas ->
+            // 1. Limpiamos artefactos de traducción de forma agresiva e insensible a mayúsculas
+            val textoLimpio = politicas
+                .replace(Regex("\\\\[nN]"), "\n")      // \n o \N (sin espacio)
+                .replace(Regex("\\\\ [nN]"), "\n")     // \ n o \ N (con espacio)
+                .replace(Regex("//[nN]"), "\n")        // //n o //N
+                .replace(Regex("\\\\ [nN][a-zA-Z]"), "\n") // Casos raros como \ NL o \ Nt
+                .replace("\\n", "\n")
+                .replace("\\\\n", "\n")
+            
+            tvPoliticasPrivacidad.text = textoLimpio.trim()
         }
 
         // Ejecutamos la consulta a Firestore

@@ -2,10 +2,10 @@ package com.moviles.triaje.network
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
-import com.moviles.triaje.model.Question
-import com.moviles.triaje.model.Usuario
-import com.moviles.triaje.model.Sintoma
 import com.moviles.triaje.model.Hospital
+import com.moviles.triaje.model.Pregunta
+import com.moviles.triaje.model.Sintoma
+import com.moviles.triaje.model.Usuario
 
 class FirestoreService {
 
@@ -80,6 +80,21 @@ class FirestoreService {
             }
     }
 
+    // GUARDAR HOSPITAL: Persistir hospitales (Manual o descubiertos)
+    fun guardarHospital(hospital: Hospital, callback: Callback<Boolean>) {
+        val docRef = if (hospital.id.isNotEmpty()) {
+            firebaseFirestore.collection("hospitales").document(hospital.id)
+        } else {
+            firebaseFirestore.collection("hospitales").document()
+        }
+
+        hospital.id = docRef.id
+
+        docRef.set(hospital)
+            .addOnSuccessListener { callback.onSuccess(true) }
+            .addOnFailureListener { exception -> callback.onFailed(exception) }
+    }
+
     // ACTUALIZAR AVATAR: Guarda el link de la foto en el documento del usuario
     fun actualizarAvatar(uid: String, avatarUrl: String, callback: Callback<Boolean>) {
         firebaseFirestore.collection("usuarios")
@@ -99,8 +114,8 @@ class FirestoreService {
             .addOnSuccessListener { result ->
                 val listaSintomas = mutableListOf<Sintoma>()
                 for (document in result) {
-                    val sintoma = document.toObject(Sintoma::class.java)?.copy(id = document.id)
-                    if (sintoma != null) listaSintomas.add(sintoma)
+                    val sintoma = document.toObject(Sintoma::class.java).copy(id = document.id)
+                    listaSintomas.add(sintoma)
                 }
                 callback.onSuccess(listaSintomas)
             }
@@ -109,25 +124,30 @@ class FirestoreService {
             }
     }
 
-    fun obtenerPreguntasPorSintoma(sintomaId: String, callback: Callback<List<Question>>) {
+    fun obtenerPreguntasPorSintoma(sintomaId: String, callback: Callback<List<Pregunta>>) {
         firebaseFirestore.collection("sintomas")
             .document(sintomaId)
             .collection("preguntas")
             .get()
             .addOnSuccessListener { result ->
-                val listaPreguntas = mutableListOf<Question>()
+                val listaPreguntas = mutableListOf<Pregunta>()
                 var idContador = 1
 
                 for (document in result) {
                     // Mapeamos manualmente los campos de Firestore a tu modelo Question
                     val textoPregunta = document.getString("pr_pregunta") ?: ""
+                    val textoPreguntaEn = document.getString("pr_pregunta_en")
                     @Suppress("UNCHECKED_CAST")
                     val opciones = document.get("valores_opciones") as? List<String> ?: emptyList()
+                    @Suppress("UNCHECKED_CAST")
+                    val opcionesEn = document.get("valores_opciones_en") as? List<String>
 
-                    val pregunta = Question(
+                    val pregunta = Pregunta(
                         id = idContador++, // ID numérico incremental para el control del RadioGroup
                         text = textoPregunta,
-                        options = opciones
+                        text_en = textoPreguntaEn,
+                        options = opciones,
+                        options_en = opcionesEn
                     )
                     listaPreguntas.add(pregunta)
                 }
@@ -138,14 +158,23 @@ class FirestoreService {
             }
     }
 
+    /**
+     * Obtiene todos los hospitales guardados en Firestore.
+     */
     fun obtenerHospitales(callback: Callback<List<Hospital>>) {
         firebaseFirestore.collection("hospitales")
             .get()
             .addOnSuccessListener { result ->
                 val listaHospitales = mutableListOf<Hospital>()
                 for (document in result) {
-                    val hospital = document.toObject(Hospital::class.java)?.copy(id = document.id)
-                    if (hospital != null) listaHospitales.add(hospital)
+                    try {
+                        val hospital = document.toObject(Hospital::class.java).apply { 
+                            id = document.id 
+                        }
+                        listaHospitales.add(hospital)
+                    } catch (e: Exception) {
+                        android.util.Log.e("HOSPITAL_DEBUG", "Error mapeando hospital ${document.id}", e)
+                    }
                 }
                 callback.onSuccess(listaHospitales)
             }

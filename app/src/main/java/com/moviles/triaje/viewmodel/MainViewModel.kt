@@ -63,22 +63,21 @@ class MainViewModel : ViewModel() {
         return firestoreService.obtenerNombreFormateado(usuario)
     }
 
-    // MODIFICADO: Genera un avatar con iniciales si el usuario no tiene foto
+    // MODIFICADO: Genera un avatar con iniciales si el usuario no tiene foto, soporta Base64
     fun getAvatarUrl(usuario: Usuario?): String {
-        // 1. Intentamos obtener la foto de Google
-        val authPhoto = firebaseAuth.currentUser?.photoUrl?.toString()
-        if (!authPhoto.isNullOrEmpty()) return authPhoto
-
-        // 2. Intentamos obtener la foto de Firestore
+        // 1. Prioridad: Avatar en Firestore (puede ser Base64 o URL)
         val firestorePhoto = usuario?.us_avatar
         if (!firestorePhoto.isNullOrEmpty()) return firestorePhoto
 
-        // 3. Fallback: Generar avatar con iniciales usando UI-Avatars
+        // 2. Foto de Firebase Auth (Google/etc)
+        val authPhoto = firebaseAuth.currentUser?.photoUrl?.toString()
+        if (!authPhoto.isNullOrEmpty()) return authPhoto
+
+        // 3. Fallback: Iniciales
         val nombre = usuario?.us_nombre ?: "U"
         val apellidos = usuario?.us_apellidos ?: ""
         val nombreCompleto = "$nombre $apellidos".trim().replace(" ", "+")
 
-        // Retorna una imagen con el color primario de tu app (#1E60D5) de fondo
         return "https://ui-avatars.com/api/?name=$nombreCompleto&background=1E60D5&color=fff&size=128&bold=true"
     }
 }

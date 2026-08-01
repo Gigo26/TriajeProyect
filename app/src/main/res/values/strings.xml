@@ -11,6 +11,12 @@
     <string name="notifications">Notificaciones</string>
     <string name="about_app">Acerca de la App</string>
     <string name="logout">Cerrar Sesión</string>
+    <string name="hello_user">Hola, %1$s</string>
+    <string name="nearby_hospitals">Hospitales Cercanos</string>
+    <string name="consultation_history">Historial de Consultas</string>
+    <string name="select_consultation_desc">Seleccionar la consulta para ver información.</string>
+    <string name="symptoms_title">¿Qué síntomas tiene?</string>
+    <string name="select_symptoms_desc">Seleccione una o más opciones.</string>
     <string name="personal_info">Información Personal</string>
     <string name="full_name">Nombre Completo</string>
     <string name="surnames">Apellidos</string>
@@ -27,4 +33,138 @@
     <string name="notif_updates">Actualizaciones de la App</string>
     <string name="notif_messages">Nuevos Mensajes</string>
     <string name="notif_offers">Ofertas y Promociones</string>
+
+    <!-- Home -->
+    <string name="who_needs_help">¿Quién necesita ayuda?</string>
+    <string name="select_option_desc">Seleccione la opción que mejor lo describe.</string>
+    <string name="child">Niño / Niña</string>
+    <string name="child_age">(0 - 12 años)</string>
+    <string name="adult">Adulto</string>
+    <string name="adult_age">(13 - 59 años)</string>
+    <string name="senior">Adulto Mayor</string>
+    <string name="senior_age">(60 años a más)</string>
+    <string name="pregnant">Gestante</string>
+    <string name="pregnant_desc">(Embarazada)</string>
+    <string name="continue_button">Continuar</string>
+
+    <!-- Login -->
+    <string name="welcome_back">¡Bienvenido de nuevo!</string>
+    <string name="login_desc">Ingresa a tu cuenta para continuar.</string>
+    <string name="forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="login">Iniciar Sesión</string>
+    <string name="or_login_with">o continua con</string>
+    <string name="continue_google">Continuar con Google</string>
+    <string name="continue_apple">Continuar con Apple</string>
+    <string name="no_account">¿No posees cuenta?</string>
+    <string name="register_here">Registrate Aquí</string>
+    <!-- Register -->
+    <string name="create_account">Crear Cuenta</string>
+    <string name="enter_dni">Ingrese su DNI</string>
+    <string name="search">Buscar</string>
+    <string name="enter_full_name">Ingrese nombres y apellidos completos</string>
+    <string name="enter_email">Ingrese su correo</string>
+    <string name="enter_password">Ingrese su contraseña</string>
+    <string name="confirm_your_password">Confirme su contraseña</string>
+    <string name="register">Registrarse</string>
+    <string name="already_have_account">¿Ya tienes una cuenta?</string>
+    <!-- Basic Questions -->
+    <string name="primary_evaluation">Evaluación Primaria</string>
+    <string name="basic_questions_desc">Responda estas 3 preguntas para validar el estado de la persona a evaluar.</string>
+    <string name="is_conscious">¿La persona responde, habla o está despierta?</string>
+    <string name="breathes_normally">¿Siente ahogo severo o le cuesta mucho trabajo respirar?</string>
+    <string name="has_bleeding">¿Presenta sangrado profuso que no se detiene al presionar?</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+
+    <!-- Image Analysis -->
+    <string name="injury_analysis">Análisis de la Lesión</string>
+    <string name="image_analysis_desc">Tome una foto clara de la zona afectada para que nuestro modelo de IA ayude a predecir la gravedad del golpe o herida.</string>
+    <string name="take_injury_photo">Tomar Foto de Lesión</string>
+    <string name="select_from_gallery">Seleccionar de Galería</string>
+    <string name="skip_step">Omitir este paso</string>
+
+    <!-- Symptoms Questions -->
+    <string name="answer_following_questions">Responda las siguientes preguntas</string>
+    <string name="symptoms_questions_desc">Seleccione la opción más cercana a su sentir del dolor.</string>
+    <string name="no_pending_questions">No hay preguntas pendientes para estos síntomas.</string>
+    <string name="next">Siguiente</string>
+    <!-- Welcome Fragment -->
+    <string name="welcome_to">Bienvenido a</string>
+    <string name="welcome_desc">Una herramienta para evaluar y priorizar la atención medica de forma rapida y efectiva</string>
+
+    <!-- Intro Fragment -->
+    <string name="intro_title">Evaluamos. Orientamos. Salvamos vidas</string>
+    <string name="intro_desc">Esta app es de uso comunitario y no reemplaza la atención médica</string>
+    <string name="start_button">Comenzar</string>
+
+    <!-- Forgot Password Dialog -->
+    <string name="recover_password">Recuperar Contraseña</string>
+    <string name="recover_access_desc">¿Cómo deseas recuperar tu acceso?</string>
+    <string name="send_email_link">Enviar enlace al Correo</string>
+    <string name="send_sms_code">Enviar código por SMS</string>
+    <string name="phone_hint">Número de celular</string>
+    <string name="send_sms_button">Enviar SMS</string>
+    <string name="sms_code_hint">Código de 6 dígitos</string>
+    <string name="verify_and_login">Verificar e Iniciar Sesión</string>
+    <string name="cancel">Cancelar</string>
+    <!-- App Info & Legal -->
+    <string name="app_info">Información de la Aplicación</string>
+    <string name="app_version">Versión</string>
+    <string name="app_description">Aplicación diseñada para apoyar al personal comunitario en la evaluación y priorización de pacientes mediante metodologías de triaje reconocidas</string>
+    <string name="quick_guide">Guía rápida de uso</string>
+    <string name="priority_index">Índice de prioridades</string>
+    <string name="terms_conditions">Términos y Condiciones</string>
+    <string name="privacy_policy">Políticas y Privacidad</string>
+
+    <!-- Educational Info (Guia) -->
+    <string name="educational_info">Información Educativa</string>
+    <string name="first_aid_guide">Guía de 1eros A</string>
+    <string name="vital_signs">Signos Vitales</string>
+    <string name="emergencies">Emergencias</string>
+    <string name="prevention">Prevención</string>
+    <string name="medications">Medicamentos</string>
+    <string name="contacts">Contactos</string>
+
+    <!-- Priority Levels -->
+    <string name="priority_red">ROJO</string>
+    <string name="priority_red_desc">Reanimación.</string>
+    <string name="priority_red_action">Atención inmediata</string>
+
+    <string name="priority_orange">NARANJA</string>
+    <string name="priority_orange_desc">Urgente.</string>
+    <string name="priority_orange_action">Atención muy pronta</string>
+
+    <string name="priority_yellow">AMARILLO</string>
+    <string name="priority_yellow_desc">Menos Urgente.</string>
+    <string name="priority_yellow_action">Atención puede esperar</string>
+
+    <string name="priority_green">VERDE</string>
+    <string name="priority_green_desc">No urgente.</string>
+    <string name="priority_green_action">Atención ambulatoria</string>
+
+    <string name="priority_blue">AZUL</string>
+    <string name="priority_blue_desc">Sin Emergencia</string>
+    <string name="priority_blue_action">Alta administrativa</string>
+
+    <string name="loading_content">Cargando contenido...</string>
+    <string name="error_loading_content">No se pudo cargar el contenido.</string>
+
+    <!-- Guide Dialogs Detail -->
+    <string name="guide_1st_aid_title">Guía de 1eros A</string>
+    <string name="guide_1st_aid_info">Protocolo de Actuación:\n1. Evaluación primaria (ABCDE).\n2. Asegurar vía aérea y control de columna cervical.\n3. Evaluación de ventilación y circulación.\n4. Identificación de déficit neurológico.\n*Priorice el soporte vital básico ante colapso.*</string>
+
+    <string name="guide_vital_signs_title">Signos Vitales</string>
+    <string name="guide_vital_signs_info">Valores de referencia (Adulto):\n• Presión Arterial: 120/80 mmHg (Normal).\n• Frecuencia Cardíaca: 60-100 lpm.\n• Frecuencia Respiratoria: 12-20 rpm.\n• Temperatura: 36.5°C - 37.5°C.\n• SatO2: >95% aire ambiente.</string>
+
+    <string name="guide_emergency_triage_title">Triaje - Priorización</string>
+    <string name="guide_emergency_triage_info">Clasificación de Emergencia:\n• Rojo: Reanimación inmediata.\n• Naranja: Muy urgente (10 min).\n• Amarillo: Urgente (60 min).\n• Verde: Menos urgente.\n• Azul: No urgente (atención diferida).</string>
+
+    <string name="guide_prevention_title">Protocolos Prevención</string>
+    <string name="guide_prevention_info">Normas de Bioseguridad:\n1. Higiene de manos (técnica OMS).\n2. Uso estricto de EPP (guantes, mascarilla, mandil).\n3. Clasificación de residuos (Bolsa roja para biocontaminados).\n4. Desinfección de superficies tras cada paciente.</string>
+
+    <string name="guide_meds_safety_title">Seguridad Farmacológica</string>
+    <string name="guide_meds_safety_info">Regla de los 5 Correctos:\n1. Paciente correcto.\n2. Medicamento correcto.\n3. Dosis correcta.\n4. Vía de administración correcta.\n5. Hora correcta.\n*Verificar siempre alergias previas en historia clínica.*</string>
+
+    <string name="guide_contacts_title">Directorio Interno</string>
+    <string name="guide_contacts_info">Unidades de Emergencia:\n• Médico de Guardia: #501\n• Enfermería Triaje: #502\n• Laboratorio Clínico: #505\n• Banco de Sangre: #508\n• Admisión/Seguridad: #500</string>
 </resources>

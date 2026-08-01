@@ -72,22 +72,12 @@ class BasicQuestionsFragment : Fragment() {
                         proximosPasosBundle
                     )
                 } else {
-                    // El paciente está estable. Evaluamos la naturaleza del síntoma:
-                    if (viewModel.requiereAnalisisVisual()) {
-                        // 📸 FLUJO 1: Requiere Imagen -> Va primero a la cámara y luego irá a las preguntas
-                        Toast.makeText(requireContext(), "Estable. Procediendo al análisis visual.", Toast.LENGTH_SHORT).show()
-                        findNavController().navigate(
-                            R.id.action_basicQuestionsFragment_to_analisisImageFragment,
-                            proximosPasosBundle
-                        )
-                    } else {
-                        // 📝 FLUJO 2: Síntomas internos -> Salta la cámara y va directo al cuestionario dinámico
-                        Toast.makeText(requireContext(), "Síntoma interno. Pasando directo al cuestionario.", Toast.LENGTH_SHORT).show()
-                        findNavController().navigate(
-                            R.id.action_basicQuestionsFragment_to_symptompsQuestionFragment,
-                            proximosPasosBundle
-                        )
-                    }
+                    // El paciente está estable -> Ir a Selección de Síntomas
+                    Toast.makeText(requireContext(), "Paciente estable. Seleccione los síntomas.", Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(
+                        R.id.action_basicQuestionsFragment_to_symptomFragment,
+                        proximosPasosBundle
+                    )
                 }
 
             } else {

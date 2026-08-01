@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.moviles.triaje.R
 import com.moviles.triaje.model.Sintoma
+import com.moviles.triaje.utils.PreferenceManager
+import com.moviles.triaje.utils.TranslationManager
 
 class SintomasAdapter(
     val symptomListener: SymptomListener
@@ -29,11 +31,24 @@ class SintomasAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val sintoma = listSintomas[position]
+        val context = holder.itemView.context
+        val prefManager = PreferenceManager(context)
 
-        holder.tvSintomaDescripcion.text = sintoma.sin_description
+        // Lógica de traducción dinámica (Prioriza campo en BD, si no hay usa ML Kit)
+        if (prefManager.language == "en") {
+            if (!sintoma.sin_description_en.isNullOrBlank()) {
+                holder.tvSintomaDescripcion.text = sintoma.sin_description_en
+            } else {
+                // Traducción Automática por código
+                TranslationManager.translate(sintoma.sin_description) { translated ->
+                    holder.tvSintomaDescripcion.text = translated
+                }
+            }
+        } else {
+            holder.tvSintomaDescripcion.text = sintoma.sin_description
+        }
 
         // Carga dinámica de la imagen desde los recursos locales drawable
-        val context = holder.itemView.context
         val resourceId = context.resources.getIdentifier(
             sintoma.sin_image, "drawable", context.packageName
         )

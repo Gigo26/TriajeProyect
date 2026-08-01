@@ -1,12 +1,20 @@
 package com.moviles.triaje.viewmodel
 
+import android.app.Application
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.moviles.triaje.ml.WoundClassifier
 import com.moviles.triaje.model.Sintoma
 
-class ImageAnalysisViewModel : ViewModel() {
+class ImageAnalysisViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val classifier = WoundClassifier(application)
 
     private val _sintomasRecuperados = MutableLiveData<List<Sintoma>>()
     val sintomasRecuperados: LiveData<List<Sintoma>> get() = _sintomasRecuperados
@@ -14,11 +22,59 @@ class ImageAnalysisViewModel : ViewModel() {
     private val _imageUri = MutableLiveData<Uri?>()
     val imageUri: LiveData<Uri?> get() = _imageUri
 
+    private val _analysisResult = MutableLiveData<String?>()
+    val analysisResult: LiveData<String?> get() = _analysisResult
+
+    private val _recommendation = MutableLiveData<String?>()
+    val recommendation: LiveData<String?> get() = _recommendation
+
     fun guardarSintomas(lista: List<Sintoma>) {
         _sintomasRecuperados.value = lista
     }
 
     fun setImageUri(uri: Uri?) {
         _imageUri.value = uri
+        if (uri != null) {
+            analyzeImage(uri)
+        }
+    }
+
+    private fun analyzeImage(uri: Uri) {
+        val bitmap = uriToBitmap(uri)
+        if (bitmap != null) {
+            val result = classifier.classify(bitmap)
+            _analysisResult.value = result
+            _recommendation.value = getRecommendation(result)
+        } else {
+            _analysisResult.value = "Error al procesar imagen"
+        }
+    }
+
+    private fun uriToBitmap(uri: Uri): Bitmap? {
+        return try {
+            val context = getApplication<Application>()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                val source = ImageDecoder.createSource(context.contentResolver, uri)
+                ImageDecoder.decodeBitmap(source) { decoder, _, _ ->
+                    decoder.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
+                    decoder.isMutableRequired = true
+                }
+            } else {
+                MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    private fun getRecommendation(result: String): String {
+        return when (result) {
+            "Burns" -> "Aplicar agua fría (no helada) por 10 minutos. No reventar ampollas."
+            "Stab_wound", "Cut", "Laceration" -> "Presionar con una gasa limpia para detener el sangrado. No retirar objetos clavados."
+            "Bruises", "Abrasions" -> "Lavar la zona y aplicar compresas frías para reducir inflamación."
+            "Ingrown_nails" -> "Remojar en agua tibia y evitar calzado ajustado. Acudir a podología."
+            else -> "Mantenga la zona limpia y observe si hay cambios en el color o temperatura."
+        }
     }
 }

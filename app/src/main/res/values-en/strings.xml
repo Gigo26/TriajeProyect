@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Triaje+</string>
     <string name="restarting_app">Restarting to apply changes...</string>
     <string name="preferences">Preferences</string>
@@ -11,6 +11,12 @@
     <string name="notifications">Notifications</string>
     <string name="about_app">About App</string>
     <string name="logout">Logout</string>
+    <string name="hello_user">Hello, %1$s</string>
+    <string name="nearby_hospitals">Nearby Hospitals</string>
+    <string name="consultation_history">Consultation History</string>
+    <string name="select_consultation_desc">Select a consultation to view details.</string>
+    <string name="symptoms_title">What symptoms do you have?</string>
+    <string name="select_symptoms_desc">Select one or more options.</string>
     <string name="personal_info">Personal Information</string>
     <string name="full_name">Full Name</string>
     <string name="surnames">Surnames</string>
@@ -27,4 +33,142 @@
     <string name="notif_updates">App Updates</string>
     <string name="notif_messages">New Messages</string>
     <string name="notif_offers">Offers and Promotions</string>
+
+    <!-- Home -->
+    <string name="who_needs_help">Who needs help?</string>
+    <string name="select_option_desc">Select the option that best describes you.</string>
+    <string name="child">Boy / Girl</string>
+    <string name="child_age">(0 - 12 years)</string>
+    <string name="adult">Adult</string>
+    <string name="adult_age">(13 - 59 years)</string>
+    <string name="senior">Senior Citizen</string>
+    <string name="senior_age">(60 years and up)</string>
+    <string name="pregnant">Pregnant</string>
+    <string name="pregnant_desc">(Expecting)</string>
+    <string name="continue_button">Continue</string>
+
+    <!-- Login -->
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="login_desc">Sign in to your account to continue.</string>
+    <string name="forgot_password">Forgot your password?</string>
+    <string name="login">Login</string>
+    <string name="or_login_with">or continue with</string>
+    <string name="continue_google">Continue with Google</string>
+    <string name="continue_apple">Continue with Apple</string>
+    <string name="no_account">Don\'t have an account?</string>
+    <string name="register_here">Register here</string>
+
+    <!-- Register -->
+    <string name="create_account">Create Account</string>
+    <string name="enter_dni">Enter your ID (DNI)</string>
+    <string name="search">Search</string>
+    <string name="enter_full_name">Enter full name and surnames</string>
+    <string name="enter_email">Enter your email</string>
+    <string name="enter_password">Enter your password</string>
+    <string name="confirm_your_password">Confirm your password</string>
+    <string name="register">Register</string>
+    <string name="already_have_account">Already have an account?</string>
+
+    <!-- Basic Questions -->
+    <string name="primary_evaluation">Primary Evaluation</string>
+    <string name="basic_questions_desc">Answer these 3 questions to validate the status of the person being evaluated.</string>
+    <string name="is_conscious">Are they conscious?</string>
+    <string name="breathes_normally">Do they breathe normally?</string>
+    <string name="has_bleeding">Is there profuse bleeding that doesn\'t stop when pressure is applied?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <!-- Image Analysis -->
+    <string name="injury_analysis">Injury Analysis</string>
+    <string name="image_analysis_desc">Take a clear photo of the affected area so our AI model can help predict the severity of the blow or wound.</string>
+    <string name="take_injury_photo">Take Injury Photo</string>
+    <string name="select_from_gallery">Select from Gallery</string>
+    <string name="skip_step">Skip this step</string>
+
+    <!-- Symptoms Questions -->
+    <string name="answer_following_questions">Answer the following questions</string>
+    <string name="symptoms_questions_desc">Select the option closest to your feeling of pain.</string>
+    <string name="no_pending_questions">No pending questions for these symptoms.</string>
+    <string name="next">Next</string>
+
+    <!-- Welcome Fragment -->
+    <string name="welcome_to">Welcome to</string>
+    <string name="welcome_desc">A tool to evaluate and prioritize medical care quickly and effectively</string>
+
+    <!-- Intro Fragment -->
+    <string name="intro_title">We evaluate. We guide. We save lives</string>
+    <string name="intro_desc">This app is for community use and does not replace medical care</string>
+    <string name="start_button">Get Started</string>
+
+    <!-- Forgot Password Dialog -->
+    <string name="recover_password">Recover Password</string>
+    <string name="recover_access_desc">How do you want to recover your access?</string>
+    <string name="send_email_link">Send link to Email</string>
+    <string name="send_sms_code">Send code via SMS</string>
+    <string name="phone_hint">Phone number</string>
+    <string name="send_sms_button">Send SMS</string>
+    <string name="sms_code_hint">6-digit code</string>
+    <string name="verify_and_login">Verify and Log In</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- App Info & Legal -->
+    <string name="app_info">Application Information</string>
+    <string name="app_version">Version</string>
+    <string name="app_description">Application designed to support community personnel in the evaluation and prioritization of patients using recognized triage methodologies</string>
+    <string name="quick_guide">Quick use guide</string>
+    <string name="priority_index">Priority index</string>
+    <string name="terms_conditions">Terms and Conditions</string>
+    <string name="privacy_policy">Privacy Policy</string>
+
+    <!-- Educational Info (Guia) -->
+    <string name="educational_info">Educational Information</string>
+    <string name="first_aid_guide">1st Aid Guide</string>
+    <string name="vital_signs">Vital Signs</string>
+    <string name="emergencies">Emergencies</string>
+    <string name="prevention">Prevention</string>
+    <string name="medications">Medications</string>
+    <string name="contacts">Contacts</string>
+
+    <!-- Priority Levels -->
+    <string name="priority_red">RED</string>
+    <string name="priority_red_desc">Resuscitation.</string>
+    <string name="priority_red_action">Immediate attention</string>
+
+    <string name="priority_orange">ORANGE</string>
+    <string name="priority_orange_desc">Urgent.</string>
+    <string name="priority_orange_action">Very prompt attention</string>
+
+    <string name="priority_yellow">YELLOW</string>
+    <string name="priority_yellow_desc">Less Urgent.</string>
+    <string name="priority_yellow_action">Attention can wait</string>
+
+    <string name="priority_green">GREEN</string>
+    <string name="priority_green_desc">Non-urgent.</string>
+    <string name="priority_green_action">Ambulatory care</string>
+
+    <string name="priority_blue">BLUE</string>
+    <string name="priority_blue_desc">No Emergency</string>
+    <string name="priority_blue_action">Administrative discharge</string>
+
+    <string name="loading_content">Loading content...</string>
+    <string name="error_loading_content">Could not load content.</string>
+
+    <!-- Guide Dialogs Detail -->
+    <string name="guide_1st_aid_title">1st Aid Guide</string>
+    <string name="guide_1st_aid_info">Action Protocol:\n1. Primary assessment (ABCDE).\n2. Secure airway and cervical spine control.\n3. Assess ventilation and circulation.\n4. Neurological deficit identification.\n*Prioritize basic life support in case of collapse.*</string>
+
+    <string name="guide_vital_signs_title">Vital Signs</string>
+    <string name="guide_vital_signs_info">Reference values (Adult):\n• Blood Pressure: 120/80 mmHg (Normal).\n• Heart Rate: 60-100 bpm.\n• Respiratory Rate: 12-20 rpm.\n• Temperature: 36.5°C - 37.5°C.\n• SatO2: >95% room air.</string>
+
+    <string name="guide_emergency_triage_title">Triage - Prioritization</string>
+    <string name="guide_emergency_triage_info">Emergency Classification:\n• Red: Immediate resuscitation.\n• Orange: Very urgent (10 min).\n• Yellow: Urgent (60 min).\n• Green: Less urgent.\n• Blue: Non-urgent (delayed care).</string>
+
+    <string name="guide_prevention_title">Prevention Protocols</string>
+    <string name="guide_prevention_info">Biosafety Standards:\n1. Hand hygiene (WHO technique).\n2. Strict use of PPE (gloves, mask, gown).\n3. Waste classification (Red bag for biocontaminated).\n4. Surface disinfection after each patient.</string>
+
+    <string name="guide_meds_safety_title">Pharmacological Safety</string>
+    <string name="guide_meds_safety_info">Rule of the 5 Rights:\n1. Right patient.\n2. Right medication.\n3. Right dose.\n4. Right route.\n5. Right time.\n*Always check previous allergies in medical history.*</string>
+
+    <string name="guide_contacts_title">Internal Directory</string>
+    <string name="guide_contacts_info">Emergency Units:\n• On-call Doctor: #501\n• Triage Nursing: #502\n• Clinical Laboratory: #505\n• Banco de Sangre: #508\n• Admission/Security: #500</string>
 </resources>
