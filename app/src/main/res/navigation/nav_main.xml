@@ -203,4 +203,10 @@
         android:label="fragment_historial"
         tools:layout="@layout/fragment_historial" />
 
+    <fragment
+        android:id="@+id/navAuraIAFragment"
+        android:name="com.moviles.triaje.view.ui.fragments.AuraIAFragment"
+        android:label="fragment_aura_ia"
+        tools:layout="@layout/fragment_aura_ia" />
+
 </navigation>

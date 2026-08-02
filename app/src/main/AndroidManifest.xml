@@ -11,9 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Triaje">
 
-        <!-- 1. Tu IntroActivity pasa a ser la Lanzadora principal -->
+        <!-- comienza con SplashScreenActivity  -->
         <activity
-            android:name=".view.ui.activities.IntroActivity"
+            android:name=".view.ui.activities.SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +21,12 @@
             </intent-filter>
         </activity>
 
-        <!-- 2. Tu MainActivity registrada abajo con su ruta correspondiente -->
+        <!-- IntroActivity ahora solo es una actividad secundaria -->
+        <activity
+            android:name=".view.ui.activities.IntroActivity"
+            android:exported="false" />
+
+        <!-- 3. MainActivity registrada -->
         <activity
             android:name=".view.ui.activities.MainActivity"
             android:exported="false" />

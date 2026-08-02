@@ -3,22 +3,53 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/ColorPrimary">
 
-    <!-- El logo oficial de Triaje+ centrado en toda la pantalla -->
     <ImageView
         android:id="@+id/ivLogoSplash"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:src="@drawable/logo_triaje"
-        android:adjustViewBounds="true"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/ic_logo2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.42"
         tools:ignore="ContentDescription" />
+
+    <LinearLayout
+        android:id="@+id/llBrandName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivLogoSplash">
+
+        <!-- letra por letra la anim -->
+        <TextView android:id="@+id/tvCharA" style="@style/SplashLetterStyle" android:text="A" />
+        <TextView android:id="@+id/tvCharU" style="@style/SplashLetterStyle" android:text="U" />
+        <TextView android:id="@+id/tvCharR" style="@style/SplashLetterStyle" android:text="R" />
+        <TextView android:id="@+id/tvCharA2" style="@style/SplashLetterStyle" android:text="A" />
+        <TextView android:id="@+id/tvCharM" style="@style/SplashLetterStyle" android:text="M" />
+        <TextView android:id="@+id/tvCharE" style="@style/SplashLetterStyle" android:text="E" />
+        <TextView android:id="@+id/tvCharD" style="@style/SplashLetterStyle" android:text="D" />
+
+        <TextView
+            android:id="@+id/tvPlus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:text="+"
+            android:textColor="#BC0B0B"
+            android:textSize="46sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

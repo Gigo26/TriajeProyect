@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/ColorPrimary">
 
-    <!-- Este contenedor se encargará de alojar e intercambiar tus fragmentos de introducción -->
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fcvIntroContainer"
         android:name="androidx.navigation.fragment.NavHostFragment"
