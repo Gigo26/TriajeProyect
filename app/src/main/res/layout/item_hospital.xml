@@ -5,23 +5,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="4dp"
+    android:layout_marginHorizontal="12dp"
     android:layout_marginVertical="8dp"
     app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="20dp"
-    app:cardElevation="3dp"
+    app:cardElevation="4dp"
     app:strokeWidth="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="12dp">
 
-        <!-- Imagen 3D del Hospital -->
+        <!-- Imagen del Hospital -->
         <ImageView
             android:id="@+id/ivHospitalIcon"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_hospital"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -29,87 +29,133 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="ContentDescription" />
 
-        <!-- Nombre del Hospital -->
-        <TextView
-            android:id="@+id/tvHospitalName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="14dp"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
+        <!-- Separador Vertical Izquierdo -->
+        <View
+            android:id="@+id/verticalSeparatorLeft"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="12dp"
+            android:background="#DDDDDD"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/ivHospitalIcon"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Hospital Regional" />
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Distancia en KM -->
-        <TextView
-            android:id="@+id/tvHospitalDistance"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="14dp"
-            android:layout_marginTop="2dp"
-            android:textColor="#666666"
-            android:textSize="13sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ivHospitalIcon"
-            app:layout_constraintTop_toBottomOf="@id/tvHospitalName"
-            tools:text="2.3 KM" />
-
-        <!-- Dirección del Hospital -->
-        <TextView
-            android:id="@+id/tvHospitalAddress"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="14dp"
-            android:layout_marginTop="1dp"
-            android:textColor="#666666"
-            android:textSize="13sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ivHospitalIcon"
-            app:layout_constraintTop_toBottomOf="@id/tvHospitalDistance"
-            tools:text="Av. Principal 123" />
-
-        <!-- Contenedor del Auto y Tiempo Estimado -->
+        <!-- Información Central -->
         <LinearLayout
-            android:id="@+id/llTimeContainer"
-            android:layout_width="wrap_content"
+            android:id="@+id/llInfoContainer"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="14dp"
-            android:layout_marginTop="8dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toEndOf="@id/ivHospitalIcon"
-            app:layout_constraintTop_toBottomOf="@id/tvHospitalAddress">
-
-            <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:src="@drawable/ic_car"
-                app:tint="@color/black"
-                tools:ignore="ContentDescription" />
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/verticalSeparatorRight"
+            app:layout_constraintStart_toEndOf="@id/verticalSeparatorLeft"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/tvHospitalTime"
-                android:layout_width="wrap_content"
+                android:id="@+id/tvHospitalName"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                tools:text="Hospital Regional" />
+
+            <TextView
+                android:id="@+id/tvHospitalDistance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="#666666"
                 android:textSize="13sp"
-                tools:text="· 30 min" />
+                tools:text="2.3 KM" />
+
+            <TextView
+                android:id="@+id/tvHospitalAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="#666666"
+                android:textSize="13sp"
+                tools:text="Av. Principal 123" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_car"
+                    app:tint="@color/black"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/tvHospitalTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    tools:text="· 30 min" />
+            </LinearLayout>
         </LinearLayout>
 
-        <!-- Icono de Avance (Flecha/Play a la derecha) -->
-        <ImageView
-            android:id="@+id/ivGoArrow"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:src="@drawable/ic_ir_derecha"
+        <!-- Separador Vertical Derecho -->
+        <View
+            android:id="@+id/verticalSeparatorRight"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="12dp"
+            android:background="#DDDDDD"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/llActionsContainer"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Acciones Derecha -->
+        <LinearLayout
+            android:id="@+id/llActionsContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:tint="@color/black"
-            tools:ignore="ContentDescription" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <!-- Estrella -->
+            <ImageView
+                android:id="@+id/ivHospitalStar"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="4dp"
+                android:src="@drawable/ic_star"
+                app:tint="#D3D3D3"
+                tools:ignore="ContentDescription" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <!-- Flecha ir al diálogo -->
+            <ImageView
+                android:id="@+id/ivGoArrow"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:padding="6dp"
+                android:src="@drawable/ic_ir_derecha"
+                app:tint="@color/black"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

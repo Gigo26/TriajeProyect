@@ -30,11 +30,14 @@
                 android:padding="10dp">
 
                 <!-- 1. Avatar del usuario (Fijo a la izquierda) -->
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/ivUserAvatar"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/ic_adulto"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_perfil"
+                    android:elevation="4dp"
+                    app:shapeAppearanceOverlay="@style/CircleImage"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"

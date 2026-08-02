@@ -235,4 +235,21 @@ class FirestoreService {
 
         return "$nombreFormateado $apellidosFormateados".trim()
     }
+
+    /**
+     * Alterna el estado de favorito de un hospital para el usuario actual.
+     */
+    fun toggleHospitalFavorito(uid: String, hospitalName: String, esFavorito: Boolean, callback: Callback<Boolean>) {
+        val userRef = firebaseFirestore.collection("usuarios").document(uid)
+        
+        val update = if (esFavorito) {
+            com.google.firebase.firestore.FieldValue.arrayUnion(hospitalName)
+        } else {
+            com.google.firebase.firestore.FieldValue.arrayRemove(hospitalName)
+        }
+
+        userRef.update("hos_fav", update)
+            .addOnSuccessListener { callback.onSuccess(true) }
+            .addOnFailureListener { callback.onFailed(it) }
+    }
 }

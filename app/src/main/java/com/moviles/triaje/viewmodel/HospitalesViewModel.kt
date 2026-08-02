@@ -101,4 +101,16 @@ class HospitalesViewModel(application: Application) : AndroidViewModel(applicati
         Location.distanceBetween(p1.latitude, p1.longitude, p2.latitude, p2.longitude, results)
         return (results[0] / 1000).toDouble() // Metros a KM
     }
+
+    fun toggleFavorito(hospitalName: String, esFavorito: Boolean) {
+        val uid = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: return
+        firestoreService.toggleHospitalFavorito(uid, hospitalName, esFavorito, object : Callback<Boolean> {
+            override fun onSuccess(result: Boolean?) {
+                // Éxito al actualizar favoritos
+            }
+            override fun onFailed(exception: Exception) {
+                _error.value = "Error al actualizar favorito: ${exception.message}"
+            }
+        })
+    }
 }

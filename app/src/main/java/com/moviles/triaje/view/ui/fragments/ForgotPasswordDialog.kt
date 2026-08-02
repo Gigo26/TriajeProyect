@@ -86,15 +86,20 @@ class ForgotPasswordDialog : DialogFragment() {
                 Toast.makeText(requireContext(), "Escribe tu correo en la pantalla principal primero.", Toast.LENGTH_LONG).show()
                 dismiss()
             } else {
+                val context = requireContext()
                 viewModel.enviarCorreoRecuperacion(correoIngresado, object : Callback<String> {
                     override fun onSuccess(result: String?) {
-                        Toast.makeText(requireContext(), result, Toast.LENGTH_LONG).show()
+                        if (isAdded && activity != null) {
+                            Toast.makeText(context, result, Toast.LENGTH_LONG).show()
+                            dismiss()
+                        }
                     }
                     override fun onFailed(exception: Exception) {
-                        Toast.makeText(requireContext(), exception.message, Toast.LENGTH_LONG).show()
+                        if (isAdded && activity != null) {
+                            Toast.makeText(context, exception.message, Toast.LENGTH_LONG).show()
+                        }
                     }
                 })
-                dismiss()
             }
         }
 

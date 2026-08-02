@@ -10,5 +10,6 @@ data class Usuario(
     val us_celular: String? = null,
     val us_email: String = "",
     val us_fecha_nac: Date? = null,
-    val us_avatar: String? = null
+    val us_avatar: String? = null,
+    val hos_fav: List<String> = emptyList()
 ) : Serializable

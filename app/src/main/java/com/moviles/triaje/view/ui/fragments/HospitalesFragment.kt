@@ -19,13 +19,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.moviles.triaje.R
 import com.moviles.triaje.model.Hospital
+import com.moviles.triaje.model.Usuario
 import com.moviles.triaje.view.adapter.HospitalAdapter
 import com.moviles.triaje.view.adapter.HospitalListener
 import com.moviles.triaje.viewmodel.HospitalesViewModel
+import com.moviles.triaje.viewmodel.MainViewModel
 
 class HospitalesFragment : Fragment() {
 
     private lateinit var viewModel: HospitalesViewModel
+    private lateinit var mainViewModel: MainViewModel
     private lateinit var hospitalAdapter: HospitalAdapter
 
     private lateinit var rvHospitales: RecyclerView
@@ -33,7 +36,8 @@ class HospitalesFragment : Fragment() {
     private lateinit var progressBar: ProgressBar
     private lateinit var tvEmptyState: TextView
 
-    // Manejo de permisos de ubicación
+    private var currentUser: Usuario? = null
+
     private val locationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -43,9 +47,7 @@ class HospitalesFragment : Fragment() {
         if (fineLocationGranted || coarseLocationGranted) {
             viewModel.cargarHospitalesCercanos()
         } else {
-            Toast.makeText(requireContext(), "Se requiere permiso de ubicación para ver hospitales cercanos", Toast.LENGTH_LONG).show()
-            tvEmptyState.visibility = View.VISIBLE
-            tvEmptyState.text = "Sin acceso a la ubicación"
+            Toast.makeText(requireContext(), "Se requiere permiso de ubicación", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -54,53 +56,43 @@ class HospitalesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_hospitales, container, false)
-
-        // 1. Vincular componentes de la interfaz
-        rvHospitales = view.findViewById(R.id.rvHospitales)
-        ivRegresar = view.findViewById(R.id.ivHospitalesRegresar)
-        progressBar = view.findViewById(R.id.progressBar)
-        tvEmptyState = view.findViewById(R.id.tvEmptyState)
-
-        // 2. Inicializar ViewModel
         viewModel = ViewModelProvider(this)[HospitalesViewModel::class.java]
+        mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
 
-        // 3. Configurar RecyclerView
-        setupRecyclerView()
-
-        // 4. Configurar Observadores del ViewModel
+        initViews(view)
         setupObservers()
-
-        // 5. Configurar Eventos de Clic
-        ivRegresar.setOnClickListener {
-            findNavController().navigateUp()
-        }
-
-        // 6. Verificar permisos y cargar datos
         checkLocationPermissions()
 
         return view
     }
 
+    private fun initViews(view: View) {
+        rvHospitales = view.findViewById(R.id.rvHospitales)
+        ivRegresar = view.findViewById(R.id.ivHospitalesRegresar)
+        progressBar = view.findViewById(R.id.progressBar)
+        tvEmptyState = view.findViewById(R.id.tvEmptyState)
+
+        ivRegresar.setOnClickListener { findNavController().navigateUp() }
+    }
+
     private fun checkLocationPermissions() {
-        when {
-            ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED -> {
-                viewModel.cargarHospitalesCercanos()
-            }
-            else -> {
-                locationPermissionLauncher.launch(
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-                )
-            }
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            viewModel.cargarHospitalesCercanos()
+        } else {
+            locationPermissionLauncher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
         }
     }
 
     private fun setupRecyclerView() {
         hospitalAdapter = HospitalAdapter(object : HospitalListener {
             override fun onHospitalClick(hospital: Hospital) {
-                // Toast.makeText(requireContext(), "Seleccionado: ${hospital.hos_name}", Toast.LENGTH_SHORT).show()
-                // Aquí podrías abrir detalles o mapas
+                HospitalDialog.newInstance(hospital).show(childFragmentManager, "HospitalDetail")
             }
-        })
+
+            override fun onFavoriteClick(hospital: Hospital, isFavorite: Boolean) {
+                viewModel.toggleFavorito(hospital.hos_name, isFavorite)
+            }
+        }, currentUser?.hos_fav ?: emptyList())
 
         rvHospitales.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -110,26 +102,24 @@ class HospitalesFragment : Fragment() {
     }
 
     private fun setupObservers() {
+        mainViewModel.usuario.observe(viewLifecycleOwner) { user ->
+            currentUser = user
+            setupRecyclerView() // Recargamos el adapter con los nuevos favoritos
+            viewModel.cargarHospitalesCercanos()
+        }
+
         viewModel.listaHospitales.observe(viewLifecycleOwner) { lista ->
             hospitalAdapter.updateData(lista)
-
-            if (lista.isEmpty()) {
-                tvEmptyState.visibility = View.VISIBLE
-                rvHospitales.visibility = View.GONE
-            } else {
-                tvEmptyState.visibility = View.GONE
-                rvHospitales.visibility = View.VISIBLE
-            }
+            tvEmptyState.visibility = if (lista.isEmpty()) View.VISIBLE else View.GONE
+            rvHospitales.visibility = if (lista.isEmpty()) View.GONE else View.VISIBLE
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
 
-        viewModel.error.observe(viewLifecycleOwner) { mensajeError ->
-            if (!mensajeError.isNullOrEmpty()) {
-                Toast.makeText(requireContext(), mensajeError, Toast.LENGTH_LONG).show()
-            }
+        viewModel.error.observe(viewLifecycleOwner) { msg ->
+            if (!msg.isNullOrEmpty()) Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
         }
     }
 }
