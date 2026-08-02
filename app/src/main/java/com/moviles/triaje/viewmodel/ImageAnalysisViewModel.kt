@@ -2,6 +2,7 @@ package com.moviles.triaje.viewmodel
 
 import android.app.Application
 import android.graphics.Bitmap
+import android.util.Log
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -35,18 +36,23 @@ class ImageAnalysisViewModel(application: Application) : AndroidViewModel(applic
     fun setImageUri(uri: Uri?) {
         _imageUri.value = uri
         if (uri != null) {
+            Log.d("IA_DEBUG", "Nueva URI de imagen recibida: $uri")
             analyzeImage(uri)
         }
     }
 
     private fun analyzeImage(uri: Uri) {
+        Log.d("IA_DEBUG", "Iniciando análisis de imagen...")
         val bitmap = uriToBitmap(uri)
         if (bitmap != null) {
             val result = classifier.classify(bitmap)
+            Log.d("IA_DEBUG", "Resultado final ganador: $result")
             _analysisResult.value = result
             _recommendation.value = getRecommendation(result)
         } else {
+            Log.e("IA_DEBUG", "Error: No se pudo convertir la URI a Bitmap")
             _analysisResult.value = "Error al procesar imagen"
+            _recommendation.value = "Intente seleccionar o tomar la foto nuevamente."
         }
     }
 
@@ -60,6 +66,7 @@ class ImageAnalysisViewModel(application: Application) : AndroidViewModel(applic
                     decoder.isMutableRequired = true
                 }
             } else {
+                @Suppress("DEPRECATION")
                 MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
             }
         } catch (e: Exception) {
@@ -70,11 +77,11 @@ class ImageAnalysisViewModel(application: Application) : AndroidViewModel(applic
 
     private fun getRecommendation(result: String): String {
         return when (result) {
-            "Burns" -> "Aplicar agua fría (no helada) por 10 minutos. No reventar ampollas."
-            "Stab_wound", "Cut", "Laceration" -> "Presionar con una gasa limpia para detener el sangrado. No retirar objetos clavados."
-            "Bruises", "Abrasions" -> "Lavar la zona y aplicar compresas frías para reducir inflamación."
-            "Ingrown_nails" -> "Remojar en agua tibia y evitar calzado ajustado. Acudir a podología."
-            else -> "Mantenga la zona limpia y observe si hay cambios en el color o temperatura."
+            "Burns" -> "Aplicar agua fría (no helada) por 10 minutos. No reventar ampollas ni aplicar remedios caseros."
+            "Stab_wound", "Cut", "Laceration" -> "Presionar con una gasa limpia para detener el sangrado. Si hay un objeto incrustado, no lo retire."
+            "Bruises", "Abrasions" -> "Lavar cuidadosamente la zona con agua y jabón. Aplicar compresas frías para reducir la inflamación."
+            "Ingrown_nails" -> "Remojar en agua tibia con sal y evitar calzado apretado. Consulte a podología."
+            else -> "Mantenga la zona limpia y seca. Si nota cambios de color o fiebre, busque atención médica."
         }
     }
 }

@@ -14,15 +14,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.moviles.triaje.R
+import com.moviles.triaje.model.DecisionContext
 import com.moviles.triaje.model.Sintoma
 import com.moviles.triaje.model.Pregunta
 import com.moviles.triaje.view.adapter.QuestionListener
 import com.moviles.triaje.view.adapter.QuestionAdapter
+import com.moviles.triaje.viewmodel.SharedTriageViewModel
 import com.moviles.triaje.viewmodel.SymptompsQuestionsViewModel
 
 class SymptompsQuestionFragment : Fragment() {
 
     private lateinit var viewModel: SymptompsQuestionsViewModel
+    private lateinit var sharedViewModel: SharedTriageViewModel
     private lateinit var questionsAdapter: QuestionAdapter
 
     private lateinit var rvQuestions: RecyclerView
@@ -44,6 +47,7 @@ class SymptompsQuestionFragment : Fragment() {
 
         // 2. Inicializar ViewModel
         viewModel = ViewModelProvider(this)[SymptompsQuestionsViewModel::class.java]
+        sharedViewModel = ViewModelProvider(requireActivity())[SharedTriageViewModel::class.java]
 
         // 3. Configurar RecyclerView
         setupRecyclerView()
@@ -51,15 +55,20 @@ class SymptompsQuestionFragment : Fragment() {
         // 4. Observar cambios del ViewModel
         setupObservers()
 
-        // 5. Recuperar síntomas
-        @Suppress("UNCHECKED_CAST")
-        val sintomasSeleccionados = arguments?.getSerializable("sintomas_seleccionados") as? List<Sintoma> ?: emptyList()
+        // 5. Recuperar síntomas desde el Shared ViewModel
+        val sintomasSeleccionados = sharedViewModel.sintomasSeleccionados.value.orEmpty()
         viewModel.cargarPreguntasPorSintomas(sintomasSeleccionados)
 
         // 6. Configurar evento click
         btnFinalizarTriaje.setOnClickListener {
             if (viewModel.verificarPreguntasCompletas()) {
-                findNavController().navigate(R.id.action_symptompsQuestionFragment_to_resultFragment)
+
+                // Guardar las preguntas respondidas en el Shared ViewModel
+                sharedViewModel.setPreguntasDinamicas(viewModel.listaPreguntas.value.orEmpty())
+
+                findNavController().navigate(
+                    R.id.action_symptompsQuestionFragment_to_resultFragment
+                )
             } else {
                 Toast.makeText(requireContext(), "Por favor, responde todas las preguntas obligatorias", Toast.LENGTH_LONG).show()
             }

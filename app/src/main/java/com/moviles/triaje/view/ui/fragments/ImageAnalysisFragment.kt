@@ -19,11 +19,13 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.moviles.triaje.R
 import com.moviles.triaje.model.Sintoma
 import com.moviles.triaje.viewmodel.ImageAnalysisViewModel
+import com.moviles.triaje.viewmodel.SharedTriageViewModel
 import java.io.File
 
 class ImageAnalysisFragment : Fragment() {
 
     private lateinit var viewModel: ImageAnalysisViewModel
+    private lateinit var sharedViewModel: SharedTriageViewModel
 
     private lateinit var ivRegresar: ImageView
     private lateinit var ivFotoLesion: ImageView
@@ -64,6 +66,7 @@ class ImageAnalysisFragment : Fragment() {
 
         // 2. Inicializar ViewModel
         viewModel = ViewModelProvider(this)[ImageAnalysisViewModel::class.java]
+        sharedViewModel = ViewModelProvider(requireActivity())[SharedTriageViewModel::class.java]
 
         // 3. Recuperar síntomas del flujo previo
         @Suppress("UNCHECKED_CAST")
@@ -128,16 +131,11 @@ class ImageAnalysisFragment : Fragment() {
     }
 
     private fun irAlCuestionario(imagePath: String?) {
-        val listaSintomas = viewModel.sintomasRecuperados.value.orEmpty()
-
-        val bundle = Bundle().apply {
-            // Convertimos la lista de manera segura a un ArrayList compatible
-            putSerializable("sintomas_seleccionados", ArrayList(listaSintomas))
-            putString("uri_imagen_evidencia", imagePath) // Viaja como String o null si se omitió
-        }
+        // Guardar datos de IA en el ViewModel compartido
+        sharedViewModel.setIAData(viewModel.analysisResult.value, imagePath)
+        
         findNavController().navigate(
-            R.id.action_analisisImagenFragment_to_symptompsQuestionFragment,
-            bundle
+            R.id.action_analisisImagenFragment_to_symptompsQuestionFragment
         )
     }
 }

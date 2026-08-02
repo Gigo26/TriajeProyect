@@ -3,28 +3,112 @@ package com.moviles.triaje.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.moviles.triaje.model.Consulta
-import com.moviles.triaje.model.DecisionContext
-import com.moviles.triaje.utils.TriajeEvaluator
+import com.moviles.triaje.model.Pregunta
+import com.moviles.triaje.model.Recomendacion
+import com.moviles.triaje.model.Sintoma
+import com.moviles.triaje.network.Callback
+import com.moviles.triaje.network.FirestoreService
+import com.moviles.triaje.utils.ResultadoEvolutivo
+import java.util.Date
 
-/**
- * ViewModel desacoplado de la lógica de evaluación.
- * Expone un estado inmutable a la vista.
- */
 class RecommendationViewModel : ViewModel() {
+
+    private val firestoreService = FirestoreService()
+    private val auth = FirebaseAuth.getInstance()
 
     private val _consultaFinal = MutableLiveData<Consulta>()
     val consultaFinal: LiveData<Consulta> get() = _consultaFinal
 
-    fun processTriage(context: DecisionContext) {
-        // Delegamos la lógica pesada al Evaluator (Clean Architecture)
-        val result = TriajeEvaluator.evaluate(context)
-        _consultaFinal.value = result
+    // Control para evitar duplicidad de guardado
+    private var isAlreadySaved = false
+
+    // Nueva LiveData para que la UI obtenga la lista fácilmente
+    private val _listaRecomendacionesUI = MutableLiveData<List<Recomendacion>>()
+    val listaRecomendacionesUI: LiveData<List<Recomendacion>> get() = _listaRecomendacionesUI
+
+    /**
+     * Consolida la consulta final usando los datos del Shared ViewModel y el resultado ya calculado.
+     */
+    fun consolidarConsulta(
+        tipoPaciente: String,
+        sintomas: List<Sintoma>,
+        respuestasBasicas: List<Boolean>,
+        uriImagen: String?,
+        preguntasDinamicas: List<Pregunta>,
+        resultadoEvolutivo: ResultadoEvolutivo
+    ) {
+        // 0. Guardar lista para la UI
+        _listaRecomendacionesUI.value = resultadoEvolutivo.recomendaciones
+
+        // 1. Mapear Respuestas (Básicas + Dinámicas)
+        val mapaRespuestas = mutableMapOf<String, String>()
+        mapaRespuestas["¿Está consciente?"] = if (respuestasBasicas.getOrElse(0) { true }) "Sí" else "No"
+        mapaRespuestas["¿Respira normalmente?"] = if (respuestasBasicas.getOrElse(1) { true }) "Sí" else "No"
+        mapaRespuestas["¿Tiene sangrado grave?"] = if (respuestasBasicas.getOrElse(2) { false }) "Sí" else "No"
+        
+        preguntasDinamicas.forEach { 
+            mapaRespuestas[it.text] = it.options.getOrNull(it.selectedOptionIndex) ?: "N/A"
+        }
+
+        // 2. Mapear Recomendaciones por pasos para Firebase (Step -> {titulo, descripcion})
+        val mapaRecomendaciones = resultadoEvolutivo.recomendaciones.associate { rec ->
+            rec.step.toString() to mapOf(
+                "titulo" to rec.titulo,
+                "descripcion" to rec.recomendacion
+            )
+        }
+
+        // 3. Formatear Tipo de Paciente de forma amigable
+        val tipoFormateado = when(tipoPaciente) {
+            "NINO" -> "Niño"
+            "GESTANTE" -> "Gestante"
+            "ADULTO_MAYOR" -> "Adulto Mayor"
+            else -> "Adulto"
+        }
+
+        val consulta = Consulta(
+            tipo_paciente = tipoFormateado,
+            prioridad = resultadoEvolutivo.prioridad.nombre,
+            sintomas = sintomas.map { it.sin_description },
+            respuestas = mapaRespuestas,
+            resultado_titulo = resultadoEvolutivo.diagnosticoProbable,
+            resultado_descripcion = resultadoEvolutivo.explicacionRiesgo,
+            url_imagen_evidencia = uriImagen,
+            recomendaciones = mapaRecomendaciones,
+            fecha_registro = Date()
+        )
+
+        _consultaFinal.value = consulta
     }
 
-    fun saveTriageToHistory() {
-        val currentConsulta = _consultaFinal.value ?: return
-        // Aquí se llamaría al FirestoreService para persistir los datos
-        // Por ahora simulamos éxito para el flujo de UI
+    /**
+     * Persiste la consulta actual en la subcolección "historial" del usuario en Firestore.
+     */
+    fun saveTriageToHistory(onComplete: (Boolean) -> Unit) {
+        // Si ya se guardó en esta sesión de ViewModel, no repetimos la operación
+        if (isAlreadySaved) {
+            onComplete(true)
+            return
+        }
+
+        val currentConsulta = _consultaFinal.value
+        val uidUsuario = auth.currentUser?.uid
+
+        if (currentConsulta != null && !uidUsuario.isNullOrEmpty()) {
+            firestoreService.guardarConsultaEnHistorial(uidUsuario, currentConsulta, object : Callback<Boolean> {
+                override fun onSuccess(result: Boolean?) {
+                    isAlreadySaved = true // Marcamos como guardado exitoso
+                    onComplete(result ?: true)
+                }
+
+                override fun onFailed(exception: Exception) {
+                    onComplete(false)
+                }
+            })
+        } else {
+            onComplete(false)
+        }
     }
 }

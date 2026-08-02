@@ -18,6 +18,7 @@ import com.moviles.triaje.network.Callback
 import com.moviles.triaje.network.FirestoreService
 import com.moviles.triaje.view.adapter.SintomasAdapter
 import com.moviles.triaje.view.adapter.SymptomListener
+import com.moviles.triaje.viewmodel.SharedTriageViewModel
 import com.moviles.triaje.viewmodel.SymptomViewModel
 
 // 🔥 Implementamos de forma explícita SymptomListener
@@ -29,6 +30,7 @@ class SymptomsFragment : Fragment(), SymptomListener {
 
     private lateinit var adapter: SintomasAdapter
     private lateinit var symptomViewModel: SymptomViewModel
+    private lateinit var sharedViewModel: SharedTriageViewModel
     private val firestoreService = FirestoreService()
 
     override fun onCreateView(
@@ -44,6 +46,7 @@ class SymptomsFragment : Fragment(), SymptomListener {
 
         // 2. Inicializar ViewModel amarrado a la actividad
         symptomViewModel = ViewModelProvider(requireActivity())[SymptomViewModel::class.java]
+        sharedViewModel = ViewModelProvider(requireActivity())[SharedTriageViewModel::class.java]
 
         // 3. Configurar el RecyclerView pasando 'this' como el Listener
         rvSintomas.layoutManager = GridLayoutManager(requireContext(), 2)
@@ -65,21 +68,19 @@ class SymptomsFragment : Fragment(), SymptomListener {
 
         btnContinuar.setOnClickListener {
             val seleccionados = symptomViewModel.sintomasSeleccionados.value.orEmpty()
-
-            // Empaquetamos la lista de síntomas seleccionados en un ArrayList serializable
-            val bundle = Bundle().apply {
-                putSerializable("sintomas_seleccionados", ArrayList(seleccionados))
-            }
+            
+            // Guardar síntomas en el ViewModel compartido
+            sharedViewModel.setSintomas(seleccionados)
 
             // Lógica de Enrutamiento según el tipo de síntoma
             // Si algún síntoma requiere imagen (ej: cortes, quemaduras), vamos a ImageAnalysis
             val requiereImagen = seleccionados.any { it.sin_requiere_imagen }
 
             if (requiereImagen) {
-                findNavController().navigate(R.id.action_symptomsFragment_to_analisisImageFragment, bundle)
+                findNavController().navigate(R.id.action_symptomsFragment_to_analisisImageFragment)
             } else {
                 // Si son solo síntomas internos (fiebre, dolor abdominal), vamos directo al cuestionario
-                findNavController().navigate(R.id.action_symptomsFragment_to_symptompsQuestionFragment, bundle)
+                findNavController().navigate(R.id.action_symptomsFragment_to_symptompsQuestionFragment)
             }
         }
 

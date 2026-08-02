@@ -3,13 +3,17 @@ package com.moviles.triaje.model
 import java.io.Serializable
 import java.util.Date
 
+/**
+ * Modelo optimizado para persistencia en Firestore (Subcolección "historial")
+ */
 data class Consulta (
-    val con_tipo_paciente: String = "",
-    val con_sintomas_seleccionados: List<String> = emptyList(),
-    val con_respuestas_basicas: Map<String, Any> = emptyMap(),
-    val con_url_imagen_evidencia: String? = null,
-    val con_cuestionario_avanzado: Map<String, String> = emptyMap(),
-    val con_resultado: Resultado = Resultado(),
-    val con_recomendaciones: List<Recomendacion> = emptyList(),
-    val con_fecha_registro: Date = Date()
+    val tipo_paciente: String = "",
+    val prioridad: String = "", // "ROJO", "NARANJA", "VERDE", etc.
+    val sintomas: List<String> = emptyList(),
+    val respuestas: Map<String, String> = emptyMap(),
+    val resultado_titulo: String = "",
+    val resultado_descripcion: String = "",
+    val url_imagen_evidencia: String? = null,
+    val recomendaciones: Map<String, Map<String, Any>> = emptyMap(), // Step -> {titulo, descripcion}
+    val fecha_registro: Date = Date()
 ) : Serializable

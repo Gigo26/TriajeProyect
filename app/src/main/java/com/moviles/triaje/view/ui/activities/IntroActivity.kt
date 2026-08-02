@@ -39,12 +39,16 @@ class IntroActivity : AppCompatActivity() {
         }
         // =======================================================
 
-        // Verificamos si venimos de un Cierre de Sesión
-        val startAtLogin = intent.getBooleanExtra("START_AT_LOGIN", false)
-        if (startAtLogin) {
-            val navHostFragment = supportFragmentManager
-                .findFragmentById(R.id.fcvIntroContainer) as? NavHostFragment
-            navHostFragment?.navController?.navigate(R.id.loginFragment)
+        // Verificamos si venimos de un Cierre de Sesión de forma segura
+        try {
+            val startAtLogin = intent.getBooleanExtra("START_AT_LOGIN", false)
+            if (startAtLogin) {
+                val navHostFragment = supportFragmentManager
+                    .findFragmentById(R.id.fcvIntroContainer) as? NavHostFragment
+                navHostFragment?.navController?.navigate(R.id.loginFragment)
+            }
+        } catch (e: Exception) {
+            Log.e("INTRO_DEBUG", "Error al intentar navegar al Login: ${e.message}")
         }
     }
 

@@ -25,6 +25,16 @@ class HomeViewModel : ViewModel() {
         _isContinuarEnabled.value = true // En cuanto elija uno, activamos el botón
     }
 
+    fun getTipoPacienteString(): String {
+        return when (_pacienteSeleccionado.value) {
+            TipoPaciente.NINO -> "NINO"
+            TipoPaciente.ADULTO -> "ADULTO"
+            TipoPaciente.ADULTO_MAYOR -> "ADULTO_MAYOR"
+            TipoPaciente.GESTANTE -> "GESTANTE"
+            else -> "ADULTO"
+        }
+    }
+
     fun limpiarDatos() {
         _pacienteSeleccionado.value = null
         _isContinuarEnabled.value = false

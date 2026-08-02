@@ -2,10 +2,16 @@ package com.moviles.triaje.network
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.google.firebase.firestore.Query
+import com.moviles.triaje.model.Consulta
+import com.moviles.triaje.model.Historial
 import com.moviles.triaje.model.Hospital
 import com.moviles.triaje.model.Pregunta
 import com.moviles.triaje.model.Sintoma
 import com.moviles.triaje.model.Usuario
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 
 class FirestoreService {
 
@@ -106,6 +112,48 @@ class FirestoreService {
             .addOnFailureListener { exception ->
                 callback.onFailed(exception)
             }
+    }
+
+    /**
+     * Guarda una consulta completa en la subcolección "historial" del usuario.
+     */
+    fun guardarConsultaEnHistorial(uid: String, consulta: Consulta, callback: Callback<Boolean>) {
+        firebaseFirestore.collection("usuarios")
+            .document(uid)
+            .collection("historial")
+            .add(consulta)
+            .addOnSuccessListener {
+                callback.onSuccess(true)
+            }
+            .addOnFailureListener { exception ->
+                callback.onFailed(exception)
+            }
+    }
+
+    /**
+     * Obtiene el historial de consultas de un usuario en tiempo real.
+     */
+    fun obtenerHistorial(uid: String): Flow<Result<List<Historial>>> = callbackFlow {
+        val listener = firebaseFirestore.collection("usuarios")
+            .document(uid)
+            .collection("historial")
+            .orderBy("fecha_registro", Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    trySend(Result.failure(error))
+                    return@addSnapshotListener
+                }
+
+                val historial = snapshot?.documents?.mapNotNull { doc ->
+                    // Mapeamos los campos del historial que el motor evolutivo guarda
+                    val categoria = doc.getString("prioridad") ?: "AZUL"
+                    val fecha = doc.getTimestamp("fecha_registro") ?: com.google.firebase.Timestamp.now()
+                    Historial(id = doc.id, categoria = categoria, fechaHora = fecha)
+                } ?: emptyList()
+
+                trySend(Result.success(historial))
+            }
+        awaitClose { listener.remove() }
     }
 
     fun obtenerSintomas(callback: Callback<List<Sintoma>>) {

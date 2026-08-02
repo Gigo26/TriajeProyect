@@ -14,12 +14,14 @@ import com.moviles.triaje.R
 import com.moviles.triaje.viewmodel.HomeViewModel
 import com.moviles.triaje.viewmodel.HomeViewModel.TipoPaciente
 import androidx.navigation.fragment.findNavController
+import com.moviles.triaje.viewmodel.SharedTriageViewModel
 import com.moviles.triaje.viewmodel.SymptomViewModel
 import com.moviles.triaje.viewmodel.VerInformacionViewModel
 
 class HomeFragment : Fragment() {
 
     private lateinit var viewModel: HomeViewModel
+    private lateinit var sharedViewModel: SharedTriageViewModel
     private lateinit var userViewModel: VerInformacionViewModel
 
     override fun onCreateView(
@@ -29,9 +31,11 @@ class HomeFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
         viewModel = ViewModelProvider(requireActivity())[HomeViewModel::class.java]
+        sharedViewModel = ViewModelProvider(requireActivity())[SharedTriageViewModel::class.java]
         userViewModel = ViewModelProvider(this)[VerInformacionViewModel::class.java]
 
         viewModel.limpiarDatos()
+        sharedViewModel.limpiarTodo()
 
         val symptomViewModel = ViewModelProvider(requireActivity())[SymptomViewModel::class.java]
         symptomViewModel.limpiarDatos()
@@ -72,6 +76,9 @@ class HomeFragment : Fragment() {
         btnContinuar.setOnClickListener {
             val seleccionado = viewModel.pacienteSeleccionado.value
             if (seleccionado != null) {
+                // Guardar tipo de paciente en el ViewModel compartido
+                sharedViewModel.setTipoPaciente(viewModel.getTipoPacienteString())
+
                 // Nuevo Flujo: Ir directo a Evaluación Primaria (Basic Questions)
                 findNavController().navigate(R.id.action_homeFragment_to_basicQuestionsFragment)
             }

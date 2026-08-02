@@ -23,6 +23,13 @@
         android:title="Historial"
         tools:ignore="HardcodedText" />
 
+    <!-- Opción de Aura IA -->
+    <item
+        android:id="@+id/navAuraIAFragment"
+        android:icon="@drawable/ic_chat"
+        android:title="Aura IA"
+        tools:ignore="HardcodedText" />
+
     <!-- Opción de Perfil -->
     <item
         android:id="@+id/navPerfilFragment"

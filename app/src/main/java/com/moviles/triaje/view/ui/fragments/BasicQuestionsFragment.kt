@@ -12,12 +12,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
 import com.moviles.triaje.R
+import com.moviles.triaje.model.DecisionContext
 import com.moviles.triaje.model.Sintoma
 import com.moviles.triaje.viewmodel.BasicQuestionsViewModel
+import com.moviles.triaje.viewmodel.SharedTriageViewModel
 
 class BasicQuestionsFragment : Fragment() {
 
     private lateinit var viewModel: BasicQuestionsViewModel
+    private lateinit var sharedViewModel: SharedTriageViewModel
 
     private lateinit var rgOptions1: RadioGroup
     private lateinit var rgOptions2: RadioGroup
@@ -40,6 +43,7 @@ class BasicQuestionsFragment : Fragment() {
 
         // 2. Inicializar ViewModel
         viewModel = ViewModelProvider(this)[BasicQuestionsViewModel::class.java]
+        sharedViewModel = ViewModelProvider(requireActivity())[SharedTriageViewModel::class.java]
 
         // 3. Recuperar síntomas del argumento y resguardarlos en el ViewModel
         @Suppress("UNCHECKED_CAST")
@@ -57,31 +61,30 @@ class BasicQuestionsFragment : Fragment() {
         // 6. Botón Siguiente con Enrutamiento de los 3 Flujos
         btnEvaluar.setOnClickListener {
             if (viewModel.validarPreguntasCompletas()) {
+                
+                // En la UI de BasicQuestions: 0=Sí, 1=No.
+                // Engine espera: [Consciente (True), Respira (True), SangradoGrave (True)]
+                val estaConsciente = viewModel.respuestaConsciente == 0
+                val respiraNormal = viewModel.respuestaRespira == 0
+                val sangradoGrave = viewModel.respuestaSangrado == 0 
 
-                // Empaquetamos los síntomas seleccionados para heredarlos en el siguiente destino
-                val proximosPasosBundle = Bundle().apply {
-                    putSerializable("sintomas_seleccionados", ArrayList(viewModel.sintomasRecuperados.value.orEmpty()))
-                }
+                val listaConsolidada = listOf(
+                    estaConsciente, 
+                    respiraNormal,
+                    sangradoGrave
+                )
 
-                // --- EVALUACIÓN DE LOS 3 FLUJOS ---
+                sharedViewModel.setRespuestasBasicas(listaConsolidada)
+
                 if (viewModel.evaluarCriterioEmergencia()) {
-                    // 🟥 FLUJO 3: Prioridad Roja Inmediata -> Va directo a Resultados
-                    Toast.makeText(requireContext(), "Alerta crítica. Derivando a resultados.", Toast.LENGTH_LONG).show()
                     findNavController().navigate(
-                        R.id.action_basicQuestionsFragment_to_fragmentResult,
-                        proximosPasosBundle
+                        R.id.action_basicQuestionsFragment_to_fragmentResult
                     )
                 } else {
-                    // El paciente está estable -> Ir a Selección de Síntomas
-                    Toast.makeText(requireContext(), "Paciente estable. Seleccione los síntomas.", Toast.LENGTH_SHORT).show()
                     findNavController().navigate(
-                        R.id.action_basicQuestionsFragment_to_symptomFragment,
-                        proximosPasosBundle
+                        R.id.action_basicQuestionsFragment_to_symptomFragment
                     )
                 }
-
-            } else {
-                Toast.makeText(requireContext(), "Por favor, responda las 3 preguntas antes de continuar", Toast.LENGTH_SHORT).show()
             }
         }
 

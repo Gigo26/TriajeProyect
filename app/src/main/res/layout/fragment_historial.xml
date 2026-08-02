@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/ColorPrimary">
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,29 +23,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="@string/consultation_history"
+                android:text="Historial de Consultas"
                 android:textSize="26sp"
                 android:textColor="@color/black"
                 android:gravity="center"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="HardcodedText"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="@string/select_consultation_desc"
+                android:text="Seleccionar la consulta para ver información."
                 android:textSize="16sp"
-                android:gravity="center" />
+                android:gravity="center"
+                tools:ignore="HardcodedText"/>
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvQuestions"
+                android:id="@+id/rvHistorial"
                 android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:clipToPadding="false"/>
+
+            <TextView
+                android:id="@+id/tvVacio"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:scrollbars="none"
-                tools:listitem="@layout/item_consulta"
-                tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                android:layout_gravity="center"
+                android:text="No hay registros aún"
+                android:visibility="gone"/>
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-    <!-- El ProgressBar ahora es hijo del ConstraintLayout y sus constraints funcionarán -->
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
