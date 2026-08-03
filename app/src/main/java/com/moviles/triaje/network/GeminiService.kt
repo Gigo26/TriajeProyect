@@ -41,7 +41,7 @@ class GeminiService {
     }
 
     private fun createModel(isEnglish: Boolean) = GenerativeModel(
-        modelName = "gemini-1.5-flash",
+        modelName = "gemini-3.6-flash",
         apiKey = apiKey,
         generationConfig = generationConfig {
             temperature = 0.7f

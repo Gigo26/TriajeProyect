@@ -162,8 +162,8 @@
 
     <!-- Aura IA -->
     <string name="aura_welcome">Hello, I am Aura IA. I am here to help you with your medical inquiries. How are you feeling today?</string>
-    <string name="aura_error_empty">Error: AI response came back empty.</string>
-    <string name="aura_error_detected">Error detected: %1$s</string>
+    <string name="aura_error_empty">I\'m sorry, the response came back empty. Please try sending your message again.</string>
+    <string name="aura_error_detected">I\'m sorry, there was a technical problem. Please try re-entering your message.</string>
 
     <!-- Triage Diagnosis -->
     <string name="diag_0">Acute Coronary Syndrome / Acute Myocardial Infarction</string>
@@ -302,6 +302,16 @@
     <string name="history_patient">Patient: %1$s</string>
     <string name="history_symptoms">Symptoms: %1$s</string>
     <string name="history_details">Consultation Details</string>
+
+    <!-- IA Class Names -->
+    <string name="ia_class_abrasions">Abrasions</string>
+    <string name="ia_class_bruises">Bruises</string>
+    <string name="ia_class_burns">Burns</string>
+    <string name="ia_class_cut">Cut</string>
+    <string name="ia_class_ingrown_nails">Ingrown Nails</string>
+    <string name="ia_class_laceration">Laceration</string>
+    <string name="ia_class_stab_wound">Stab Wound</string>
+    <string name="ia_class_unknown">Unidentified pattern</string>
 
     <!-- Guide Dialogs Detail -->
     <string name="guide_1st_aid_title">1st Aid Guide</string>

@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.moviles.triaje.R
 import com.moviles.triaje.model.Sintoma
 import com.moviles.triaje.viewmodel.ImageAnalysisViewModel
@@ -28,9 +27,12 @@ class ImageAnalysisFragment : Fragment() {
 
     private lateinit var ivRegresar: ImageView
     private lateinit var ivFotoLesion: ImageView
+    private lateinit var vOverlayResultado: View
+    private lateinit var tvResultadoIAOverlay: TextView
     private lateinit var cvVistaPrevia: MaterialCardView
     private lateinit var btnTomarFoto: MaterialButton
     private lateinit var btnSubirGaleria: MaterialButton
+    private lateinit var btnContinuarCuestionario: MaterialButton
     private lateinit var tvOmitirPaso: TextView
 
     private var temporalCameraUri: Uri? = null
@@ -58,9 +60,12 @@ class ImageAnalysisFragment : Fragment() {
         // 1. Vincular componentes de la interfaz
         ivRegresar = view.findViewById(R.id.ivAnalisisImagenRegresar)
         ivFotoLesion = view.findViewById(R.id.ivFotoLesion)
+        vOverlayResultado = view.findViewById(R.id.vOverlayResultado)
+        tvResultadoIAOverlay = view.findViewById(R.id.tvResultadoIAOverlay)
         cvVistaPrevia = view.findViewById(R.id.cvVistaPrevia)
         btnTomarFoto = view.findViewById(R.id.btnTomarFoto)
         btnSubirGaleria = view.findViewById(R.id.btnSubirGaleria)
+        btnContinuarCuestionario = view.findViewById(R.id.btnContinuarCuestionario)
         tvOmitirPaso = view.findViewById(R.id.tvOmitirPaso)
 
         // 2. Inicializar ViewModel (SharedTriageViewModel atado a la Activity para mantener los datos)
@@ -80,10 +85,15 @@ class ImageAnalysisFragment : Fragment() {
             }
         }
 
-        // 4.1 Observar resultados de la IA (Ya no pide 'recommendation')
+        // 4.1 Observar resultados de la IA
         viewModel.analysisResult.observe(viewLifecycleOwner) { result ->
-            if (result != null) {
-                mostrarResultadoIA(result)
+            if (result != null && result != "Error" && result != "No se pudo determinar") {
+                mostrarResultadoIAEnImagen(result)
+            } else if (result == "Error" || result == "No se pudo determinar") {
+                vOverlayResultado.visibility = View.GONE
+                tvResultadoIAOverlay.visibility = View.GONE
+                btnContinuarCuestionario.visibility = View.GONE
+                btnSubirGaleria.visibility = View.VISIBLE
             }
         }
 
@@ -93,6 +103,10 @@ class ImageAnalysisFragment : Fragment() {
         btnSubirGaleria.setOnClickListener { pickMedia.launch("image/*") }
 
         btnTomarFoto.setOnClickListener { configurarCamaraYDisparar() }
+
+        btnContinuarCuestionario.setOnClickListener {
+            irAlCuestionario(viewModel.imageUri.value?.toString())
+        }
 
         tvOmitirPaso.setOnClickListener { irAlCuestionario(null) }
 
@@ -112,19 +126,25 @@ class ImageAnalysisFragment : Fragment() {
         takePicture.launch(temporalCameraUri!!)
     }
 
-    private fun mostrarResultadoIA(result: String) {
-        // Mostramos un diálogo informativo más limpio, indicando que el motor evolutivo hará el resto.
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Análisis IA Completado")
-            .setMessage("Se ha detectado patrón visual compatible con: $result\n\nEste dato ha sido enviado al motor de triaje para calcular el diagnóstico y las recomendaciones finales.")
-            .setPositiveButton("Continuar al Cuestionario") { _, _ ->
-                irAlCuestionario(viewModel.imageUri.value?.toString())
-            }
-            .setNegativeButton("Reintentar") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .setCancelable(false)
-            .show()
+    private fun mostrarResultadoIAEnImagen(resultRaw: String) {
+        val resourceId = when (resultRaw) {
+            "Abrasions" -> R.string.ia_class_abrasions
+            "Bruises" -> R.string.ia_class_bruises
+            "Burns" -> R.string.ia_class_burns
+            "Cut" -> R.string.ia_class_cut
+            "Ingrown_nails" -> R.string.ia_class_ingrown_nails
+            "Laceration" -> R.string.ia_class_laceration
+            "Stab_wound" -> R.string.ia_class_stab_wound
+            else -> R.string.ia_class_unknown
+        }
+
+        tvResultadoIAOverlay.text = getString(resourceId)
+        vOverlayResultado.visibility = View.VISIBLE
+        tvResultadoIAOverlay.visibility = View.VISIBLE
+
+        // Ocultamos galería, mostramos botón verde de continuar
+        btnSubirGaleria.visibility = View.GONE
+        btnContinuarCuestionario.visibility = View.VISIBLE
     }
 
     private fun irAlCuestionario(imagePath: String?) {

@@ -65,8 +65,10 @@ class AuraIAViewModel(application: Application) : AndroidViewModel(application) 
                     updateLastIAMessage(context.getString(R.string.aura_error_empty), isTyping = false)
                 }
             } catch (e: Exception) {
-                // Mostramos el error REAL para diagnosticar
-                updateLastIAMessage(context.getString(R.string.aura_error_detected, e.message ?: ""), isTyping = false)
+                // Logueamos el error real en la consola para desarrollo
+                android.util.Log.e("GEMINI_ERROR", "Error detectado: ${e.message}", e)
+                // Mostramos un mensaje amigable al usuario final
+                updateLastIAMessage(context.getString(R.string.aura_error_detected), isTyping = false)
             }
             _isAILoading.value = false
         }

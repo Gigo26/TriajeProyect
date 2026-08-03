@@ -158,8 +158,8 @@
 
     <!-- Aura IA -->
     <string name="aura_welcome">Hola, soy Aura IA. Estoy aquí para ayudarte con tus consultas médicas. ¿Cómo te sientes hoy?</string>
-    <string name="aura_error_empty">Error: La respuesta de la IA llegó vacía.</string>
-    <string name="aura_error_detected">Error detectado: %1$s</string>
+    <string name="aura_error_empty">Lo siento, la respuesta llegó vacía. Por favor, intenta enviar tu mensaje de nuevo.</string>
+    <string name="aura_error_detected">Lo siento, hubo un problema técnico. Por favor, vuelve a ingresar tu mensaje.</string>
 
     <!-- Triage Diagnosis -->
     <string name="diag_0">Síndrome Coronario Agudo / Infarto Agudo de Miocardio</string>
@@ -298,6 +298,16 @@
     <string name="history_patient">Paciente: %1$s</string>
     <string name="history_symptoms">Síntomas: %1$s</string>
     <string name="history_details">Detalles de la Consulta</string>
+
+    <!-- IA Class Names -->
+    <string name="ia_class_abrasions">Abrasiones / Raspones</string>
+    <string name="ia_class_bruises">Moretones / Contusiones</string>
+    <string name="ia_class_burns">Quemaduras</string>
+    <string name="ia_class_cut">Corte / Herida Incisa</string>
+    <string name="ia_class_ingrown_nails">Uñero / Infección Ungueal</string>
+    <string name="ia_class_laceration">Laceración / Desgarro</string>
+    <string name="ia_class_stab_wound">Herida Punzante / Penetrante</string>
+    <string name="ia_class_unknown">Patrón no identificado</string>
 
     <!-- Guide Dialogs Detail -->
     <string name="guide_1st_aid_title">Guía de 1eros A</string>
