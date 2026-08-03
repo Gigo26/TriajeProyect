@@ -49,7 +49,7 @@ class ResultFragment : Fragment() {
         if (sharedViewModel.resultadoEvolutivo.value == null) {
             // TRIAJE NUEVO: Reseteamos el seguro para permitir que se guarde en Firebase
             recommendationViewModel.prepararNuevoGuardado()
-            sharedViewModel.ejecutarEvaluacion()
+            sharedViewModel.ejecutarEvaluacion(requireContext())
         }
 
         setupObservers()
@@ -68,7 +68,7 @@ class ResultFragment : Fragment() {
             resultado?.let {
                 val prioridad = it.prioridad
 
-                tvPriorityName.text = "PRIORIDAD ${prioridad.nombre}"
+                tvPriorityName.text = getString(R.string.priority_label, getString(prioridad.stringResId))
                 tvPriorityName.setTextColor(ContextCompat.getColor(requireContext(), prioridad.colorResId))
                 ivPriorityIcon.setImageResource(prioridad.iconResId)
 

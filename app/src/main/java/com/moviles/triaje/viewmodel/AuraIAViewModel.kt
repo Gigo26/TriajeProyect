@@ -1,17 +1,23 @@
 package com.moviles.triaje.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.ai.client.generativeai.type.content
+import com.moviles.triaje.R
 import com.moviles.triaje.model.ChatMessage
 import com.moviles.triaje.network.GeminiService
+import com.moviles.triaje.utils.PreferenceManager
+import com.moviles.triaje.utils.TranslationManager
 import kotlinx.coroutines.launch
 
-class AuraIAViewModel : ViewModel() {
+class AuraIAViewModel(application: Application) : AndroidViewModel(application) {
 
     private val geminiService = GeminiService()
+    private val prefManager = PreferenceManager(application)
+    private val context = application.applicationContext
     private val _messages = MutableLiveData<MutableList<ChatMessage>>(mutableListOf())
     val messages: LiveData<MutableList<ChatMessage>> get() = _messages
 
@@ -28,6 +34,8 @@ class AuraIAViewModel : ViewModel() {
         //  mensaje del usuario en estado "procesando" en gris
         addMessage(ChatMessage(userText, isUser = true, isTyping = true))
         _isAILoading.value = true
+
+        val isEnglish = prefManager.language == "en"
 
         viewModelScope.launch {
             // retraso visual
@@ -50,15 +58,15 @@ class AuraIAViewModel : ViewModel() {
 
             // llamar a la API
             try {
-                val response = geminiService.generateResponse(userText, history)
+                val response = geminiService.generateResponse(userText, isEnglish, history)
                 if (response != null) {
                     _lastResponse.value = response
                 } else {
-                    updateLastIAMessage("Error: La respuesta de la IA llegó vacía.", isTyping = false)
+                    updateLastIAMessage(context.getString(R.string.aura_error_empty), isTyping = false)
                 }
             } catch (e: Exception) {
                 // Mostramos el error REAL para diagnosticar
-                updateLastIAMessage("Error detectado: ${e.message}", isTyping = false)
+                updateLastIAMessage(context.getString(R.string.aura_error_detected, e.message ?: ""), isTyping = false)
             }
             _isAILoading.value = false
         }

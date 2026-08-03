@@ -1,9 +1,11 @@
 package com.moviles.triaje.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.moviles.triaje.R
 import com.moviles.triaje.model.Consulta
 import com.moviles.triaje.model.Pregunta
 import com.moviles.triaje.model.Recomendacion
@@ -13,10 +15,11 @@ import com.moviles.triaje.network.FirestoreService
 import com.moviles.triaje.utils.ResultadoEvolutivo
 import java.util.Date
 
-class RecommendationViewModel : ViewModel() {
+class RecommendationViewModel(application: Application) : AndroidViewModel(application) {
 
     private val firestoreService = FirestoreService()
     private val auth = FirebaseAuth.getInstance()
+    private val context = application.applicationContext
 
     private val _consultaFinal = MutableLiveData<Consulta>()
     val consultaFinal: LiveData<Consulta> get() = _consultaFinal
@@ -53,9 +56,9 @@ class RecommendationViewModel : ViewModel() {
         val mapaRespuestas = mutableMapOf<String, String>()
 
         // Mapeo profesional en lugar de preguntas literales
-        mapaRespuestas["Estado de Consciencia"] = if (respuestasBasicas.getOrElse(0) { true }) "Alerta / Consciente" else "Inconsciente"
-        mapaRespuestas["Patrón Respiratorio"] = if (respuestasBasicas.getOrElse(1) { true }) "Normal" else "Dificultad Severa / Ausente"
-        mapaRespuestas["Hemorragia Activa"] = if (respuestasBasicas.getOrElse(2) { false }) "Presente (Grave)" else "No presenta"
+        mapaRespuestas[context.getString(R.string.status_consciousness)] = if (respuestasBasicas.getOrElse(0) { true }) context.getString(R.string.val_conscious) else context.getString(R.string.val_unconscious)
+        mapaRespuestas[context.getString(R.string.status_respiratory)] = if (respuestasBasicas.getOrElse(1) { true }) context.getString(R.string.val_res_normal) else context.getString(R.string.val_res_severe)
+        mapaRespuestas[context.getString(R.string.status_bleeding)] = if (respuestasBasicas.getOrElse(2) { false }) context.getString(R.string.val_bleeding_present) else context.getString(R.string.val_bleeding_none)
 
         // Mapear el resto de preguntas dinámicas
         preguntasDinamicas.forEach {
@@ -72,15 +75,15 @@ class RecommendationViewModel : ViewModel() {
 
         // 3. Formatear Tipo de Paciente de forma amigable
         val tipoFormateado = when(tipoPaciente) {
-            "NINO" -> "Niño"
-            "GESTANTE" -> "Gestante"
-            "ADULTO_MAYOR" -> "Adulto Mayor"
-            else -> "Adulto"
+            "NINO" -> context.getString(R.string.patient_child)
+            "GESTANTE" -> context.getString(R.string.patient_pregnant)
+            "ADULTO_MAYOR" -> context.getString(R.string.patient_senior)
+            else -> context.getString(R.string.patient_adult)
         }
 
         val consulta = Consulta(
             tipo_paciente = tipoFormateado,
-            prioridad = resultadoEvolutivo.prioridad.nombre,
+            prioridad = context.getString(resultadoEvolutivo.prioridad.stringResId),
             sintomas = sintomas.map { it.sin_description },
             respuestas = mapaRespuestas,
             resultado_titulo = resultadoEvolutivo.diagnosticoProbable,
@@ -99,7 +102,7 @@ class RecommendationViewModel : ViewModel() {
      */
     fun saveTriageToHistory(onComplete: (Boolean, String) -> Unit) {
         if (isAlreadySaved) {
-            onComplete(true, "Ignorado: La consulta ya estaba guardada en esta sesión.")
+            onComplete(true, context.getString(R.string.save_ignored))
             return
         }
 
@@ -107,7 +110,7 @@ class RecommendationViewModel : ViewModel() {
         val uidUsuario = auth.currentUser?.uid
 
         if (uidUsuario.isNullOrEmpty()) {
-            onComplete(false, "El UID de Firebase Auth es nulo. El usuario no está logueado.")
+            onComplete(false, context.getString(R.string.save_no_uid))
             return
         }
 
@@ -115,15 +118,15 @@ class RecommendationViewModel : ViewModel() {
             firestoreService.guardarConsultaEnHistorial(uidUsuario, currentConsulta, object : Callback<Boolean> {
                 override fun onSuccess(result: Boolean?) {
                     isAlreadySaved = true
-                    onComplete(true, "Historial guardado exitosamente en Firestore.")
+                    onComplete(true, context.getString(R.string.save_success))
                 }
 
                 override fun onFailed(exception: Exception) {
-                    onComplete(false, "FirestoreService devolvió un error: ${exception.message}")
+                    onComplete(false, context.getString(R.string.save_error, exception.message))
                 }
             })
         } else {
-            onComplete(false, "El objeto ConsultaFinal está vacío y no se puede guardar.")
+            onComplete(false, context.getString(R.string.save_empty))
         }
     }
 }

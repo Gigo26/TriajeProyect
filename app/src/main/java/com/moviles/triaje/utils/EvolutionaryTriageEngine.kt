@@ -34,64 +34,55 @@ object EvolutionaryTriageEngine {
     private const val LIMITE_ESTANCAMIENTO = 15
 
     private val BANCO_RESULTADO_POSIBLE = listOf(
-        "Síndrome Coronario Agudo / Infarto Agudo de Miocardio", // 0
-        "Arritmia Cardíaca Severa con Descompensación", // 1
-        "Insuficiencia Respiratoria Aguda / Asma Severa", // 2
-        "Neumonía Adquirida con Criterios de Gravedad", // 3
-        "Enfermedad Cerebrovascular (ACV) en Ventana Terapéutica", // 4
-        "Síndrome Sincopal / Pérdida Transitoria de Conciencia", // 5
-        "Status Convulsivo / Trastorno Neurológico Paroxístico", // 6
-        "Trauma Lacerante Profundo con Riesgo de Infección Mayor", // 7
-        "Herida Punzocortante Penetrante con Compromiso Vascular", // 8
-        "Lesión Térmica / Quemadura de Segundo o Tercer Grado", // 9
-        "Trauma Contuso Severo / Hematoma Estructural", // 10
-        "Abrasión Cutánea Extensa con Riesgo de Contaminación", // 11
-        "Onicocriptosis Complicada / Infección Periungueal", // 12
-        "Trauma Osteomuscular / Fractura Cerrada o Expuesta", // 13
-        "Abdomen Agudo Quirúrgico (Apendicitis/Colecistitis)", // 14
-        "Hemorragia Digestiva Activa", // 15
-        "Síndrome Febril Agudo de Foco Infeccioso Desconocido", // 16
-        "Sepsis de Origen Indeterminado", // 17
-        "Choque Anafiláctico / Reacción Alérgica Severa", // 18
-        "Intoxicación Aguda por Agente Químico/Farmacológico", // 19
-        "Envenenamiento Sistémico por Mordedura/Picadura", // 20
-        "Infección Respiratoria Alta (Manejo Ambulatorio)", // 21
-        "Gastroenteritis Aguda sin Signos de Deshidratación", // 22
-        "Mialgia o Dolor Articular Leve", // 23
-        "Sintomatología Leve / Evaluación por Consulta Externa" // 24
+        R.string.diag_0, R.string.diag_1, R.string.diag_2, R.string.diag_3, R.string.diag_4,
+        R.string.diag_5, R.string.diag_6, R.string.diag_7, R.string.diag_8, R.string.diag_9,
+        R.string.diag_10, R.string.diag_11, R.string.diag_12, R.string.diag_13, R.string.diag_14,
+        R.string.diag_15, R.string.diag_16, R.string.diag_17, R.string.diag_18, R.string.diag_19,
+        R.string.diag_20, R.string.diag_21, R.string.diag_22, R.string.diag_23, R.string.diag_24
     )
 
-    private val BANCO_RECOMENDACIONES = listOf(
-        Recomendacion(0, "Activar Sistema de Emergencia", "Comuníquese de inmediato con el 106 (SAMU) o 116 (Bomberos).", R.drawable.ic_telefono), // 0
-        Recomendacion(0, "Asegurar Vía Aérea", "Coloque al paciente de lado (Posición Lateral de Seguridad) para evitar ahogamiento.", R.drawable.ic_escudo), // 1
-        Recomendacion(0, "Monitoreo Vital Constante", "Vigile respiración, pulso y estado de alerta cada 5 minutos.", R.drawable.ic_corazon), // 2
-        Recomendacion(0, "Ayuno Estricto", "No administre absolutamente nada por vía oral (ni agua, ni pastillas).", R.drawable.ic_pastillas), // 3
-        Recomendacion(0, "RCP Básico", "Si la persona no responde y no respira, inicie compresiones torácicas fuertes y rápidas.", R.drawable.ic_corazon), // 4
-        Recomendacion(0, "Hemostasia Directa", "Haga presión fuerte y sostenida sobre la herida con tela limpia para frenar el sangrado.", R.drawable.ic_sangrado), // 5
-        Recomendacion(0, "Inmovilizar Objeto", "Si hay cuchillo o cristal incrustado, NO lo retire. Fíjelo para que no se mueva.", R.drawable.ic_escudo), // 6
-        Recomendacion(0, "Torniquete de Salvamento", "Solo si la presión directa falla y el sangrado en extremidad es masivo, use un torniquete alto y ajustado.", R.drawable.ic_sangrado), // 7
-        Recomendacion(0, "Lavado Antiséptico", "Limpie los bordes de la herida con abundante agua a chorro y jabón neutro.", R.drawable.ic_info), // 8
-        Recomendacion(0, "Elevación de Miembro", "Eleve el brazo o pierna sangrante por encima del nivel del corazón.", R.drawable.ic_prim_auxilios), // 9
-        Recomendacion(0, "Irrigación Térmica", "Vierta agua a temperatura ambiente (nunca hielo) sobre la quemadura por al menos 15 minutos.", R.drawable.ic_prim_auxilios), // 10
-        Recomendacion(0, "Retirar Restricciones", "Quite anillos, pulseras o ropa ajustada cerca de la quemadura antes de que se inflame.", R.drawable.ic_info), // 11
-        Recomendacion(0, "Protección Estéril", "Cubra la zona afectada con film plástico transparente o gasa limpia sin presionar.", R.drawable.ic_escudo), // 12
-        Recomendacion(0, "Preservar Flictenas", "Prohibido reventar las ampollas; son una barrera natural contra infecciones.", R.drawable.ic_info), // 13
-        Recomendacion(0, "Crioterapia Local", "Aplique hielo envuelto en tela por periodos de 15 minutos para reducir el hematoma.", R.drawable.ic_corazon), // 14
-        Recomendacion(0, "Férula Improvisada", "Ante sospecha de fractura, inmovilice la zona usando cartón o tablas fijadas con vendas.", R.drawable.ic_escudo), // 15
-        Recomendacion(0, "Limpieza por Fricción Suave", "Limpie los raspones arrastrando suavemente la suciedad para evitar tatuaje traumático.", R.drawable.ic_info), // 16
-        Recomendacion(0, "Fomento Tibio Salino", "Sumerja la zona del uñero en agua tibia con sal por 15 minutos para ablandar el tejido.", R.drawable.ic_info), // 17
-        Recomendacion(0, "Evitar Manipulación", "No intente cortar la uña infectada con cortaúñas caseros. Requiere material esterilizado.", R.drawable.ic_escudo), // 18
-        Recomendacion(0, "Control Térmico Físico", "Use paños tibios en zonas de pliegues (axilas, ingles, frente) para bajar la fiebre.", R.drawable.ic_corazon), // 19
-        Recomendacion(0, "Vigilancia de Signos de Alarma", "Acuda urgente si hay rigidez de nuca, manchas púrpuras en la piel o letargo extremo.", R.drawable.ic_info), // 20
-        Recomendacion(0, "Auto-Inyector de Epinefrina", "En caso de alergia conocida y asfixia, asista al paciente a usar su inyector si lo posee.", R.drawable.ic_pastillas), // 21
-        Recomendacion(0, "Aislamiento del Tóxico", "Lleve el envase del producto ingerido al hospital para el antídoto exacto.", R.drawable.ic_info), // 22
-        Recomendacion(0, "Contraindicación de Vómito", "En ingesta de ácidos, lejía o hidrocarburos, está prohibido inducir el vómito.", R.drawable.ic_pastillas), // 23
-        Recomendacion(0, "Extracción por Raspado", "Saque el aguijón de abeja raspando con una tarjeta; no lo pellizque con pinzas.", R.drawable.ic_info), // 24
-        Recomendacion(0, "Posición Materna", "Coloque a la gestante recostada sobre su lado izquierdo para oxigenar al bebé.", R.drawable.ic_escudo), // 25
-        Recomendacion(0, "Evitar Hipotermia", "En adultos mayores y niños pequeños, cubra con mantas para evitar pérdida de calor.", R.drawable.ic_corazon), // 26
-        Recomendacion(0, "Cero Automedicación", "No administre analgésicos; pueden ocultar el cuadro clínico y retrasar el diagnóstico real.", R.drawable.ic_pastillas), // 27
-        Recomendacion(0, "Traslado Asistido", "Diríjase a la Sala de Urgencias del Hospital de Mayor Nivel resolutivo disponible.", R.drawable.ic_hospital), // 28
-        Recomendacion(0, "Agenda por Consultorio", "Programe una cita por Consulta Externa (Medicina General). No es una emergencia vital.", R.drawable.ic_hospital) // 29
+    private val BANCO_RECOMENDACIONES_RESOURCES = listOf(
+        Pair(R.string.rec_title_0, R.string.rec_desc_0),
+        Pair(R.string.rec_title_1, R.string.rec_desc_1),
+        Pair(R.string.rec_title_2, R.string.rec_desc_2),
+        Pair(R.string.rec_title_3, R.string.rec_desc_3),
+        Pair(R.string.rec_title_4, R.string.rec_desc_4),
+        Pair(R.string.rec_title_5, R.string.rec_desc_5),
+        Pair(R.string.rec_title_6, R.string.rec_desc_6),
+        Pair(R.string.rec_title_7, R.string.rec_desc_7),
+        Pair(R.string.rec_title_8, R.string.rec_desc_8),
+        Pair(R.string.rec_title_9, R.string.rec_desc_9),
+        Pair(R.string.rec_title_10, R.string.rec_desc_10),
+        Pair(R.string.rec_title_11, R.string.rec_desc_11),
+        Pair(R.string.rec_title_12, R.string.rec_desc_12),
+        Pair(R.string.rec_title_13, R.string.rec_desc_13),
+        Pair(R.string.rec_title_14, R.string.rec_desc_14),
+        Pair(R.string.rec_title_15, R.string.rec_desc_15),
+        Pair(R.string.rec_title_16, R.string.rec_desc_16),
+        Pair(R.string.rec_title_17, R.string.rec_desc_17),
+        Pair(R.string.rec_title_18, R.string.rec_desc_18),
+        Pair(R.string.rec_title_19, R.string.rec_desc_19),
+        Pair(R.string.rec_title_20, R.string.rec_desc_20),
+        Pair(R.string.rec_title_21, R.string.rec_desc_21),
+        Pair(R.string.rec_title_22, R.string.rec_desc_22),
+        Pair(R.string.rec_title_23, R.string.rec_desc_23),
+        Pair(R.string.rec_title_24, R.string.rec_desc_24),
+        Pair(R.string.rec_title_25, R.string.rec_desc_25),
+        Pair(R.string.rec_title_26, R.string.rec_desc_26),
+        Pair(R.string.rec_title_27, R.string.rec_desc_27),
+        Pair(R.string.rec_title_28, R.string.rec_desc_28),
+        Pair(R.string.rec_title_29, R.string.rec_desc_29)
+    )
+
+    private val BANCO_RECOMENDACIONES_ICONS = listOf(
+        R.drawable.ic_telefono, R.drawable.ic_escudo, R.drawable.ic_corazon, R.drawable.ic_pastillas,
+        R.drawable.ic_corazon, R.drawable.ic_sangrado, R.drawable.ic_escudo, R.drawable.ic_sangrado,
+        R.drawable.ic_info, R.drawable.ic_prim_auxilios, R.drawable.ic_prim_auxilios, R.drawable.ic_info,
+        R.drawable.ic_escudo, R.drawable.ic_info, R.drawable.ic_corazon, R.drawable.ic_escudo,
+        R.drawable.ic_info, R.drawable.ic_info, R.drawable.ic_escudo, R.drawable.ic_corazon,
+        R.drawable.ic_info, R.drawable.ic_pastillas, R.drawable.ic_info, R.drawable.ic_pastillas,
+        R.drawable.ic_info, R.drawable.ic_escudo, R.drawable.ic_corazon, R.drawable.ic_pastillas,
+        R.drawable.ic_hospital, R.drawable.ic_hospital
     )
 
     fun evaluarTriajeEvolutivo(context: DecisionContext): ResultadoEvolutivo {
@@ -173,7 +164,7 @@ object EvolutionaryTriageEngine {
         } else {
             val afirmativas = context.preguntasDinamicas.count { p ->
                 val r = p.options.getOrNull(p.selectedOptionIndex) ?: ""
-                r.equals("Sí", ignoreCase = true)
+                r.equals("Sí", ignoreCase = true) || r.equals("Yes", ignoreCase = true)
             }
             when {
                 afirmativas >= 3 -> if (c.prioridad == Prioridad.ROJA || c.prioridad == Prioridad.NARANJA) score += 300.0 else score -= 200.0
@@ -264,7 +255,7 @@ object EvolutionaryTriageEngine {
                 listOf(10, 11, 12, 13).forEach { if (c.recomendacionesIndices.contains(it)) score -= 600.0 } // Adiós Quemaduras
             }
             if (context.claseIA != "Ingrown_nails") {
-                listOf(17, 18).forEach { if (c.recomendacionesIndices.contains(it)) score -= 600.0 } // Adiós Uñero (AQUÍ ESTABA TU ERROR ANTES)
+                listOf(17, 18).forEach { if (c.recomendacionesIndices.contains(it)) score -= 600.0 } // Adiós Uñero
             }
         }
 
@@ -304,7 +295,7 @@ object EvolutionaryTriageEngine {
     private fun generarCromosomaAleatorio(): Cromosoma {
         val prio = Prioridad.values().random()
         val diag = Random.nextInt(BANCO_RESULTADO_POSIBLE.size)
-        val recs = (0 until BANCO_RECOMENDACIONES.size).shuffled().take(4) // TAMAÑO 4
+        val recs = (0 until BANCO_RECOMENDACIONES_RESOURCES.size).shuffled().take(4) // TAMAÑO 4
         return Cromosoma(prio, diag, recs, fitnessCalculado = false)
     }
 
@@ -329,8 +320,8 @@ object EvolutionaryTriageEngine {
     private fun mutar(c: Cromosoma): Cromosoma {
         val recs = c.recomendacionesIndices.toMutableList()
         val idx = Random.nextInt(4) // TAMAÑO 4
-        var nuevoGen = Random.nextInt(BANCO_RECOMENDACIONES.size)
-        while (recs.contains(nuevoGen)) { nuevoGen = Random.nextInt(BANCO_RECOMENDACIONES.size) }
+        var nuevoGen = Random.nextInt(BANCO_RECOMENDACIONES_RESOURCES.size)
+        while (recs.contains(nuevoGen)) { nuevoGen = Random.nextInt(BANCO_RECOMENDACIONES_RESOURCES.size) }
         recs[idx] = nuevoGen
 
         val prio = if (Random.nextDouble() < 0.2) Prioridad.values().random() else c.prioridad
@@ -340,32 +331,44 @@ object EvolutionaryTriageEngine {
     }
 
     private fun construirResultadoFinal(c: Cromosoma, context: DecisionContext): ResultadoEvolutivo {
-        val diagnostico = BANCO_RESULTADO_POSIBLE.getOrElse(c.diagnosticoIndex) { "Evaluación general clínica" }
+        val diagResId = BANCO_RESULTADO_POSIBLE.getOrElse(c.diagnosticoIndex) { R.string.diag_default }
+        val diagnostico = context.context.getString(diagResId)
         val explicacionMedica = redactarJustificacionClinica(c, context)
 
         val recomendaciones = c.recomendacionesIndices.mapIndexed { index, recIdx ->
-            val plantilla = BANCO_RECOMENDACIONES[recIdx]
-            Recomendacion(index + 1, plantilla.titulo, plantilla.recomendacion, plantilla.iconResId)
+            val pair = BANCO_RECOMENDACIONES_RESOURCES[recIdx]
+            val icon = BANCO_RECOMENDACIONES_ICONS[recIdx]
+            Recomendacion(
+                index + 1,
+                context.context.getString(pair.first),
+                context.context.getString(pair.second),
+                icon
+            )
         }
 
         return ResultadoEvolutivo(c.prioridad, diagnostico, explicacionMedica, recomendaciones)
     }
 
     private fun redactarJustificacionClinica(c: Cromosoma, context: DecisionContext): String {
-        val sb = StringBuilder("Cuadro clínico derivado por el motor de triaje. ")
+        val androidContext = context.context
+        val sb = StringBuilder(androidContext.getString(R.string.just_intro))
+        sb.append(" ")
 
         val sintomas = context.sintomas.joinToString(", ") { it.sin_description.lowercase() }
         if (sintomas.isNotEmpty()) {
-            sb.append("El paciente manifiesta $sintomas. ")
+            sb.append(androidContext.getString(R.string.just_patient_manifests, sintomas))
+            sb.append(" ")
         }
 
         if (!context.claseIA.isNullOrEmpty() && context.claseIA != "Error" && context.claseIA != "No se pudo determinar") {
-            sb.append("El análisis visual por IA detectó características compatibles con [${context.claseIA}]. ")
+            sb.append(androidContext.getString(R.string.just_ia_detected, context.claseIA))
+            sb.append(" ")
         }
 
         if (context.tipoPaciente != "ADULTO") {
             val pacienteF = context.tipoPaciente.lowercase().replace("_", " ")
-            sb.append("Se han aplicado protocolos de protección debido a la condición de vulnerabilidad ($pacienteF). ")
+            sb.append(androidContext.getString(R.string.just_vulnerability, pacienteF))
+            sb.append(" ")
         }
 
         val consciente = context.respuestasBasicas.getOrElse(0) { true }
@@ -375,15 +378,19 @@ object EvolutionaryTriageEngine {
 
         if (esCritico) {
             val alarmasClinicas = mutableListOf<String>()
-            if (!consciente) alarmasClinicas.add("pérdida de consciencia")
-            if (!respira) alarmasClinicas.add("alteración respiratoria severa o apnea")
-            if (sangra) alarmasClinicas.add("hemorragia activa grave")
+            if (!consciente) alarmasClinicas.add(androidContext.getString(R.string.just_alarm_consciousness))
+            if (!respira) alarmasClinicas.add(androidContext.getString(R.string.just_alarm_respiratory))
+            if (sangra) alarmasClinicas.add(androidContext.getString(R.string.just_alarm_bleeding))
 
-            sb.append("Alerta crítica detectada por: ${alarmasClinicas.joinToString(" y ")}. ")
-            sb.append("Se asigna Prioridad ${c.prioridad.nombre} por compromiso inminente de vida. Requiere soporte vital inmediato.")
+            sb.append(androidContext.getString(R.string.just_critical_alert, alarmasClinicas.joinToString(" y ")))
+            sb.append(" ")
+            sb.append(androidContext.getString(R.string.just_assign_priority, androidContext.getString(c.prioridad.stringResId)))
         } else {
-            val graves = context.preguntasDinamicas.count { (it.options.getOrNull(it.selectedOptionIndex) ?: "") == "Sí" }
-            sb.append("Se determina nivel de riesgo ${c.prioridad.nombre} al evaluar $graves factor(es) agravante(s) en la anamnesis.")
+            val graves = context.preguntasDinamicas.count { 
+                val r = it.options.getOrNull(it.selectedOptionIndex) ?: ""
+                r.equals("Sí", ignoreCase = true) || r.equals("Yes", ignoreCase = true)
+            }
+            sb.append(androidContext.getString(R.string.just_determine_risk, androidContext.getString(c.prioridad.stringResId), graves))
         }
 
         return sb.toString()

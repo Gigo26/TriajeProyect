@@ -149,6 +149,156 @@
     <string name="loading_content">Cargando contenido...</string>
     <string name="error_loading_content">No se pudo cargar el contenido.</string>
 
+    <!-- Navigation Menu -->
+    <string name="menu_home">Inicio</string>
+    <string name="menu_hospitals">Hospitales</string>
+    <string name="menu_history">Historial</string>
+    <string name="menu_aura_ia">Aura IA</string>
+    <string name="menu_profile">Perfil</string>
+
+    <!-- Aura IA -->
+    <string name="aura_welcome">Hola, soy Aura IA. Estoy aquí para ayudarte con tus consultas médicas. ¿Cómo te sientes hoy?</string>
+    <string name="aura_error_empty">Error: La respuesta de la IA llegó vacía.</string>
+    <string name="aura_error_detected">Error detectado: %1$s</string>
+
+    <!-- Triage Diagnosis -->
+    <string name="diag_0">Síndrome Coronario Agudo / Infarto Agudo de Miocardio</string>
+    <string name="diag_1">Arritmia Cardíaca Severa con Descompensación</string>
+    <string name="diag_2">Insuficiencia Respiratoria Aguda / Asma Severa</string>
+    <string name="diag_3">Neumonía Adquirida con Criterios de Gravedad</string>
+    <string name="diag_4">Enfermedad Cerebrovascular (ACV) en Ventana Terapéutica</string>
+    <string name="diag_5">Síndrome Sincopal / Pérdida Transitoria de Conciencia</string>
+    <string name="diag_6">Status Convulsivo / Trastorno Neurológico Paroxístico</string>
+    <string name="diag_7">Trauma Lacerante Profundo con Riesgo de Infección Mayor</string>
+    <string name="diag_8">Herida Punzocortante Penetrante con Compromiso Vascular</string>
+    <string name="diag_9">Lesión Térmica / Quemadura de Segundo o Tercer Grado</string>
+    <string name="diag_10">Trauma Contuso Severo / Hematoma Estructural</string>
+    <string name="diag_11">Abrasión Cutánea Extensa con Riesgo de Contaminación</string>
+    <string name="diag_12">Onicocriptosis Complicada / Infección Periungueal</string>
+    <string name="diag_13">Trauma Osteomuscular / Fractura Cerrada o Expuesta</string>
+    <string name="diag_14">Abdomen Agudo Quirúrgico (Apendicitis/Colecistitis)</string>
+    <string name="diag_15">Hemorragia Digestiva Activa</string>
+    <string name="diag_16">Síndrome Febril Agudo de Foco Infeccioso Desconocido</string>
+    <string name="diag_17">Sepsis de Origen Indeterminado</string>
+    <string name="diag_18">Choque Anafiláctico / Reacción Alérgica Severa</string>
+    <string name="diag_19">Intoxicación Aguda por Agente Químico/Farmacológico</string>
+    <string name="diag_20">Envenenamiento Sistémico por Mordedura/Picadura</string>
+    <string name="diag_21">Infección Respiratoria Alta (Manejo Ambulatorio)</string>
+    <string name="diag_22">Gastroenteritis Aguda sin Signos de Deshidratación</string>
+    <string name="diag_23">Mialgia o Dolor Articular Leve</string>
+    <string name="diag_24">Sintomatología Leve / Evaluación por Consulta Externa</string>
+    <string name="diag_default">Evaluación general clínica</string>
+
+    <!-- Recommendations Titles -->
+    <string name="rec_title_0">Activar Sistema de Emergencia</string>
+    <string name="rec_title_1">Asegurar Vía Aérea</string>
+    <string name="rec_title_2">Monitoreo Vital Constante</string>
+    <string name="rec_title_3">Ayuno Estricto</string>
+    <string name="rec_title_4">RCP Básico</string>
+    <string name="rec_title_5">Hemostasia Directa</string>
+    <string name="rec_title_6">Inmovilizar Objeto</string>
+    <string name="rec_title_7">Torniquete de Salvamento</string>
+    <string name="rec_title_8">Lavado Antiséptico</string>
+    <string name="rec_title_9">Elevación de Miembro</string>
+    <string name="rec_title_10">Irrigación Térmica</string>
+    <string name="rec_title_11">Retirar Restricciones</string>
+    <string name="rec_title_12">Protección Estéril</string>
+    <string name="rec_title_13">Preservar Flictenas</string>
+    <string name="rec_title_14">Crioterapia Local</string>
+    <string name="rec_title_15">Férula Improvisada</string>
+    <string name="rec_title_16">Limpieza por Fricción Suave</string>
+    <string name="rec_title_17">Fomento Tibio Salino</string>
+    <string name="rec_title_18">Evitar Manipulación</string>
+    <string name="rec_title_19">Control Térmico Físico</string>
+    <string name="rec_title_20">Vigilancia de Signos de Alarma</string>
+    <string name="rec_title_21">Auto-Inyector de Epinefrina</string>
+    <string name="rec_title_22">Aislamiento del Tóxico</string>
+    <string name="rec_title_23">Contraindicación de Vómito</string>
+    <string name="rec_title_24">Extracción por Raspado</string>
+    <string name="rec_title_25">Posición Materna</string>
+    <string name="rec_title_26">Evitar Hipotermia</string>
+    <string name="rec_title_27">Cero Automedicación</string>
+    <string name="rec_title_28">Traslado Asistido</string>
+    <string name="rec_title_29">Agenda por Consultorio</string>
+
+    <!-- Recommendations Descriptions -->
+    <string name="rec_desc_0">Comuníquese de inmediato con el 106 (SAMU) o 116 (Bomberos).</string>
+    <string name="rec_desc_1">Coloque al paciente de lado (Posición Lateral de Seguridad) para evitar ahogamiento.</string>
+    <string name="rec_desc_2">Vigile respiración, pulso y estado de alerta cada 5 minutos.</string>
+    <string name="rec_desc_3">No administre absolutamente nada por vía oral (ni agua, ni pastillas).</string>
+    <string name="rec_desc_4">Si la persona no responde y no respira, inicie compresiones torácicas fuertes y rápidas.</string>
+    <string name="rec_desc_5">Haga presión fuerte y sostenida sobre la herida con tela limpia para frenar el sangrado.</string>
+    <string name="rec_desc_6">Si hay cuchillo o cristal incrustado, NO lo retire. Fíjelo para que no se mueva.</string>
+    <string name="rec_desc_7">Solo si la presión directa falla y el sangrado en extremidad es masivo, use un torniquete alto y ajustado.</string>
+    <string name="rec_desc_8">Limpie los bordes de la herida con abundante agua a chorro y jabón neutro.</string>
+    <string name="rec_desc_9">Eleve el brazo o pierna sangrante por encima del nivel del corazón.</string>
+    <string name="rec_desc_10">Vierta agua a temperatura ambiente (nunca hielo) sobre la quemadura por al menos 15 minutos.</string>
+    <string name="rec_desc_11">Quite anillos, pulseras o ropa ajustada cerca de la quemadura antes de que se inflame.</string>
+    <string name="rec_desc_12">Cubra la zona afectada con film plástico transparente o gasa limpia sin presionar.</string>
+    <string name="rec_desc_13">Prohibido reventar las ampollas; son una barrera natural contra infecciones.</string>
+    <string name="rec_desc_14">Aplique hielo envuelto en tela por periodos de 15 minutos para reducir el hematoma.</string>
+    <string name="rec_desc_15">Ante sospecha de fractura, inmovilice la zona usando cartón o tablas fijadas con vendas.</string>
+    <string name="rec_desc_16">Limpie los raspones arrastrando suavemente la suciedad para evitar tatuaje traumático.</string>
+    <string name="rec_desc_17">Sumerja la zona del uñero en agua tibia con sal por 15 minutos para ablandar el tejido.</string>
+    <string name="rec_desc_18">No intente cortar la uña infectada con cortaúñas caseros. Requiere material esterilizado.</string>
+    <string name="rec_desc_19">Use paños tibios en zonas de pliegues (axilas, ingles, frente) para bajar la fiebre.</string>
+    <string name="rec_desc_20">Acuda urgente si hay rigidez de nuca, manchas púrpuras en la piel o letargo extremo.</string>
+    <string name="rec_desc_21">En caso de alergia conocida y asfixia, asista al paciente a usar su inyector si lo posee.</string>
+    <string name="rec_desc_22">Lleve el envase del producto ingerido al hospital para el antídoto exacto.</string>
+    <string name="rec_desc_23">En ingesta de ácidos, lejía o hidrocarburos, está prohibido inducir el vómito.</string>
+    <string name="rec_desc_24">Saque el aguijón de abeja raspando con una tarjeta; no lo pellizque con pinzas.</string>
+    <string name="rec_desc_25">Coloque a la gestante recostada sobre su lado izquierdo para oxigenar al bebé.</string>
+    <string name="rec_desc_26">En adultos mayores y niños pequeños, cubra con mantas para evitar pérdida de calor.</string>
+    <string name="rec_desc_27">No administre analgésicos; pueden ocultar el cuadro clínico y retrasar el diagnóstico real.</string>
+    <string name="rec_desc_28">Diríjase a la Sala de Urgencias del Hospital de Mayor Nivel resolutivo disponible.</string>
+    <string name="rec_desc_29">Programe una cita por Consulta Externa (Medicina General). No es una emergencia vital.</string>
+
+    <!-- Justification Clinical -->
+    <string name="just_intro">Cuadro clínico derivado por el motor de triaje.</string>
+    <string name="just_patient_manifests">El paciente manifiesta %1$s.</string>
+    <string name="just_ia_detected">El análisis visual por IA detectó características compatibles con [%1$s].</string>
+    <string name="just_vulnerability">Se han aplicado protocolos de protección debido a la condición de vulnerabilidad (%1$s).</string>
+    <string name="just_critical_alert">Alerta crítica detectada por: %1$s.</string>
+    <string name="just_assign_priority">Se asigna Prioridad %1$s por compromiso inminente de vida. Requiere soporte vital inmediato.</string>
+    <string name="just_determine_risk">Se determina nivel de riesgo %1$s al evaluar %2$d factor(es) agravante(s) en la anamnesis.</string>
+    <string name="just_alarm_consciousness">pérdida de consciencia</string>
+    <string name="just_alarm_respiratory">alteración respiratoria severa o apnea</string>
+    <string name="just_alarm_bleeding">hemorragia activa grave</string>
+
+    <!-- Result Fragment -->
+    <string name="priority_label">PRIORIDAD %1$s</string>
+
+    <!-- Recommendation ViewModel -->
+    <string name="status_consciousness">Estado de Consciencia</string>
+    <string name="status_respiratory">Patrón Respiratorio</string>
+    <string name="status_bleeding">Hemorragia Activa</string>
+    <string name="val_conscious">Alerta / Consciente</string>
+    <string name="val_unconscious">Inconsciente</string>
+    <string name="val_res_normal">Normal</string>
+    <string name="val_res_severe">Dificultad Severa / Ausente</string>
+    <string name="val_bleeding_present">Presente (Grave)</string>
+    <string name="val_bleeding_none">No presenta</string>
+    <string name="patient_child">Niño</string>
+    <string name="patient_pregnant">Gestante</string>
+    <string name="patient_senior">Adulto Mayor</string>
+    <string name="patient_adult">Adulto</string>
+
+    <string name="save_ignored">Ignorado: La consulta ya estaba guardada en esta sesión.</string>
+    <string name="save_no_uid">El UID de Firebase Auth es nulo. El usuario no está logueado.</string>
+    <string name="save_success">Historial guardado exitosamente en Firestore.</string>
+    <string name="save_error">FirestoreService devolvió un error: %1$s</string>
+    <string name="save_empty">El objeto ConsultaFinal está vacío y no se puede guardar.</string>
+
+    <!-- Language Names -->
+    <string name="lang_english">English</string>
+    <string name="lang_spanish">Español</string>
+
+    <!-- Historial -->
+    <string name="history_empty">No tienes consultas registradas.</string>
+    <string name="history_patient">Paciente: %1$s</string>
+    <string name="history_symptoms">Síntomas: %1$s</string>
+    <string name="history_details">Detalles de la Consulta</string>
+
     <!-- Guide Dialogs Detail -->
     <string name="guide_1st_aid_title">Guía de 1eros A</string>
     <string name="guide_1st_aid_info">Protocolo de Actuación:\n1. Evaluación primaria (ABCDE).\n2. Asegurar vía aérea y control de columna cervical.\n3. Evaluación de ventilación y circulación.\n4. Identificación de déficit neurológico.\n*Priorice el soporte vital básico ante colapso.*</string>

@@ -153,6 +153,156 @@
     <string name="loading_content">Loading content...</string>
     <string name="error_loading_content">Could not load content.</string>
 
+    <!-- Navigation Menu -->
+    <string name="menu_home">Home</string>
+    <string name="menu_hospitals">Hospitals</string>
+    <string name="menu_history">History</string>
+    <string name="menu_aura_ia">Aura IA</string>
+    <string name="menu_profile">Profile</string>
+
+    <!-- Aura IA -->
+    <string name="aura_welcome">Hello, I am Aura IA. I am here to help you with your medical inquiries. How are you feeling today?</string>
+    <string name="aura_error_empty">Error: AI response came back empty.</string>
+    <string name="aura_error_detected">Error detected: %1$s</string>
+
+    <!-- Triage Diagnosis -->
+    <string name="diag_0">Acute Coronary Syndrome / Acute Myocardial Infarction</string>
+    <string name="diag_1">Severe Cardiac Arrhythmia with Decompensation</string>
+    <string name="diag_2">Acute Respiratory Failure / Severe Asthma</string>
+    <string name="diag_3">Community-Acquired Pneumonia with Severity Criteria</string>
+    <string name="diag_4">Cerebrovascular Accident (Stroke) in Therapeutic Window</string>
+    <string name="diag_5">Syncopal Syndrome / Transient Loss of Consciousness</string>
+    <string name="diag_6">Convulsive Status / Paroxysmal Neurological Disorder</string>
+    <string name="diag_7">Deep Lacerating Trauma with Major Infection Risk</string>
+    <string name="diag_8">Penetrating Puncture Wound with Vascular Compromise</string>
+    <string name="diag_9">Thermal Injury / Second or Third Degree Burn</string>
+    <string name="diag_10">Severe Blunt Trauma / Structural Hematoma</string>
+    <string name="diag_11">Extensive Skin Abrasion with Contamination Risk</string>
+    <string name="diag_12">Complicated Onychocryptosis / Periungual Infection</string>
+    <string name="diag_13">Musculoskeletal Trauma / Closed or Open Fracture</string>
+    <string name="diag_14">Surgical Acute Abdomen (Appendicitis/Cholecystitis)</string>
+    <string name="diag_15">Active Gastrointestinal Bleeding</string>
+    <string name="diag_16">Acute Febrile Syndrome of Unknown Infectious Focus</string>
+    <string name="diag_17">Sepsis of Undetermined Origin</string>
+    <string name="diag_18">Anaphylactic Shock / Severe Allergic Reaction</string>
+    <string name="diag_19">Acute Intoxication by Chemical/Pharmacological Agent</string>
+    <string name="diag_20">Systemic Poisoning by Bite/Sting</string>
+    <string name="diag_21">Upper Respiratory Infection (Ambulatory Management)</string>
+    <string name="diag_22">Acute Gastroenteritis without Signs of Dehydration</string>
+    <string name="diag_23">Myalgia or Mild Joint Pain</string>
+    <string name="diag_24">Mild Symptomatology / Evaluation by External Consultation</string>
+    <string name="diag_default">General clinical evaluation</string>
+
+    <!-- Recommendations Titles -->
+    <string name="rec_title_0">Activate Emergency System</string>
+    <string name="rec_title_1">Secure Airway</string>
+    <string name="rec_title_2">Constant Vital Monitoring</string>
+    <string name="rec_title_3">Strict Fasting</string>
+    <string name="rec_title_4">Basic CPR</string>
+    <string name="rec_title_5">Direct Hemostasis</string>
+    <string name="rec_title_6">Immobilize Object</string>
+    <string name="rec_title_7">Life-Saving Tourniquet</string>
+    <string name="rec_title_8">Antiseptic Wash</string>
+    <string name="rec_title_9">Limb Elevation</string>
+    <string name="rec_title_10">Thermal Irrigation</string>
+    <string name="rec_title_11">Remove Restrictions</string>
+    <string name="rec_title_12">Sterile Protection</string>
+    <string name="rec_title_13">Preserve Phlyctenules</string>
+    <string name="rec_title_14">Local Cryotherapy</string>
+    <string name="rec_title_15">Improvised Splint</string>
+    <string name="rec_title_16">Gentle Friction Cleaning</string>
+    <string name="rec_title_17">Warm Saline Soak</string>
+    <string name="rec_title_18">Avoid Manipulation</string>
+    <string name="rec_title_19">Physical Thermal Control</string>
+    <string name="rec_title_20">Warning Signs Surveillance</string>
+    <string name="rec_title_21">Epinephrine Auto-Injector</string>
+    <string name="rec_title_22">Toxic Isolation</string>
+    <string name="rec_title_23">Vomiting Contraindication</string>
+    <string name="rec_title_24">Scraping Extraction</string>
+    <string name="rec_title_25">Maternal Position</string>
+    <string name="rec_title_26">Avoid Hypothermia</string>
+    <string name="rec_title_27">Zero Self-Medication</string>
+    <string name="rec_title_28">Assisted Transfer</string>
+    <string name="rec_title_29">Schedule by Clinic</string>
+
+    <!-- Recommendations Descriptions -->
+    <string name="rec_desc_0">Contact 106 (SAMU) or 116 (Firefighters) immediately.</string>
+    <string name="rec_desc_1">Place the patient on their side (Recovery Position) to prevent choking.</string>
+    <string name="rec_desc_2">Monitor breathing, pulse, and alertness every 5 minutes.</string>
+    <string name="rec_desc_3">Do not administer anything by mouth (neither water nor pills).</string>
+    <string name="rec_desc_4">If the person does not respond and is not breathing, start strong and fast chest compressions.</string>
+    <string name="rec_desc_5">Apply strong and sustained pressure on the wound with clean cloth to stop bleeding.</string>
+    <string name="rec_desc_6">If there is an embedded knife or glass, DO NOT remove it. Fix it so it doesn\'t move.</string>
+    <string name="rec_desc_7">Only if direct pressure fails and limb bleeding is massive, use a high and tight tourniquet.</string>
+    <string name="rec_desc_8">Clean the edges of the wound with plenty of running water and neutral soap.</string>
+    <string name="rec_desc_9">Elevate the bleeding arm or leg above heart level.</string>
+    <string name="rec_desc_10">Pour room temperature water (never ice) over the burn for at least 15 minutes.</string>
+    <string name="rec_desc_11">Remove rings, bracelets, or tight clothing near the burn before it swells.</string>
+    <string name="rec_desc_12">Cover the affected area with clear plastic film or clean gauze without pressing.</string>
+    <string name="rec_desc_13">Prohibited to pop blisters; they are a natural barrier against infections.</string>
+    <string name="rec_desc_14">Apply ice wrapped in cloth for 15-minute periods to reduce the hematoma.</string>
+    <string name="rec_desc_15">If a fracture is suspected, immobilize the area using cardboard or boards fixed with bandages.</string>
+    <string name="rec_desc_16">Clean scrapes by gently dragging away dirt to avoid traumatic tattooing.</string>
+    <string name="rec_desc_17">Soak the ingrown nail area in warm salt water for 15 minutes to soften the tissue.</string>
+    <string name="rec_desc_18">Do not try to cut the infected nail with household nail clippers. Requires sterilized material.</string>
+    <string name="rec_desc_19">Use warm cloths in fold areas (armpits, groin, forehead) to lower fever.</string>
+    <string name="rec_desc_20">Go urgently if there is neck stiffness, purple spots on the skin, or extreme lethargy.</string>
+    <string name="rec_desc_21">In case of known allergy and asphyxia, assist the patient in using their injector if they have one.</string>
+    <string name="rec_desc_22">Take the product container to the hospital for the exact antidote.</string>
+    <string name="rec_desc_23">In case of ingestion of acids, bleach, or hydrocarbons, it is forbidden to induce vomiting.</string>
+    <string name="rec_desc_24">Remove the bee stinger by scraping with a card; do not pinch it with tweezers.</string>
+    <string name="rec_desc_25">Place the pregnant woman lying on her left side to oxygenate the baby.</string>
+    <string name="rec_desc_26">In seniors and young children, cover with blankets to avoid heat loss.</string>
+    <string name="rec_desc_27">Do not administer painkillers; they can hide the clinical picture and delay the real diagnosis.</string>
+    <string name="rec_desc_28">Go to the Emergency Room of the Highest Level Hospital available.</string>
+    <string name="rec_desc_29">Schedule an appointment by External Consultation (General Medicine). It is not a vital emergency.</string>
+
+    <!-- Justification Clinical -->
+    <string name="just_intro">Clinical picture derived by the triage engine.</string>
+    <string name="just_patient_manifests">The patient manifests %1$s.</string>
+    <string name="just_ia_detected">AI visual analysis detected features compatible with [%1$s].</string>
+    <string name="just_vulnerability">Protection protocols have been applied due to vulnerability condition (%1$s).</string>
+    <string name="just_critical_alert">Critical alert detected by: %1$s.</string>
+    <string name="just_assign_priority">Priority %1$s is assigned due to imminent life compromise. Requires immediate life support.</string>
+    <string name="just_determine_risk">Risk level %1$s is determined by evaluating %2$d aggravating factor(s) in the anamnesis.</string>
+    <string name="just_alarm_consciousness">loss of consciousness</string>
+    <string name="just_alarm_respiratory">severe respiratory alteration or apnea</string>
+    <string name="just_alarm_bleeding">severe active bleeding</string>
+
+    <!-- Result Fragment -->
+    <string name="priority_label">PRIORITY %1$s</string>
+
+    <!-- Recommendation ViewModel -->
+    <string name="status_consciousness">Consciousness Status</string>
+    <string name="status_respiratory">Respiratory Pattern</string>
+    <string name="status_bleeding">Active Bleeding</string>
+    <string name="val_conscious">Alert / Conscious</string>
+    <string name="val_unconscious">Unconscious</string>
+    <string name="val_res_normal">Normal</string>
+    <string name="val_res_severe">Severe Difficulty / Absent</string>
+    <string name="val_bleeding_present">Present (Severe)</string>
+    <string name="val_bleeding_none">Does not present</string>
+    <string name="patient_child">Child</string>
+    <string name="patient_pregnant">Pregnant</string>
+    <string name="patient_senior">Senior Citizen</string>
+    <string name="patient_adult">Adult</string>
+
+    <string name="save_ignored">Ignored: The consultation was already saved in this session.</string>
+    <string name="save_no_uid">Firebase Auth UID is null. User is not logged in.</string>
+    <string name="save_success">History successfully saved in Firestore.</string>
+    <string name="save_error">FirestoreService returned an error: %1$s</string>
+    <string name="save_empty">The ConsultaFinal object is empty and cannot be saved.</string>
+
+    <!-- Language Names -->
+    <string name="lang_english">English</string>
+    <string name="lang_spanish">Spanish</string>
+
+    <!-- Historial -->
+    <string name="history_empty">You have no registered consultations.</string>
+    <string name="history_patient">Patient: %1$s</string>
+    <string name="history_symptoms">Symptoms: %1$s</string>
+    <string name="history_details">Consultation Details</string>
+
     <!-- Guide Dialogs Detail -->
     <string name="guide_1st_aid_title">1st Aid Guide</string>
     <string name="guide_1st_aid_info">Action Protocol:\n1. Primary assessment (ABCDE).\n2. Secure airway and cervical spine control.\n3. Assess ventilation and circulation.\n4. Neurological deficit identification.\n*Prioritize basic life support in case of collapse.*</string>

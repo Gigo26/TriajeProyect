@@ -6,35 +6,30 @@
     <item
         android:id="@+id/navHomeFragment"
         android:icon="@drawable/ic_home"
-        android:title="Inicio"
-        tools:ignore="HardcodedText" />
+        android:title="@string/menu_home" />
 
     <!-- Opción de Historial/Mis Triajes -->
     <item
         android:id="@+id/navHospitalesFragment"
         android:icon="@drawable/ic_hospital"
-        android:title="Hospitales"
-        tools:ignore="HardcodedText" />
+        android:title="@string/menu_hospitals" />
 
     <!-- Opción de Historial/Mis Triajes -->
     <item
         android:id="@+id/navHistorialFragment"
         android:icon="@drawable/ic_historial"
-        android:title="Historial"
-        tools:ignore="HardcodedText" />
+        android:title="@string/menu_history" />
 
     <!-- Opción de Aura IA -->
     <item
         android:id="@+id/navAuraIAFragment"
         android:icon="@drawable/ic_chat"
-        android:title="Aura IA"
-        tools:ignore="HardcodedText" />
+        android:title="@string/menu_aura_ia" />
 
     <!-- Opción de Perfil -->
     <item
         android:id="@+id/navPerfilFragment"
         android:icon="@drawable/ic_perfil"
-        android:title="Perfil"
-        tools:ignore="HardcodedText" />
+        android:title="@string/menu_profile" />
 
 </menu>

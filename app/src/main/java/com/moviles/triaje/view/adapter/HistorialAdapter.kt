@@ -5,15 +5,17 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.core.content.ContextCompat
+import com.moviles.triaje.R
 import com.moviles.triaje.databinding.ItemHistorialBinding
 import com.moviles.triaje.model.Consulta
+import com.moviles.triaje.model.Prioridad
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class HistorialAdapter(private val onItemClick: (Consulta) -> Unit) : RecyclerView.Adapter<HistorialAdapter.ViewHolder>() {
 
     private var lista: List<Consulta> = emptyList()
-    private val formato = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
 
     fun actualizarLista(nuevaLista: List<Consulta>) {
         lista = nuevaLista
@@ -32,17 +34,27 @@ class HistorialAdapter(private val onItemClick: (Consulta) -> Unit) : RecyclerVi
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = lista[position]
-        holder.binding.tvCategoria.text = "PRIORIDAD ${item.prioridad}"
+        val context = holder.itemView.context
+        
+        // Determinar prioridad para localización y color
+        val prioridadEnum = try {
+            Prioridad.valueOf(item.prioridad.uppercase()
+                .replace("AMARILLO", "AMARILLO") // Mapeo de seguridad para BD vieja
+                .replace("ROJO", "ROJA")) 
+        } catch (e: Exception) {
+            when (item.prioridad.uppercase()) {
+                "ROJO" -> Prioridad.ROJA
+                "AMARILLA" -> Prioridad.AMARILLO
+                else -> Prioridad.AZUL
+            }
+        }
+
+        holder.binding.tvCategoria.text = context.getString(R.string.priority_label, context.getString(prioridadEnum.stringResId))
+        
+        val formato = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
         holder.binding.tvFecha.text = formato.format(item.fecha_registro)
 
-        val color = when (item.prioridad.uppercase()) {
-            "AZUL" -> Color.parseColor("#2196F3")
-            "VERDE" -> Color.parseColor("#4CAF50")
-            "AMARILLO" -> Color.parseColor("#FFC107")
-            "NARANJA" -> Color.parseColor("#FF9800")
-            "ROJA" -> Color.parseColor("#F44336")
-            else -> Color.GRAY
-        }
+        val color = ContextCompat.getColor(context, prioridadEnum.colorResId)
         holder.binding.vColorCategoria.backgroundTintList = ColorStateList.valueOf(color)
 
         holder.itemView.setOnClickListener { onItemClick(item) }

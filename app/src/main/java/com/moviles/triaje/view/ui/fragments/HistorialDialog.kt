@@ -72,12 +72,18 @@ class HistorialDialog : DialogFragment() {
 
         // Prioridad
         val prioridadEnum = try {
-            Prioridad.valueOf(consulta.prioridad.uppercase())
+            Prioridad.valueOf(consulta.prioridad.uppercase()
+                .replace("AMARILLO", "AMARILLO")
+                .replace("ROJO", "ROJA"))
         } catch (e: Exception) {
-            Prioridad.AZUL
+            when (consulta.prioridad.uppercase()) {
+                "ROJO" -> Prioridad.ROJA
+                "AMARILLA" -> Prioridad.AMARILLO
+                else -> Prioridad.AZUL
+            }
         }
 
-        tvPriorityName.text = "PRIORIDAD ${prioridadEnum.nombre}"
+        tvPriorityName.text = getString(R.string.priority_label, getString(prioridadEnum.stringResId))
         tvPriorityName.setTextColor(ContextCompat.getColor(requireContext(), prioridadEnum.colorResId))
         ivPriorityIcon.setImageResource(prioridadEnum.iconResId)
         btnOk.setBackgroundColor(ContextCompat.getColor(requireContext(), prioridadEnum.colorResId))
@@ -86,8 +92,8 @@ class HistorialDialog : DialogFragment() {
         tvHistoryDate.text = formato.format(consulta.fecha_registro)
         tvHistoryDiagnosis.text = consulta.resultado_titulo
         tvHistoryDescription.text = consulta.resultado_descripcion
-        tvPatientType.text = "Paciente: ${consulta.tipo_paciente}"
-        tvSymptoms.text = "Síntomas: ${consulta.sintomas.joinToString(", ")}"
+        tvPatientType.text = getString(R.string.history_patient, consulta.tipo_paciente)
+        tvSymptoms.text = getString(R.string.history_symptoms, consulta.sintomas.joinToString(", "))
 
         // Imagen
         if (!consulta.url_imagen_evidencia.isNullOrEmpty()) {
@@ -110,8 +116,9 @@ class HistorialDialog : DialogFragment() {
             itemView.findViewById<TextView>(R.id.tvStepTitle).text = titulo
             itemView.findViewById<TextView>(R.id.tvStepDescription).text = desc
             
-            // Opcionalmente ocultar icono si no lo tenemos mapeado por ID de recurso aquí
-            itemView.findViewById<ImageView>(R.id.ivStepIcon).visibility = View.GONE
+            // Buscar icono dinámicamente si es posible
+            val iconResId = context?.resources?.getIdentifier("ic_info", "drawable", context?.packageName) ?: R.drawable.ic_info
+            itemView.findViewById<ImageView>(R.id.ivStepIcon).setImageResource(iconResId)
 
             llRecommendations.addView(itemView)
         }

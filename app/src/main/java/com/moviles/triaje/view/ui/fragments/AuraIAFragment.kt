@@ -86,7 +86,11 @@ class AuraIAFragment : Fragment() {
     }
 
     private fun addInitialHeaders() {
-        val sdf = java.text.SimpleDateFormat("EEE, dd MMM", java.util.Locale("es", "ES"))
+        val prefManager = com.moviles.triaje.utils.PreferenceManager(requireContext())
+        val localeStr = if (prefManager.language == "en") "en" else "es"
+        val countryStr = if (prefManager.language == "en") "US" else "ES"
+        
+        val sdf = java.text.SimpleDateFormat("EEE, dd MMM", java.util.Locale(localeStr, countryStr))
         val currentDate = sdf.format(java.util.Date()).replaceFirstChar {
             if (it.isLowerCase()) it.titlecase(java.util.Locale.getDefault()) else it.toString()
         }
@@ -96,7 +100,7 @@ class AuraIAFragment : Fragment() {
     }
 
     private fun showInitialMessage() {
-        val welcomeText = "Hola, soy Aura IA. Estoy aquí para ayudarte con tus consultas médicas. ¿Cómo te sientes hoy?"
+        val welcomeText = getString(R.string.aura_welcome)
         val initialMsg = ChatMessage("", isUser = false, isTyping = true)
         viewModel.addMessage(initialMsg)
 

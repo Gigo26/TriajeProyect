@@ -72,6 +72,6 @@ class PreferenciasFragment : Fragment() {
     }
 
     private fun updateLanguageText(tv: TextView) {
-        tv.text = if (prefManager.language == "en") "English" else "Español"
+        tv.text = if (prefManager.language == "en") getString(R.string.lang_english) else getString(R.string.lang_spanish)
     }
 }

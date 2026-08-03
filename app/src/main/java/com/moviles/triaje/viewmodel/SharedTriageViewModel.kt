@@ -59,8 +59,9 @@ class SharedTriageViewModel : ViewModel() {
     /**
      * Ejecuta el Motor Evolutivo una sola vez y guarda el resultado.
      */
-    fun ejecutarEvaluacion() {
+    fun ejecutarEvaluacion(androidContext: android.content.Context) {
         val context = DecisionContext(
+            context = androidContext,
             tipoPaciente = _tipoPaciente.value ?: "ADULTO",
             respuestasBasicas = _respuestasBasicas.value ?: listOf(true, true, false),
             sintomas = _sintomasSeleccionados.value ?: emptyList(),

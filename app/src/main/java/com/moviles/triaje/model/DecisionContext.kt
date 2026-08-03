@@ -1,5 +1,6 @@
 package com.moviles.triaje.model
 
+import android.content.Context
 import java.io.Serializable
 
 /**
@@ -7,6 +8,7 @@ import java.io.Serializable
  * Reutiliza las clases existentes del proyecto.
  */
 data class DecisionContext(
+    val context: Context,
     val tipoPaciente: String,
     val respuestasBasicas: List<Boolean>, // [Consciente, Respira, Sangrado]
     val sintomas: List<Sintoma>,

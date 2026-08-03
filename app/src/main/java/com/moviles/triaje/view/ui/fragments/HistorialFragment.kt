@@ -40,6 +40,8 @@ class HistorialFragment : Fragment() {
         }
         binding.rvHistorial.layoutManager = LinearLayoutManager(requireContext())
         binding.rvHistorial.adapter = adapter
+        
+        binding.tvVacio.text = getString(R.string.history_empty)
 
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
         viewModel.cargarHistorial(userId)
