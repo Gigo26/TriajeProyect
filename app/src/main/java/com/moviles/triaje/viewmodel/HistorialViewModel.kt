@@ -3,7 +3,7 @@ package com.moviles.triaje.viewmodel
 import com.moviles.triaje.network.FirestoreService
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.moviles.triaje.model.Historial
+import com.moviles.triaje.model.Consulta
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -15,7 +15,7 @@ class HistorialViewModel(
     sealed class HistorialUiState {
         object Cargando : HistorialUiState()
         object Vacio : HistorialUiState()
-        data class Exito(val datos: List<Historial>) : HistorialUiState()
+        data class Exito(val datos: List<Consulta>) : HistorialUiState()
         data class Error(val mensaje: String) : HistorialUiState()
     }
 

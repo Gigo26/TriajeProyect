@@ -7,6 +7,7 @@ import java.util.Date
  * Modelo optimizado para persistencia en Firestore (Subcolección "historial")
  */
 data class Consulta (
+    var id: String = "",
     val tipo_paciente: String = "",
     val prioridad: String = "", // "ROJO", "NARANJA", "VERDE", etc.
     val sintomas: List<String> = emptyList(),

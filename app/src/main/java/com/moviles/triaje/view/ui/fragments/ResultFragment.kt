@@ -1,6 +1,8 @@
 package com.moviles.triaje.view.ui.fragments
 
+import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,13 +15,13 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.moviles.triaje.R
-import com.moviles.triaje.viewmodel.ResultViewModel
+import com.moviles.triaje.viewmodel.RecommendationViewModel
 import com.moviles.triaje.viewmodel.SharedTriageViewModel
 
 class ResultFragment : Fragment() {
 
-    private lateinit var viewModel: ResultViewModel
     private lateinit var sharedViewModel: SharedTriageViewModel
+    private lateinit var recommendationViewModel: RecommendationViewModel
 
     private lateinit var cvHeaderResult: MaterialCardView
     private lateinit var ivPriorityIcon: ImageView
@@ -34,7 +36,6 @@ class ResultFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_result, container, false)
 
-        // 1. Vincular componentes del XML (Asegurados con los nuevos IDs del fragment_result.xml)
         cvHeaderResult = view.findViewById(R.id.cvHeaderResult)
         ivPriorityIcon = view.findViewById(R.id.ivPriorityIcon)
         tvPriorityName = view.findViewById(R.id.tvPriorityName)
@@ -42,17 +43,17 @@ class ResultFragment : Fragment() {
         tvRiskExplanation = view.findViewById(R.id.tvRiskExplanation)
         btnVerRecomendaciones = view.findViewById(R.id.btnVerRecomendaciones)
 
-        // 2. Inicializar ViewModels
-        viewModel = ViewModelProvider(this)[ResultViewModel::class.java]
         sharedViewModel = ViewModelProvider(requireActivity())[SharedTriageViewModel::class.java]
+        recommendationViewModel = ViewModelProvider(requireActivity())[RecommendationViewModel::class.java]
 
-        // 3. Ejecutar Evaluación Evolutiva
-        sharedViewModel.ejecutarEvaluacion()
+        if (sharedViewModel.resultadoEvolutivo.value == null) {
+            // TRIAJE NUEVO: Reseteamos el seguro para permitir que se guarde en Firebase
+            recommendationViewModel.prepararNuevoGuardado()
+            sharedViewModel.ejecutarEvaluacion()
+        }
 
-        // 4. Observar la respuesta generada por el Algoritmo Genético
         setupObservers()
 
-        // 5. Transición hacia RecommendationsFragment
         btnVerRecomendaciones.setOnClickListener {
             findNavController().navigate(
                 R.id.action_resultFragment_to_recomendacionesFragment
@@ -67,17 +68,34 @@ class ResultFragment : Fragment() {
             resultado?.let {
                 val prioridad = it.prioridad
 
-                // Actualizar datos de Prioridad
                 tvPriorityName.text = "PRIORIDAD ${prioridad.nombre}"
                 tvPriorityName.setTextColor(ContextCompat.getColor(requireContext(), prioridad.colorResId))
                 ivPriorityIcon.setImageResource(prioridad.iconResId)
 
-                // Actualizar Diagnóstico Probable y Explicación Evolutiva
                 tvDiagnosisTitle.text = it.diagnosticoProbable
                 tvRiskExplanation.text = it.explicacionRiesgo
-                
-                // Opcional: Cambiar color del botón según la prioridad para mayor coherencia visual
-                btnVerRecomendaciones.setBackgroundColor(ContextCompat.getColor(requireContext(), prioridad.colorResId))
+
+                btnVerRecomendaciones.backgroundTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(requireContext(), prioridad.colorResId)
+                )
+
+                recommendationViewModel.consolidarConsulta(
+                    tipoPaciente = sharedViewModel.tipoPaciente.value ?: "ADULTO",
+                    sintomas = sharedViewModel.sintomasSeleccionados.value ?: emptyList(),
+                    respuestasBasicas = sharedViewModel.respuestasBasicas.value ?: listOf(true, true, false),
+                    uriImagen = sharedViewModel.uriImagen.value,
+                    preguntasDinamicas = sharedViewModel.preguntasDinamicas.value ?: emptyList(),
+                    resultadoEvolutivo = it
+                )
+
+                // Ahora recibimos un mensaje de texto para saber exactamente qué pasa en la consola
+                recommendationViewModel.saveTriageToHistory { exito, mensaje ->
+                    if (exito) {
+                        Log.d("TRIAJE_DB", mensaje)
+                    } else {
+                        Log.e("TRIAJE_DB", "Fallo al guardar: $mensaje")
+                    }
+                }
             }
         }
     }

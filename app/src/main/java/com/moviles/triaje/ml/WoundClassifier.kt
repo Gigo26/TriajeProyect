@@ -9,6 +9,9 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
+import kotlin.math.exp
+import kotlin.math.max
+import kotlin.math.min
 
 class WoundClassifier(context: Context) {
     private var interpreter: Interpreter? = null
@@ -44,7 +47,7 @@ class WoundClassifier(context: Context) {
     fun classify(bitmap: Bitmap): String {
         if (interpreter == null) return "Error: Modelo no cargado"
 
-        // 1. Forzar formato ARGB_8888 en software
+        // 1. Forzar formato ARGB_8888 (Para evitar errores de hardware en algunos Androids)
         val softwareBitmap = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O &&
             bitmap.config == Bitmap.Config.HARDWARE) {
             bitmap.copy(Bitmap.Config.ARGB_8888, false)
@@ -52,11 +55,11 @@ class WoundClassifier(context: Context) {
             bitmap.copy(Bitmap.Config.ARGB_8888, true)
         }
 
-        // 2. Redimensionar exactamente a 224x224 (Misma bilinear que PIL/PyTorch)
-        val resizedBitmap = Bitmap.createScaledBitmap(softwareBitmap, 224, 224, true)
+        // 2. RECORTAR LA IMAGEN COMO LO HACE PYTHON (Center Crop)
+        val croppedBitmap = centerCrop(softwareBitmap, 224)
 
-        // 3. Convertir a ByteBuffer forzando RGB de 0.0f a 1.0f
-        val inputBuffer = convertBitmapToByteBuffer(resizedBitmap)
+        // 3. Convertir a ByteBuffer (Verificando dinámicamente si es NCHW o NHWC)
+        val inputBuffer = convertBitmapToByteBuffer(croppedBitmap)
 
         // 4. Preparar buffer de salida
         val outputBuffer = Array(1) { FloatArray(labels.size) }
@@ -64,7 +67,9 @@ class WoundClassifier(context: Context) {
         // 5. Inferencia
         interpreter?.run(inputBuffer, outputBuffer)
 
-        val probabilities = outputBuffer[0]
+        // 6. APLICAR SOFTMAX PARA CONVERTIR LOGITS EN PORCENTAJES REALES
+        val logits = outputBuffer[0]
+        val probabilities = applySoftmax(logits)
 
         // --- LOGCAT DEPURACIÓN ---
         Log.d("IA_DEBUG", "=== Resultados del Análisis TFLite ===")
@@ -82,8 +87,40 @@ class WoundClassifier(context: Context) {
         }
     }
 
+    // --- FUNCIONES CLAVE AÑADIDAS ---
+
+    // Transforma los valores crudos del modelo en probabilidades (0.0 a 1.0)
+    private fun applySoftmax(logits: FloatArray): FloatArray {
+        val maxLogit = logits.maxOrNull() ?: 0f
+        val expLogits = logits.map { exp((it - maxLogit).toDouble()).toFloat() }
+        val sumExp = expLogits.sum()
+        return expLogits.map { it / sumExp }.toFloatArray()
+    }
+
+    // Recorta el centro de la imagen para no aplastarla/deformarla
+    private fun centerCrop(bitmap: Bitmap, targetSize: Int): Bitmap {
+        val width = bitmap.width
+        val height = bitmap.height
+
+        // Escalar la imagen respetando la proporción (el lado menor será 224)
+        val scale = targetSize.toFloat() / min(width, height).toFloat()
+        val scaledWidth = Math.round(width * scale)
+        val scaledHeight = Math.round(height * scale)
+        val scaledBitmap = Bitmap.createScaledBitmap(bitmap, scaledWidth, scaledHeight, true)
+
+        // Recortar exactamente el centro
+        val xOffset = max(0, (scaledWidth - targetSize) / 2)
+        val yOffset = max(0, (scaledHeight - targetSize) / 2)
+
+        return Bitmap.createBitmap(scaledBitmap, xOffset, yOffset, targetSize, targetSize)
+    }
+
     private fun convertBitmapToByteBuffer(bitmap: Bitmap): ByteBuffer {
-        // 4 bytes por float * 224 * 224 * 3 canales
+        // Consultamos dinámicamente qué formato espera tu modelo exportado
+        val inputTensor = interpreter?.getInputTensor(0)
+        val shape = inputTensor?.shape() // [1, 224, 224, 3] (NHWC) o [1, 3, 224, 224] (NCHW)
+        val isNCHW = shape != null && shape.size == 4 && shape[1] == 3
+
         val byteBuffer = ByteBuffer.allocateDirect(4 * 224 * 224 * 3)
         byteBuffer.order(ByteOrder.nativeOrder())
 
@@ -93,19 +130,27 @@ class WoundClassifier(context: Context) {
 
         bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
 
-        for (i in 0 until height) {
-            for (j in 0 until width) {
-                val pixel = pixels[i * width + j]
-
-                // Extraer canales con Color de Android para evitar problemas de endianness
-                val r = android.graphics.Color.red(pixel) / 255.0f
-                val g = android.graphics.Color.green(pixel) / 255.0f
-                val b = android.graphics.Color.blue(pixel) / 255.0f
-
-                // Escribir en orden estricto R -> G -> B
-                byteBuffer.putFloat(r)
-                byteBuffer.putFloat(g)
-                byteBuffer.putFloat(b)
+        if (isNCHW) {
+            // Formato NCHW (PyTorch estándar)
+            // Primero todo el Rojo, luego todo el Verde, luego todo el Azul
+            for (i in pixels.indices) {
+                byteBuffer.putFloat(android.graphics.Color.red(pixels[i]) / 255.0f)
+            }
+            for (i in pixels.indices) {
+                byteBuffer.putFloat(android.graphics.Color.green(pixels[i]) / 255.0f)
+            }
+            for (i in pixels.indices) {
+                byteBuffer.putFloat(android.graphics.Color.blue(pixels[i]) / 255.0f)
+            }
+        } else {
+            // Formato NHWC (TensorFlow estándar) - El que tenías antes
+            for (i in 0 until height) {
+                for (j in 0 until width) {
+                    val pixel = pixels[i * width + j]
+                    byteBuffer.putFloat(android.graphics.Color.red(pixel) / 255.0f)
+                    byteBuffer.putFloat(android.graphics.Color.green(pixel) / 255.0f)
+                    byteBuffer.putFloat(android.graphics.Color.blue(pixel) / 255.0f)
+                }
             }
         }
         return byteBuffer

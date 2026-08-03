@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
@@ -64,7 +63,7 @@ class ImageAnalysisFragment : Fragment() {
         btnSubirGaleria = view.findViewById(R.id.btnSubirGaleria)
         tvOmitirPaso = view.findViewById(R.id.tvOmitirPaso)
 
-        // 2. Inicializar ViewModel
+        // 2. Inicializar ViewModel (SharedTriageViewModel atado a la Activity para mantener los datos)
         viewModel = ViewModelProvider(this)[ImageAnalysisViewModel::class.java]
         sharedViewModel = ViewModelProvider(requireActivity())[SharedTriageViewModel::class.java]
 
@@ -76,16 +75,15 @@ class ImageAnalysisFragment : Fragment() {
         // 4. Observar cambios en la URI de la imagen para actualizar la interfaz
         viewModel.imageUri.observe(viewLifecycleOwner) { uri ->
             if (uri != null) {
-                ivFotoLesion.setPadding(0, 0, 0, 0) // Quitamos el padding del icono por defecto
+                ivFotoLesion.setPadding(0, 0, 0, 0)
                 ivFotoLesion.setImageURI(uri)
             }
         }
 
-        // 4.1 Observar resultados de la IA
+        // 4.1 Observar resultados de la IA (Ya no pide 'recommendation')
         viewModel.analysisResult.observe(viewLifecycleOwner) { result ->
             if (result != null) {
-                val recommendation = viewModel.recommendation.value ?: ""
-                mostrarResultadoIA(result, recommendation)
+                mostrarResultadoIA(result)
             }
         }
 
@@ -103,11 +101,9 @@ class ImageAnalysisFragment : Fragment() {
 
     private fun configurarCamaraYDisparar() {
         val context = requireContext()
-        // Creamos un archivo temporal seguro en la caché del sistema
         val directory = File(context.cacheDir, "images").apply { mkdirs() }
         val file = File.createTempFile("lesion_", ".jpg", directory)
 
-        // Obtenemos la URI segura mediante el FileProvider de tu proyecto
         temporalCameraUri = FileProvider.getUriForFile(
             context,
             "${context.packageName}.fileprovider",
@@ -116,10 +112,11 @@ class ImageAnalysisFragment : Fragment() {
         takePicture.launch(temporalCameraUri!!)
     }
 
-    private fun mostrarResultadoIA(result: String, recommendation: String) {
+    private fun mostrarResultadoIA(result: String) {
+        // Mostramos un diálogo informativo más limpio, indicando que el motor evolutivo hará el resto.
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Resultado del Análisis")
-            .setMessage("La IA ha detectado: $result\n\nRecomendación: $recommendation")
+            .setTitle("Análisis IA Completado")
+            .setMessage("Se ha detectado patrón visual compatible con: $result\n\nEste dato ha sido enviado al motor de triaje para calcular el diagnóstico y las recomendaciones finales.")
             .setPositiveButton("Continuar al Cuestionario") { _, _ ->
                 irAlCuestionario(viewModel.imageUri.value?.toString())
             }
@@ -131,9 +128,9 @@ class ImageAnalysisFragment : Fragment() {
     }
 
     private fun irAlCuestionario(imagePath: String?) {
-        // Guardar datos de IA en el ViewModel compartido
+        // Guardar datos de IA en el ViewModel compartido para que el Algoritmo Genético lo consuma al final
         sharedViewModel.setIAData(viewModel.analysisResult.value, imagePath)
-        
+
         findNavController().navigate(
             R.id.action_analisisImagenFragment_to_symptompsQuestionFragment
         )

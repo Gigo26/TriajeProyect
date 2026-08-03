@@ -28,6 +28,13 @@ class RecommendationViewModel : ViewModel() {
     private val _listaRecomendacionesUI = MutableLiveData<List<Recomendacion>>()
     val listaRecomendacionesUI: LiveData<List<Recomendacion>> get() = _listaRecomendacionesUI
 
+    // ==============================================================
+    // NUEVA FUNCIÓN: Habilita el guardado para una nueva consulta
+    // ==============================================================
+    fun prepararNuevoGuardado() {
+        isAlreadySaved = false
+    }
+
     /**
      * Consolida la consulta final usando los datos del Shared ViewModel y el resultado ya calculado.
      */
@@ -42,13 +49,16 @@ class RecommendationViewModel : ViewModel() {
         // 0. Guardar lista para la UI
         _listaRecomendacionesUI.value = resultadoEvolutivo.recomendaciones
 
-        // 1. Mapear Respuestas (Básicas + Dinámicas)
+        // 1. Mapear Respuestas Clínicas (Transformando las preguntas en estados médicos)
         val mapaRespuestas = mutableMapOf<String, String>()
-        mapaRespuestas["¿Está consciente?"] = if (respuestasBasicas.getOrElse(0) { true }) "Sí" else "No"
-        mapaRespuestas["¿Respira normalmente?"] = if (respuestasBasicas.getOrElse(1) { true }) "Sí" else "No"
-        mapaRespuestas["¿Tiene sangrado grave?"] = if (respuestasBasicas.getOrElse(2) { false }) "Sí" else "No"
-        
-        preguntasDinamicas.forEach { 
+
+        // Mapeo profesional en lugar de preguntas literales
+        mapaRespuestas["Estado de Consciencia"] = if (respuestasBasicas.getOrElse(0) { true }) "Alerta / Consciente" else "Inconsciente"
+        mapaRespuestas["Patrón Respiratorio"] = if (respuestasBasicas.getOrElse(1) { true }) "Normal" else "Dificultad Severa / Ausente"
+        mapaRespuestas["Hemorragia Activa"] = if (respuestasBasicas.getOrElse(2) { false }) "Presente (Grave)" else "No presenta"
+
+        // Mapear el resto de preguntas dinámicas
+        preguntasDinamicas.forEach {
             mapaRespuestas[it.text] = it.options.getOrNull(it.selectedOptionIndex) ?: "N/A"
         }
 
@@ -85,30 +95,35 @@ class RecommendationViewModel : ViewModel() {
 
     /**
      * Persiste la consulta actual en la subcolección "historial" del usuario en Firestore.
+     * AHORA DEVUELVE BOOLEAN (Éxito) y STRING (Mensaje de estado).
      */
-    fun saveTriageToHistory(onComplete: (Boolean) -> Unit) {
-        // Si ya se guardó en esta sesión de ViewModel, no repetimos la operación
+    fun saveTriageToHistory(onComplete: (Boolean, String) -> Unit) {
         if (isAlreadySaved) {
-            onComplete(true)
+            onComplete(true, "Ignorado: La consulta ya estaba guardada en esta sesión.")
             return
         }
 
         val currentConsulta = _consultaFinal.value
         val uidUsuario = auth.currentUser?.uid
 
-        if (currentConsulta != null && !uidUsuario.isNullOrEmpty()) {
+        if (uidUsuario.isNullOrEmpty()) {
+            onComplete(false, "El UID de Firebase Auth es nulo. El usuario no está logueado.")
+            return
+        }
+
+        if (currentConsulta != null) {
             firestoreService.guardarConsultaEnHistorial(uidUsuario, currentConsulta, object : Callback<Boolean> {
                 override fun onSuccess(result: Boolean?) {
-                    isAlreadySaved = true // Marcamos como guardado exitoso
-                    onComplete(result ?: true)
+                    isAlreadySaved = true
+                    onComplete(true, "Historial guardado exitosamente en Firestore.")
                 }
 
                 override fun onFailed(exception: Exception) {
-                    onComplete(false)
+                    onComplete(false, "FirestoreService devolvió un error: ${exception.message}")
                 }
             })
         } else {
-            onComplete(false)
+            onComplete(false, "El objeto ConsultaFinal está vacío y no se puede guardar.")
         }
     }
 }

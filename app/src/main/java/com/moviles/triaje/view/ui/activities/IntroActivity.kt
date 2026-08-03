@@ -28,27 +28,18 @@ class IntroActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_intro)
 
-        // =======================================================
-        // 🔥 PRUEBA DE CONEXIÓN RÁPIDA A FIREBASE
-        // =======================================================
-        try {
-            val auth = FirebaseAuth.getInstance()
-            Log.d("FIREBASE_TEST", "¡Conexión exitosa! Instancia de Auth obtenida: ${auth.app.name}")
-        } catch (e: Exception) {
-            Log.e("FIREBASE_TEST", "Error en la conexión a Firebase: ${e.message}")
-        }
-        // =======================================================
-
-        // Verificamos si venimos de un Cierre de Sesión de forma segura
-        try {
-            val startAtLogin = intent.getBooleanExtra("START_AT_LOGIN", false)
-            if (startAtLogin) {
-                val navHostFragment = supportFragmentManager
-                    .findFragmentById(R.id.fcvIntroContainer) as? NavHostFragment
-                navHostFragment?.navController?.navigate(R.id.loginFragment)
+        // Verificamos si venimos de un Cierre de Sesión de forma segura en el siguiente ciclo del loop
+        window.decorView.post {
+            try {
+                val startAtLogin = intent.getBooleanExtra("START_AT_LOGIN", false)
+                if (startAtLogin) {
+                    val navHostFragment = supportFragmentManager
+                        .findFragmentById(R.id.fcvIntroContainer) as? NavHostFragment
+                    navHostFragment?.navController?.navigate(R.id.loginFragment)
+                }
+            } catch (e: Exception) {
+                Log.e("INTRO_DEBUG", "Error al intentar navegar al Login: ${e.message}")
             }
-        } catch (e: Exception) {
-            Log.e("INTRO_DEBUG", "Error al intentar navegar al Login: ${e.message}")
         }
     }
 

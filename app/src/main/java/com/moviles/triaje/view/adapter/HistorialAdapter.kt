@@ -6,16 +6,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.moviles.triaje.databinding.ItemHistorialBinding
-import com.moviles.triaje.model.Historial
+import com.moviles.triaje.model.Consulta
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class HistorialAdapter : RecyclerView.Adapter<HistorialAdapter.ViewHolder>() {
+class HistorialAdapter(private val onItemClick: (Consulta) -> Unit) : RecyclerView.Adapter<HistorialAdapter.ViewHolder>() {
 
-    private var lista: List<Historial> = emptyList()
+    private var lista: List<Consulta> = emptyList()
     private val formato = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
 
-    fun actualizarLista(nuevaLista: List<Historial>) {
+    fun actualizarLista(nuevaLista: List<Consulta>) {
         lista = nuevaLista
         notifyDataSetChanged() // para mejor performance usar DiffUtil
     }
@@ -32,18 +32,20 @@ class HistorialAdapter : RecyclerView.Adapter<HistorialAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = lista[position]
-        holder.binding.tvCategoria.text = item.categoria.replaceFirstChar { it.uppercase() }
-        holder.binding.tvFecha.text = formato.format(item.fechaHora.toDate())
+        holder.binding.tvCategoria.text = "PRIORIDAD ${item.prioridad}"
+        holder.binding.tvFecha.text = formato.format(item.fecha_registro)
 
-        val color = when (item.categoria.lowercase()) {
-            "azul" -> Color.parseColor("#2196F3")
-            "verde" -> Color.parseColor("#4CAF50")
-            "amarillo" -> Color.parseColor("#FFEB3B")
-            "naranja" -> Color.parseColor("#FF9800")
-            "rojo" -> Color.parseColor("#F44336")
+        val color = when (item.prioridad.uppercase()) {
+            "AZUL" -> Color.parseColor("#2196F3")
+            "VERDE" -> Color.parseColor("#4CAF50")
+            "AMARILLO" -> Color.parseColor("#FFC107")
+            "NARANJA" -> Color.parseColor("#FF9800")
+            "ROJA" -> Color.parseColor("#F44336")
             else -> Color.GRAY
         }
         holder.binding.vColorCategoria.backgroundTintList = ColorStateList.valueOf(color)
+
+        holder.itemView.setOnClickListener { onItemClick(item) }
     }
 
     override fun getItemCount() = lista.size

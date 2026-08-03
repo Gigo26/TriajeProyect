@@ -8,7 +8,6 @@ import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.FirebaseAuth
 import com.moviles.triaje.R
 
 class SplashScreenActivity : AppCompatActivity() {
@@ -53,19 +52,14 @@ class SplashScreenActivity : AppCompatActivity() {
             }
         })
 
-        // en milisegundos
-        // pulso(600 * 4 = 2400) + Pausa(100) + letras(7 * 250 = 1750) + Plus(600) + espera(800)
+        // milisegundos reducidos:
+        // pulso(400 * 4 = 1600) + Pausa(50) + letras(7 * 150 = 1050) + Plus(300) + espera(300)
         ivLogo.postDelayed({
-            val user = FirebaseAuth.getInstance().currentUser
-            val intent = if (user != null) {
-                Intent(this, MainActivity::class.java)
-            } else {
-                Intent(this, IntroActivity::class.java)
-            }
+            val intent = Intent(this, IntroActivity::class.java)
             startActivity(intent)
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             finish()
-        }, 5800)
+        }, 3300)
     }
 
     private fun animateLetters(
@@ -80,10 +74,10 @@ class SplashScreenActivity : AppCompatActivity() {
             letter.visibility = View.VISIBLE
             letter.startAnimation(letterAnim)
 
-            // intervalo entre letras
+            // intervalo entre letras más rápido
             letter.postDelayed({
                 animateLetters(letters, index + 1, letterAnim, plusAnim, tvPlus)
-            }, 250)
+            }, 150)
         } else {
             // el "+"
             tvPlus.postDelayed({

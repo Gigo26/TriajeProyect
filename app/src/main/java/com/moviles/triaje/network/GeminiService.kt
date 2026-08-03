@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 class GeminiService {
 
 
-    private val apiKey = "AQ.Ab8RN6I83oaQJW7mGHvltqOQEWOMP8lijQrfB-aWlJzw9pLBeA"
+    private val apiKey = "AQ.Ab8RN6IFcoJLySrNkM7SfwJBdPT-gunmNJrqKJFiwd4VK-En4Q"
 
     private val model = GenerativeModel(
         modelName = "gemini-3.6-flash",

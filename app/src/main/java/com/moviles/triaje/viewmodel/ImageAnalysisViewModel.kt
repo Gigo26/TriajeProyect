@@ -23,11 +23,9 @@ class ImageAnalysisViewModel(application: Application) : AndroidViewModel(applic
     private val _imageUri = MutableLiveData<Uri?>()
     val imageUri: LiveData<Uri?> get() = _imageUri
 
+    // Solo guardará la clase cruda devuelta por la IA (Ej: "Burns", "Cut")
     private val _analysisResult = MutableLiveData<String?>()
     val analysisResult: LiveData<String?> get() = _analysisResult
-
-    private val _recommendation = MutableLiveData<String?>()
-    val recommendation: LiveData<String?> get() = _recommendation
 
     fun guardarSintomas(lista: List<Sintoma>) {
         _sintomasRecuperados.value = lista
@@ -42,17 +40,16 @@ class ImageAnalysisViewModel(application: Application) : AndroidViewModel(applic
     }
 
     private fun analyzeImage(uri: Uri) {
-        Log.d("IA_DEBUG", "Iniciando análisis de imagen...")
+        Log.d("IA_DEBUG", "Iniciando análisis de imagen para Algoritmo Evolutivo...")
         val bitmap = uriToBitmap(uri)
         if (bitmap != null) {
+            // El resultado es solo la etiqueta: "Burns", "Cut", "Laceration", etc.
             val result = classifier.classify(bitmap)
-            Log.d("IA_DEBUG", "Resultado final ganador: $result")
+            Log.d("IA_DEBUG", "Resultado IA para Motor Evolutivo: $result")
             _analysisResult.value = result
-            _recommendation.value = getRecommendation(result)
         } else {
             Log.e("IA_DEBUG", "Error: No se pudo convertir la URI a Bitmap")
-            _analysisResult.value = "Error al procesar imagen"
-            _recommendation.value = "Intente seleccionar o tomar la foto nuevamente."
+            _analysisResult.value = "Error"
         }
     }
 
@@ -72,16 +69,6 @@ class ImageAnalysisViewModel(application: Application) : AndroidViewModel(applic
         } catch (e: Exception) {
             e.printStackTrace()
             null
-        }
-    }
-
-    private fun getRecommendation(result: String): String {
-        return when (result) {
-            "Burns" -> "Aplicar agua fría (no helada) por 10 minutos. No reventar ampollas ni aplicar remedios caseros."
-            "Stab_wound", "Cut", "Laceration" -> "Presionar con una gasa limpia para detener el sangrado. Si hay un objeto incrustado, no lo retire."
-            "Bruises", "Abrasions" -> "Lavar cuidadosamente la zona con agua y jabón. Aplicar compresas frías para reducir la inflamación."
-            "Ingrown_nails" -> "Remojar en agua tibia con sal y evitar calzado apretado. Consulte a podología."
-            else -> "Mantenga la zona limpia y seca. Si nota cambios de color o fiebre, busque atención médica."
         }
     }
 }

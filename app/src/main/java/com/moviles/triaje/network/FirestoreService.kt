@@ -133,7 +133,7 @@ class FirestoreService {
     /**
      * Obtiene el historial de consultas de un usuario en tiempo real.
      */
-    fun obtenerHistorial(uid: String): Flow<Result<List<Historial>>> = callbackFlow {
+    fun obtenerHistorial(uid: String): Flow<Result<List<Consulta>>> = callbackFlow {
         val listener = firebaseFirestore.collection("usuarios")
             .document(uid)
             .collection("historial")
@@ -145,10 +145,13 @@ class FirestoreService {
                 }
 
                 val historial = snapshot?.documents?.mapNotNull { doc ->
-                    // Mapeamos los campos del historial que el motor evolutivo guarda
-                    val categoria = doc.getString("prioridad") ?: "AZUL"
-                    val fecha = doc.getTimestamp("fecha_registro") ?: com.google.firebase.Timestamp.now()
-                    Historial(id = doc.id, categoria = categoria, fechaHora = fecha)
+                    try {
+                        doc.toObject(Consulta::class.java)?.apply { 
+                            id = doc.id 
+                        }
+                    } catch (e: Exception) {
+                        null
+                    }
                 } ?: emptyList()
 
                 trySend(Result.success(historial))

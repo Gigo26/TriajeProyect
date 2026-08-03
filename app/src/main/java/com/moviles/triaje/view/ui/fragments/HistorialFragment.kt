@@ -34,7 +34,10 @@ class HistorialFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = HistorialAdapter()
+        adapter = HistorialAdapter { consulta ->
+            val dialog = HistorialDialog.newInstance(consulta)
+            dialog.show(childFragmentManager, "HistorialDialog")
+        }
         binding.rvHistorial.layoutManager = LinearLayoutManager(requireContext())
         binding.rvHistorial.adapter = adapter
 

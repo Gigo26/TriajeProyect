@@ -82,7 +82,7 @@ class LoginFragment : Fragment() {
         viewModel.loginState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is LoginState.Loading -> {
-                    Toast.makeText(requireContext(), "Autenticando de forma segura...", Toast.LENGTH_SHORT).show()
+
                 }
                 is LoginState.Success -> {
                     val intent = Intent(requireContext(), MainActivity::class.java)

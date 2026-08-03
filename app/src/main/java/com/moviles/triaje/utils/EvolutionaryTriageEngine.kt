@@ -4,11 +4,12 @@ import com.moviles.triaje.R
 import com.moviles.triaje.model.DecisionContext
 import com.moviles.triaje.model.Prioridad
 import com.moviles.triaje.model.Recomendacion
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.runBlocking
 import kotlin.random.Random
 
-/**
- * Resultado completo devuelto por el Motor Evolutivo.
- */
 data class ResultadoEvolutivo(
     val prioridad: Prioridad,
     val diagnosticoProbable: String,
@@ -16,335 +17,375 @@ data class ResultadoEvolutivo(
     val recomendaciones: List<Recomendacion>
 )
 
-/**
- * Cromosoma (Individuo): Representa una solución candidata completa.
- * Gen 1: Prioridad asignada
- * Gen 2: Índice de Diagnóstico/Hipótesis
- * Gen 3..6: 4 Índices de Recomendaciones únicas
- */
 data class Cromosoma(
     val prioridad: Prioridad,
     val diagnosticoIndex: Int,
-    val recomendacionesIndices: List<Int>, // Siempre tamaño 4 y sin duplicados
-    var fitness: Double = 0.0
+    val recomendacionesIndices: List<Int>, // REDUCIDO A 4 GENES
+    var fitness: Double = 0.0,
+    var fitnessCalculado: Boolean = false
 )
 
 object EvolutionaryTriageEngine {
 
-    // Configuración del Algoritmo Genético
-    private const val TAMANO_POBLACION = 60
-    private const val GENERACIONES = 50
-    private const val TASA_MUTACION = 0.20
-    private const val TAMANO_TORNEO = 4
+    private const val TAMANO_POBLACION = 150
+    private const val GENERACIONES = 100
+    private const val TASA_MUTACION_BASE = 0.15
+    private const val TAMANO_TORNEO = 5
+    private const val LIMITE_ESTANCAMIENTO = 15
 
-    // ─────────────────────────────────────────────────────────────────────────────
-    // BANCO DE GENES: DIAGNÓSTICOS PROBABLES (Gen 2)
-    // ─────────────────────────────────────────────────────────────────────────────
-    private val BANCO_DIAGNOSTICOS = listOf(
-        // Críticos / Síntomas de Alta Severidad (0..3)
-        "Síndrome Coronario Agudo / Patología Cardíaca a Descartar", // Dolor de pecho
-        "Insuficiencia Respiratoria Aguda / Compromiso de Vía Aérea", // Dificultad para respirar
-        "Síndrome Sincopal / Pérdida Transitoria de Conciencia", // Pérdida de conocimiento
-        "Crisis Convulsiva / Trastorno Neurológico Paroxístico", // Convulsiones
-
-        // Lesiones Externas / TFLite y Trauma (4..10)
-        "Trauma Lacerante / Herida Abierta con Riesgo de Infección", // Laceration / Cut / Herida abierta
-        "Trauma Penetrante / Herida Punzocortante de Cuidado", // Stab_wound
-        "Lesión Térmica / Quemadura Aguda de Espesor Variable", // Burns
-        "Trauma Contuso / Hematoma o Equimosis Tisular", // Bruises / Golpe fuerte
-        "Abrasión Cutánea / Excoriación Superficial", // Abrasions
-        "Patología Ungueal / Onicocriptosis con Infección Local", // Ingrown_nails
-        "Trauma Osteomuscular / Sospecha de Fractura o Fisura", // Posible fractura
-
-        // Visceral / Sistémico / Físico (11..14)
-        "Cuadro Abdominal Agudo a Descartar Proceso Quirúrgico", // Dolor abdominal
-        "Síndrome Febril Agudo / Proceso Infeccioso en Estudio", // Fiebre alta
-        "Reacción de Hipersensibilidad / Anafilaxia en Evolución", // Reacción alérgica
-        "Síndrome de Intoxicación o Exposición a Agente Tóxico", // Intoxicación
-
-        // Picaduras y Manejo General (15..16)
-        "Envenenamiento o Reacción Local por Picadura/Mordedura", // Picadura o mordedura
-        "Sintomatología Leve / Manejo sintomático de Consulta Externa" // Caso genérico/Azul
+    private val BANCO_RESULTADO_POSIBLE = listOf(
+        "Síndrome Coronario Agudo / Infarto Agudo de Miocardio", // 0
+        "Arritmia Cardíaca Severa con Descompensación", // 1
+        "Insuficiencia Respiratoria Aguda / Asma Severa", // 2
+        "Neumonía Adquirida con Criterios de Gravedad", // 3
+        "Enfermedad Cerebrovascular (ACV) en Ventana Terapéutica", // 4
+        "Síndrome Sincopal / Pérdida Transitoria de Conciencia", // 5
+        "Status Convulsivo / Trastorno Neurológico Paroxístico", // 6
+        "Trauma Lacerante Profundo con Riesgo de Infección Mayor", // 7
+        "Herida Punzocortante Penetrante con Compromiso Vascular", // 8
+        "Lesión Térmica / Quemadura de Segundo o Tercer Grado", // 9
+        "Trauma Contuso Severo / Hematoma Estructural", // 10
+        "Abrasión Cutánea Extensa con Riesgo de Contaminación", // 11
+        "Onicocriptosis Complicada / Infección Periungueal", // 12
+        "Trauma Osteomuscular / Fractura Cerrada o Expuesta", // 13
+        "Abdomen Agudo Quirúrgico (Apendicitis/Colecistitis)", // 14
+        "Hemorragia Digestiva Activa", // 15
+        "Síndrome Febril Agudo de Foco Infeccioso Desconocido", // 16
+        "Sepsis de Origen Indeterminado", // 17
+        "Choque Anafiláctico / Reacción Alérgica Severa", // 18
+        "Intoxicación Aguda por Agente Químico/Farmacológico", // 19
+        "Envenenamiento Sistémico por Mordedura/Picadura", // 20
+        "Infección Respiratoria Alta (Manejo Ambulatorio)", // 21
+        "Gastroenteritis Aguda sin Signos de Deshidratación", // 22
+        "Mialgia o Dolor Articular Leve", // 23
+        "Sintomatología Leve / Evaluación por Consulta Externa" // 24
     )
 
-    // ─────────────────────────────────────────────────────────────────────────────
-    // BANCO DE GENES: RECOMENDACIONES / PRIMEROS AUXILIOS (Gen 3..6)
-    // Amplio para permitir cruzamiento real entre distintas áreas clínicas.
-    // ─────────────────────────────────────────────────────────────────────────────
     private val BANCO_RECOMENDACIONES = listOf(
-        // [0..5] Soporte Vital y Emergencias
-        Recomendacion(0, "Llamar a Emergencias", "Comuníquese inmediatamente con el 106 (SAMU) o 116 (Bomberos).", R.drawable.ic_telefono),
-        Recomendacion(0, "Asegurar Vía Aérea", "Coloque al paciente en Posición Lateral de Seguridad y verifique la respiración.", R.drawable.ic_escudo),
-        Recomendacion(0, "Monitoreo Vital", "Vigile constante de pulso, estado de conciencia y coloración de piel.", R.drawable.ic_corazon),
-        Recomendacion(0, "No Dar Alimentos/Líquidos", "No administre nada por vía oral ante riesgo de atragantamiento o aspiración.", R.drawable.ic_pastillas),
-        Recomendacion(0, "Reposo y Calma", "Mantenga al paciente sentado o recostado en un ambiente tranquilo.", R.drawable.ic_info),
-        Recomendacion(0, "Desabrochar Prendas", "Afloje la ropa ajustada alrededor del cuello, tórax y cintura.", R.drawable.ic_info),
-
-        // [6..9] Heridas, Laceraciones y Cortantes (Cut, Laceration, Stab_wound)
-        Recomendacion(0, "Presión Directa", "Presione la herida firmemente con una gasa o paño limpio para detener la hemorragia.", R.drawable.ic_sangrado),
-        Recomendacion(0, "No Retirar Objetos", "Si hay un objeto incrustado, NO lo retire; fíjelo suavemente con bordes de gasa.", R.drawable.ic_escudo),
-        Recomendacion(0, "Elevar Extremidad", "Si la herida está en un miembro y no hay fractura, elévela sobre el nivel del corazón.", R.drawable.ic_prim_auxilios),
-        Recomendacion(0, "Lavado de Herida", "Si el sangrado cesó, lave suavemente con abundante agua y jabón neutro.", R.drawable.ic_info),
-
-        // [10..12] Quemaduras (Burns)
-        Recomendacion(0, "Enfriamiento Continuo", "Vierta agua limpia a temperatura ambiente sobre la quemadura por 10 a 15 min.", R.drawable.ic_prim_auxilios),
-        Recomendacion(0, "Cubrir sin Presión", "Proteja la zona con un apósito limpio, gasa estéril o film transparente sin apretar.", R.drawable.ic_escudo),
-        Recomendacion(0, "No Reventar Ampollas", "No aplique crema, aceite ni dentífrico. Deje las ampollas intactas.", R.drawable.ic_info),
-
-        // [13..15] Contusiones, Raspones y Uñeros (Bruises, Abrasions, Ingrown_nails)
-        Recomendacion(0, "Compresas Frías", "Aplique hielo envuelto en una toalla sobre el golpe o hematoma durante 15 minutos.", R.drawable.ic_corazon),
-        Recomendacion(0, "Desinfección Superficial", "Limpie la raspadura suavemente con agua y antiséptico para eliminar restos de tierra.", R.drawable.ic_info),
-        Recomendacion(0, "Baños de Agua Tibia / Podología", "Para el uñero, remoje el pie en agua tibia con sal y evite calzado apretado.", R.drawable.ic_info),
-
-        // [16..18] Fiebre y Cuadros Pediátricos
-        Recomendacion(0, "Medios Físicos Tibios", "Aplique paños tibios (no helados) en frente, axilas e ingle para bajar la temperatura.", R.drawable.ic_corazon),
-        Recomendacion(0, "Hidratación Oral Sorbos", "Si está totalmente consciente, ofrezca suero oral o agua en pequeñas dosis.", R.drawable.ic_pastillas),
-        Recomendacion(0, "Vigilancia de Convulsión", "En niños con fiebre > 38.5°C, vigile rigidez muscular, desvío de mirada o espasmos.", R.drawable.ic_info),
-
-        // [19..20] Vulnerabilidad / Gestante
-        Recomendacion(0, "Decúbito Lateral Izquierdo", "En gestantes, recueste a la persona sobre su lado izquierdo para mejorar el flujo sanguíneo.", R.drawable.ic_escudo),
-        Recomendacion(0, "Inmovilización Preventiva", "Si se sospecha de fractura o lesión articular, no fuerce el movimiento del miembro.", R.drawable.ic_escudo),
-
-        // [21..23] Intoxicación y Picaduras
-        Recomendacion(0, "Identificar la Sustancia/Animal", "Guarde el envase del químico o tome foto al insecto/animal sin arriesgarse.", R.drawable.ic_info),
-        Recomendacion(0, "Retirar Aguijón / Torniquete NO", "Retire el aguijón rascando con una tarjeta. NO haga torniquetes ni succione el veneno.", R.drawable.ic_info),
-        Recomendacion(0, "No Provocar el Vómito", "En intoxicaciones por químicos o corrosivos, NO provoque el vómito.", R.drawable.ic_pastillas),
-
-        // [24..26] Orientación General
-        Recomendacion(0, "No Automedicar", "Evite administrar analgésicos o antibióticos sin indicación médica explícita.", R.drawable.ic_pastillas),
-        Recomendacion(0, "Consulta Ambulatoria", "Acuda al centro de salud o posta más cercana para una evaluación completa.", R.drawable.ic_hospital),
-        Recomendacion(0, "Urgencia Médica", "Diríjase de inmediato a la sala de emergencias del hospital más cercano.", R.drawable.ic_hospital)
+        Recomendacion(0, "Activar Sistema de Emergencia", "Comuníquese de inmediato con el 106 (SAMU) o 116 (Bomberos).", R.drawable.ic_telefono), // 0
+        Recomendacion(0, "Asegurar Vía Aérea", "Coloque al paciente de lado (Posición Lateral de Seguridad) para evitar ahogamiento.", R.drawable.ic_escudo), // 1
+        Recomendacion(0, "Monitoreo Vital Constante", "Vigile respiración, pulso y estado de alerta cada 5 minutos.", R.drawable.ic_corazon), // 2
+        Recomendacion(0, "Ayuno Estricto", "No administre absolutamente nada por vía oral (ni agua, ni pastillas).", R.drawable.ic_pastillas), // 3
+        Recomendacion(0, "RCP Básico", "Si la persona no responde y no respira, inicie compresiones torácicas fuertes y rápidas.", R.drawable.ic_corazon), // 4
+        Recomendacion(0, "Hemostasia Directa", "Haga presión fuerte y sostenida sobre la herida con tela limpia para frenar el sangrado.", R.drawable.ic_sangrado), // 5
+        Recomendacion(0, "Inmovilizar Objeto", "Si hay cuchillo o cristal incrustado, NO lo retire. Fíjelo para que no se mueva.", R.drawable.ic_escudo), // 6
+        Recomendacion(0, "Torniquete de Salvamento", "Solo si la presión directa falla y el sangrado en extremidad es masivo, use un torniquete alto y ajustado.", R.drawable.ic_sangrado), // 7
+        Recomendacion(0, "Lavado Antiséptico", "Limpie los bordes de la herida con abundante agua a chorro y jabón neutro.", R.drawable.ic_info), // 8
+        Recomendacion(0, "Elevación de Miembro", "Eleve el brazo o pierna sangrante por encima del nivel del corazón.", R.drawable.ic_prim_auxilios), // 9
+        Recomendacion(0, "Irrigación Térmica", "Vierta agua a temperatura ambiente (nunca hielo) sobre la quemadura por al menos 15 minutos.", R.drawable.ic_prim_auxilios), // 10
+        Recomendacion(0, "Retirar Restricciones", "Quite anillos, pulseras o ropa ajustada cerca de la quemadura antes de que se inflame.", R.drawable.ic_info), // 11
+        Recomendacion(0, "Protección Estéril", "Cubra la zona afectada con film plástico transparente o gasa limpia sin presionar.", R.drawable.ic_escudo), // 12
+        Recomendacion(0, "Preservar Flictenas", "Prohibido reventar las ampollas; son una barrera natural contra infecciones.", R.drawable.ic_info), // 13
+        Recomendacion(0, "Crioterapia Local", "Aplique hielo envuelto en tela por periodos de 15 minutos para reducir el hematoma.", R.drawable.ic_corazon), // 14
+        Recomendacion(0, "Férula Improvisada", "Ante sospecha de fractura, inmovilice la zona usando cartón o tablas fijadas con vendas.", R.drawable.ic_escudo), // 15
+        Recomendacion(0, "Limpieza por Fricción Suave", "Limpie los raspones arrastrando suavemente la suciedad para evitar tatuaje traumático.", R.drawable.ic_info), // 16
+        Recomendacion(0, "Fomento Tibio Salino", "Sumerja la zona del uñero en agua tibia con sal por 15 minutos para ablandar el tejido.", R.drawable.ic_info), // 17
+        Recomendacion(0, "Evitar Manipulación", "No intente cortar la uña infectada con cortaúñas caseros. Requiere material esterilizado.", R.drawable.ic_escudo), // 18
+        Recomendacion(0, "Control Térmico Físico", "Use paños tibios en zonas de pliegues (axilas, ingles, frente) para bajar la fiebre.", R.drawable.ic_corazon), // 19
+        Recomendacion(0, "Vigilancia de Signos de Alarma", "Acuda urgente si hay rigidez de nuca, manchas púrpuras en la piel o letargo extremo.", R.drawable.ic_info), // 20
+        Recomendacion(0, "Auto-Inyector de Epinefrina", "En caso de alergia conocida y asfixia, asista al paciente a usar su inyector si lo posee.", R.drawable.ic_pastillas), // 21
+        Recomendacion(0, "Aislamiento del Tóxico", "Lleve el envase del producto ingerido al hospital para el antídoto exacto.", R.drawable.ic_info), // 22
+        Recomendacion(0, "Contraindicación de Vómito", "En ingesta de ácidos, lejía o hidrocarburos, está prohibido inducir el vómito.", R.drawable.ic_pastillas), // 23
+        Recomendacion(0, "Extracción por Raspado", "Saque el aguijón de abeja raspando con una tarjeta; no lo pellizque con pinzas.", R.drawable.ic_info), // 24
+        Recomendacion(0, "Posición Materna", "Coloque a la gestante recostada sobre su lado izquierdo para oxigenar al bebé.", R.drawable.ic_escudo), // 25
+        Recomendacion(0, "Evitar Hipotermia", "En adultos mayores y niños pequeños, cubra con mantas para evitar pérdida de calor.", R.drawable.ic_corazon), // 26
+        Recomendacion(0, "Cero Automedicación", "No administre analgésicos; pueden ocultar el cuadro clínico y retrasar el diagnóstico real.", R.drawable.ic_pastillas), // 27
+        Recomendacion(0, "Traslado Asistido", "Diríjase a la Sala de Urgencias del Hospital de Mayor Nivel resolutivo disponible.", R.drawable.ic_hospital), // 28
+        Recomendacion(0, "Agenda por Consultorio", "Programe una cita por Consulta Externa (Medicina General). No es una emergencia vital.", R.drawable.ic_hospital) // 29
     )
 
-    /**
-     * FUNCIÓN PRINCIPAL: Ejecuta la evolución y devuelve la mejor solución.
-     */
     fun evaluarTriajeEvolutivo(context: DecisionContext): ResultadoEvolutivo {
-
-        // 1. Población Inicial Aleatoria
         var poblacion = MutableList(TAMANO_POBLACION) { generarCromosomaAleatorio() }
+        var mejorFitnessHistorico = -9999.0
+        var generacionesSinMejora = 0
 
-        // 2. Bucle de Evolución a lo largo de las Generaciones
-        for (generacion in 1..GENERACIONES) {
+        val cpuCores = Runtime.getRuntime().availableProcessors()
+        val dispatcherOptimo = Dispatchers.Default.limitedParallelism(cpuCores)
 
-            // Evaluar la adaptación de cada individuo
-            poblacion.forEach { c -> c.fitness = calcularFitness(c, context) }
+        runBlocking(dispatcherOptimo) {
+            for (generacion in 1..GENERACIONES) {
+                val evaluaciones = poblacion.map { c ->
+                    async {
+                        if (!c.fitnessCalculado) {
+                            c.fitness = calcularFitness(c, context)
+                            c.fitnessCalculado = true
+                        }
+                    }
+                }
+                evaluaciones.awaitAll()
 
-            // Ordenamiento por adaptación (Elitismo: conservar los 4 mejores)
-            poblacion.sortByDescending { it.fitness }
-            val nuevaPoblacion = mutableListOf<Cromosoma>()
-
-            // Conservar la Élite (mejores soluciones intactas)
-            nuevaPoblacion.addAll(poblacion.take(4))
-
-            // Reproducción hasta llenar la siguiente generación
-            while (nuevaPoblacion.size < TAMANO_POBLACION) {
-                val padre1 = seleccionPorTorneo(poblacion)
-                val padre2 = seleccionPorTorneo(poblacion)
-
-                var hijo = cruzar(padre1, padre2)
-
-                if (Random.nextDouble() < TASA_MUTACION) {
-                    hijo = mutar(hijo)
+                val mejorActual = poblacion.maxByOrNull { it.fitness }?.fitness ?: 0.0
+                if (mejorActual > mejorFitnessHistorico) {
+                    mejorFitnessHistorico = mejorActual
+                    generacionesSinMejora = 0
+                } else {
+                    generacionesSinMejora++
                 }
 
-                nuevaPoblacion.add(hijo)
+                if (generacionesSinMejora >= LIMITE_ESTANCAMIENTO) break
+
+                poblacion.sortByDescending { it.fitness }
+                val nuevaPoblacion = mutableListOf<Cromosoma>()
+                nuevaPoblacion.addAll(poblacion.take(10))
+
+                while (nuevaPoblacion.size < TAMANO_POBLACION) {
+                    val padre1 = seleccionPorTorneo(poblacion)
+                    val padre2 = seleccionPorTorneo(poblacion)
+                    var hijo = cruzarUniforme(padre1, padre2)
+
+                    val tasaMutacionActual = if (hijo.fitness < 50.0) TASA_MUTACION_BASE * 2 else TASA_MUTACION_BASE
+                    if (Random.nextDouble() < tasaMutacionActual) hijo = mutar(hijo)
+                    nuevaPoblacion.add(hijo)
+                }
+                poblacion = nuevaPoblacion
             }
 
-            poblacion = nuevaPoblacion
+            val evaluacionesFinales = poblacion.map { c ->
+                async {
+                    if (!c.fitnessCalculado) {
+                        c.fitness = calcularFitness(c, context)
+                        c.fitnessCalculado = true
+                    }
+                }
+            }
+            evaluacionesFinales.awaitAll()
         }
 
-        // 3. Evaluar la generación final y extraer el Individuo Óptimo
-        poblacion.forEach { c -> c.fitness = calcularFitness(c, context) }
         val mejorCromosoma = poblacion.maxByOrNull { it.fitness } ?: generarCromosomaAleatorio()
-
         return construirResultadoFinal(mejorCromosoma, context)
     }
 
-    // ─────────────────────────────────────────────────────────────────────────────
-    // FUNCIÓN DE FITNESS (El motor de decisión clínica)
-    // ─────────────────────────────────────────────────────────────────────────────
     private fun calcularFitness(c: Cromosoma, context: DecisionContext): Double {
-        var score = 100.0 // Puntaje base
+        var score = 0.0
+        val ids = context.sintomas.map { it.id }
 
-        val estaConsciente = context.respuestasBasicas.getOrElse(0) { true }
-        val respiraNormal = context.respuestasBasicas.getOrElse(1) { true }
-        val sangradoGrave = context.respuestasBasicas.getOrElse(2) { false }
-        val esCritico = !estaConsciente || !respiraNormal || sangradoGrave
+        val consciente = context.respuestasBasicas.getOrElse(0) { true }
+        val respira = context.respuestasBasicas.getOrElse(1) { true }
+        val sangra = context.respuestasBasicas.getOrElse(2) { false }
+        val esCritico = !consciente || !respira || sangra
 
-        // A. EVALUACIÓN DE PRIORIDAD
+        val sintomasTrauma = listOf("golpe_fuerte", "herida_abierta", "posible_fractura", "quemadura")
+        val esTrauma = ids.any { it in sintomasTrauma } || (!context.claseIA.isNullOrEmpty() && context.claseIA != "Error" && context.claseIA != "No se pudo determinar")
+
         if (esCritico) {
-            if (c.prioridad == Prioridad.ROJA) score += 150.0 else score -= 300.0
+            if (c.prioridad == Prioridad.ROJA) score += 500.0 else score -= 800.0
+            if (!respira && c.recomendacionesIndices.contains(4)) score += 200.0
         } else {
-            // Si no es crítico por descarte, evaluar según preguntas afirmativas
             val afirmativas = context.preguntasDinamicas.count { p ->
                 val r = p.options.getOrNull(p.selectedOptionIndex) ?: ""
                 r.equals("Sí", ignoreCase = true)
             }
             when {
-                afirmativas >= 2 -> if (c.prioridad in listOf(Prioridad.ROJA, Prioridad.NARANJA)) score += 80.0 else score -= 100.0
-                afirmativas == 1 -> if (c.prioridad in listOf(Prioridad.NARANJA, Prioridad.AMARILLO)) score += 60.0 else score -= 50.0
-                else -> if (c.prioridad in listOf(Prioridad.AMARILLO, Prioridad.VERDE, Prioridad.AZUL)) score += 50.0 else score -= 40.0
+                afirmativas >= 3 -> if (c.prioridad == Prioridad.ROJA || c.prioridad == Prioridad.NARANJA) score += 300.0 else score -= 200.0
+                afirmativas == 2 -> if (c.prioridad == Prioridad.NARANJA || c.prioridad == Prioridad.AMARILLO) score += 200.0 else score -= 100.0
+                afirmativas == 1 -> if (c.prioridad == Prioridad.AMARILLO || c.prioridad == Prioridad.VERDE) score += 150.0 else score -= 100.0
+                else -> if (c.prioridad == Prioridad.AZUL || c.prioridad == Prioridad.VERDE) score += 200.0 else score -= 150.0
             }
         }
 
-        // B. EVALUACIÓN SEGÚN TIPO DE PACIENTE (Vulnerabilidad)
-        val esVulnerable = context.tipoPaciente in listOf("NINO", "GESTANTE", "ADULTO_MAYOR", "MAYOR")
-        if (esVulnerable) {
-            if (c.prioridad == Prioridad.AZUL) score -= 80.0 // Penalizar infravaloración
-            if (context.tipoPaciente == "GESTANTE" && c.recomendacionesIndices.contains(16)) score += 50.0 // Favorecer Decúbito Izquierdo
-            if (context.tipoPaciente == "NINO" && c.recomendacionesIndices.contains(13)) score += 40.0 // Paños tibios
-        }
-
-        // C. EVALUACIÓN SEGÚN IA DE IMAGEN (best.tflite: 7 clases)
         when (context.claseIA) {
             "Burns" -> {
-                if (c.diagnosticoIndex == 6) score += 80.0 // Lesión Térmica / Quemadura
-                if (c.recomendacionesIndices.contains(10)) score += 60.0 // Enfriamiento
-                if (c.recomendacionesIndices.contains(11)) score += 40.0 // Cubrir sin presión
-                if (c.recomendacionesIndices.contains(12)) score += 40.0 // No reventar ampollas
+                if (c.diagnosticoIndex == 9) score += 300.0
+                if (c.recomendacionesIndices.contains(10)) score += 100.0
+                if (c.recomendacionesIndices.contains(12)) score += 100.0
             }
             "Stab_wound" -> {
-                if (c.diagnosticoIndex == 5) score += 80.0 // Trauma Penetrante
-                if (c.recomendacionesIndices.contains(6)) score += 60.0 // Presión directa
-                if (c.recomendacionesIndices.contains(7)) score += 60.0 // No retirar objetos
+                if (c.diagnosticoIndex == 8) score += 300.0
+                if (c.recomendacionesIndices.contains(5)) score += 100.0
+                if (c.recomendacionesIndices.contains(6)) score += 150.0
             }
             "Cut", "Laceration" -> {
-                if (c.diagnosticoIndex == 4) score += 80.0 // Trauma Lacerante
-                if (c.recomendacionesIndices.contains(6)) score += 50.0 // Presión directa
-                if (c.recomendacionesIndices.contains(9)) score += 40.0 // Lavado de herida
+                if (c.diagnosticoIndex == 7) score += 300.0
+                if (c.recomendacionesIndices.contains(5)) score += 100.0
+                if (c.recomendacionesIndices.contains(8)) score += 100.0
             }
             "Bruises" -> {
-                if (c.diagnosticoIndex == 7) score += 80.0 // Trauma Contuso / Hematoma
-                if (c.recomendacionesIndices.contains(13)) score += 60.0 // Compresas frías
-                if (c.recomendacionesIndices.contains(20)) score += 40.0 // Inmovilización preventiva
+                if (c.diagnosticoIndex == 10) score += 300.0
+                if (c.recomendacionesIndices.contains(14)) score += 100.0
             }
             "Abrasions" -> {
-                if (c.diagnosticoIndex == 8) score += 80.0 // Abrasión Cutánea
-                if (c.recomendacionesIndices.contains(14)) score += 60.0 // Desinfección superficial
-                if (c.recomendacionesIndices.contains(9)) score += 40.0 // Lavado suave
+                if (c.diagnosticoIndex == 11) score += 300.0
+                if (c.recomendacionesIndices.contains(16)) score += 100.0
             }
             "Ingrown_nails" -> {
-                if (c.diagnosticoIndex == 9) score += 80.0 // Patología Ungueal / Uñero
-                if (c.recomendacionesIndices.contains(15)) score += 70.0 // Baños de agua tibia
-                if (c.recomendacionesIndices.contains(25)) score += 50.0 // Consulta ambulatoria
+                if (c.diagnosticoIndex == 12) score += 300.0
+                if (c.recomendacionesIndices.contains(17)) score += 100.0
+                if (c.recomendacionesIndices.contains(18)) score += 100.0
             }
         }
 
-        // D. COINCIDENCIA CON LOS 13 SÍNTOMAS SELECCIONADOS
-        val idsSintomas = context.sintomas.map { it.id }
-
-        if (idsSintomas.contains("dolor_pecho") && c.diagnosticoIndex == 0) score += 70.0
-        if (idsSintomas.contains("dificultad_respiratoria") && c.diagnosticoIndex == 1) score += 70.0
-        if (idsSintomas.contains("perdida_conocimiento") && c.diagnosticoIndex == 2) score += 70.0
-        if (idsSintomas.contains("convulsiones")) {
-            if (c.diagnosticoIndex == 3) score += 70.0
-            if (c.recomendacionesIndices.contains(1)) score += 50.0 // Asegurar vía aérea
+        if ("dolor_pecho" in ids) { if (c.diagnosticoIndex in 0..1) score += 200.0 }
+        if ("dificultad_respiratoria" in ids) { if (c.diagnosticoIndex == 2) score += 200.0 }
+        if ("perdida_conocimiento" in ids) { if (c.diagnosticoIndex == 5) score += 200.0 }
+        if ("convulsiones" in ids) {
+            if (c.diagnosticoIndex == 6) score += 200.0
+            if (c.recomendacionesIndices.contains(1)) score += 100.0
         }
-        if (idsSintomas.contains("posible_fractura")) {
-            if (c.diagnosticoIndex == 10) score += 70.0
-            if (c.recomendacionesIndices.contains(20)) score += 50.0 // Inmovilización
+        if ("dolor_abdominal" in ids) {
+            if (c.diagnosticoIndex in 14..15) score += 200.0
+            if (c.recomendacionesIndices.contains(3)) score += 150.0
         }
-        if (idsSintomas.contains("dolor_abdominal") && c.diagnosticoIndex == 11) score += 70.0
-        if (idsSintomas.contains("fiebre_alta")) {
-            if (c.diagnosticoIndex == 12) score += 70.0
-            if (c.recomendacionesIndices.contains(16)) score += 50.0 // Medios físicos
-        }
-        if (idsSintomas.contains("reaccion_alergica") && c.diagnosticoIndex == 13) score += 70.0
-        if (idsSintomas.contains("intoxicacion")) {
-            if (c.diagnosticoIndex == 14) score += 70.0
-            if (c.recomendacionesIndices.contains(23)) score += 60.0 // No provocar el vómito
-            if (c.recomendacionesIndices.contains(21)) score += 40.0 // Identificar la sustancia
-        }
-        if (idsSintomas.contains("picadura_mordedura")) {
-            if (c.diagnosticoIndex == 15) score += 70.0
-            if (c.recomendacionesIndices.contains(22)) score += 60.0 // Retirar aguijón / No torniquete
+        if ("fiebre_alta" in ids) {
+            if (c.diagnosticoIndex == 16) score += 200.0
+            if (c.recomendacionesIndices.contains(19)) score += 100.0
         }
 
-        // E. PENALIZACIÓN DE REPETICIONES Y COHERENCIA
-        if (c.recomendacionesIndices.distinct().size < 4) score -= 200.0 // Duplicados prohibidos
+        if (context.tipoPaciente == "GESTANTE" && c.recomendacionesIndices.contains(25)) score += 150.0
+        if (context.tipoPaciente == "NINO" && c.recomendacionesIndices.contains(26)) score += 100.0
+
+        // E. RESTRICCIONES GENÉTICAS (Tamaño 4)
+        if (c.recomendacionesIndices.distinct().size < 4) score -= 1000.0
+
+        // =========================================================================
+        // F. EL SÚPER FILTRO DE SENTIDO COMÚN (LA MASACRE DE GENES)
+        // =========================================================================
+
+        // 1. Coherencia de Prioridad
+        if (c.prioridad == Prioridad.AZUL || c.prioridad == Prioridad.VERDE) {
+            if (c.recomendacionesIndices.contains(0)) score -= 800.0
+            if (c.recomendacionesIndices.contains(28)) score -= 800.0
+            if (c.recomendacionesIndices.contains(29)) score += 150.0
+        } else if (c.prioridad == Prioridad.ROJA || c.prioridad == Prioridad.NARANJA) {
+            if (c.recomendacionesIndices.contains(29)) score -= 800.0
+            if (c.recomendacionesIndices.contains(0)) score += 150.0
+            if (c.recomendacionesIndices.contains(28)) score += 150.0
+        }
+
+        // 2. Prohibir Trauma en Casos Internos (Fiebre, Dolor, etc.)
+        if (!esTrauma) {
+            val prohibidosTrauma = listOf(5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18)
+            c.recomendacionesIndices.forEach { if (it in prohibidosTrauma) score -= 800.0 }
+        } else {
+            // Específicos dentro de Trauma
+            if ("posible_fractura" !in ids && "golpe_fuerte" !in ids) {
+                if (c.recomendacionesIndices.contains(15)) score -= 600.0 // Adiós Férula
+            }
+            if (context.claseIA != "Burns" && "quemadura" !in ids) {
+                listOf(10, 11, 12, 13).forEach { if (c.recomendacionesIndices.contains(it)) score -= 600.0 } // Adiós Quemaduras
+            }
+            if (context.claseIA != "Ingrown_nails") {
+                listOf(17, 18).forEach { if (c.recomendacionesIndices.contains(it)) score -= 600.0 } // Adiós Uñero (AQUÍ ESTABA TU ERROR ANTES)
+            }
+        }
+
+        // 3. Prohibir Enfermedades Específicas
+        if ("fiebre_alta" !in ids) {
+            if (c.recomendacionesIndices.contains(19)) score -= 600.0 // Adiós paños tibios
+        }
+        if ("reaccion_alergica" !in ids) {
+            if (c.recomendacionesIndices.contains(21)) score -= 800.0 // Adiós Epinefrina
+        }
+        if ("intoxicacion" !in ids) {
+            listOf(22, 23).forEach { if (c.recomendacionesIndices.contains(it)) score -= 600.0 } // Adiós vómito/tóxico
+        }
+        if ("picadura_mordedura" !in ids) {
+            if (c.recomendacionesIndices.contains(24)) score -= 600.0 // Adiós aguijón
+        }
+
+        // 4. Vulnerabilidad Restringida
+        if (context.tipoPaciente != "GESTANTE") {
+            if (c.recomendacionesIndices.contains(25)) score -= 600.0
+        }
+        if (context.tipoPaciente != "NINO" && context.tipoPaciente != "ADULTO_MAYOR") {
+            if (c.recomendacionesIndices.contains(26)) score -= 500.0
+        }
+
+        // 5. Coherencia Vital
+        if (!sangra) {
+            listOf(5, 7, 9).forEach { if (c.recomendacionesIndices.contains(it)) score -= 800.0 } // Adiós torniquetes
+        }
+        if (respira) {
+            if (c.recomendacionesIndices.contains(4)) score -= 1000.0 // Adiós RCP
+        }
 
         return score
     }
 
-    // ─────────────────────────────────────────────────────────────────────────────
-    // OPERADORES GENÉTICOS
-    // ─────────────────────────────────────────────────────────────────────────────
     private fun generarCromosomaAleatorio(): Cromosoma {
-        val prioridad = Prioridad.values().random()
-        val diagIndex = Random.nextInt(BANCO_DIAGNOSTICOS.size)
-        val recsIndices = (0 until BANCO_RECOMENDACIONES.size).shuffled().take(4)
-        return Cromosoma(prioridad, diagIndex, recsIndices)
+        val prio = Prioridad.values().random()
+        val diag = Random.nextInt(BANCO_RESULTADO_POSIBLE.size)
+        val recs = (0 until BANCO_RECOMENDACIONES.size).shuffled().take(4) // TAMAÑO 4
+        return Cromosoma(prio, diag, recs, fitnessCalculado = false)
     }
 
     private fun seleccionPorTorneo(poblacion: List<Cromosoma>): Cromosoma {
-        val participantes = List(TAMANO_TORNEO) { poblacion.random() }
-        return participantes.maxByOrNull { it.fitness } ?: poblacion.random()
+        val torneo = List(TAMANO_TORNEO) { poblacion.random() }
+        return torneo.maxByOrNull { it.fitness } ?: poblacion.random()
     }
 
-    private fun cruzar(p1: Cromosoma, p2: Cromosoma): Cromosoma {
-        val nuevaPrioridad = if (Random.nextBoolean()) p1.prioridad else p2.prioridad
-        val nuevoDiag = if (Random.nextBoolean()) p1.diagnosticoIndex else p2.diagnosticoIndex
+    private fun cruzarUniforme(p1: Cromosoma, p2: Cromosoma): Cromosoma {
+        val prio = if (Random.nextBoolean()) p1.prioridad else p2.prioridad
+        val diag = if (Random.nextBoolean()) p1.diagnosticoIndex else p2.diagnosticoIndex
 
-        // Cruzamiento de recomendaciones con unificación sin duplicados
-        val combinadas = (p1.recomendacionesIndices.take(2) + p2.recomendacionesIndices.take(2)).toMutableList()
-        while (combinadas.distinct().size < 4) {
-            val candidato = Random.nextInt(BANCO_RECOMENDACIONES.size)
-            if (!combinadas.contains(candidato)) combinadas.add(candidato)
+        val recs = mutableSetOf<Int>()
+        val poolPadres = p1.recomendacionesIndices + p2.recomendacionesIndices
+
+        while (recs.size < 4) { // TAMAÑO 4
+            recs.add(poolPadres.random())
         }
-
-        return Cromosoma(nuevaPrioridad, nuevoDiag, combinadas.distinct().take(4))
+        return Cromosoma(prio, diag, recs.toList(), fitnessCalculado = false)
     }
 
     private fun mutar(c: Cromosoma): Cromosoma {
-        val recsMutadas = c.recomendacionesIndices.toMutableList()
-        val idxAMutar = Random.nextInt(4)
-        var nuevoGenRec = Random.nextInt(BANCO_RECOMENDACIONES.size)
+        val recs = c.recomendacionesIndices.toMutableList()
+        val idx = Random.nextInt(4) // TAMAÑO 4
+        var nuevoGen = Random.nextInt(BANCO_RECOMENDACIONES.size)
+        while (recs.contains(nuevoGen)) { nuevoGen = Random.nextInt(BANCO_RECOMENDACIONES.size) }
+        recs[idx] = nuevoGen
 
-        // Asegurar que la mutación no genere duplicados
-        while (recsMutadas.contains(nuevoGenRec)) {
-            nuevoGenRec = Random.nextInt(BANCO_RECOMENDACIONES.size)
-        }
-        recsMutadas[idxAMutar] = nuevoGenRec
+        val prio = if (Random.nextDouble() < 0.2) Prioridad.values().random() else c.prioridad
+        val diag = if (Random.nextDouble() < 0.2) Random.nextInt(BANCO_RESULTADO_POSIBLE.size) else c.diagnosticoIndex
 
-        val nuevaPrioridad = if (Random.nextDouble() < 0.3) Prioridad.values().random() else c.prioridad
-        val nuevoDiag = if (Random.nextDouble() < 0.3) Random.nextInt(BANCO_DIAGNOSTICOS.size) else c.diagnosticoIndex
-
-        return Cromosoma(nuevaPrioridad, nuevoDiag, recsMutadas)
+        return Cromosoma(prio, diag, recs, fitnessCalculado = false)
     }
 
-    // ─────────────────────────────────────────────────────────────────────────────
-    // MAPPING FINAL A LA CAPA DE PRESENTACIÓN
-    // ─────────────────────────────────────────────────────────────────────────────
     private fun construirResultadoFinal(c: Cromosoma, context: DecisionContext): ResultadoEvolutivo {
-        val diagBase = BANCO_DIAGNOSTICOS.getOrElse(c.diagnosticoIndex) { "Evaluación general de triaje" }
+        val diagnostico = BANCO_RESULTADO_POSIBLE.getOrElse(c.diagnosticoIndex) { "Evaluación general clínica" }
+        val explicacionMedica = redactarJustificacionClinica(c, context)
 
-        val sintomasTexto = if (context.sintomas.isNotEmpty()) {
-            context.sintomas.joinToString(", ") { it.sin_description }
-        } else {
-            "Evaluación por descarte inicial"
-        }
-
-        val diagnosticoCompleto = "$diagBase. Relacionado a: $sintomasTexto."
-
-        val explicacionRiesgo = "Resultado optimizado tras ${GENERACIONES} generaciones evolutivas. " +
-                "Ajustado al perfil de paciente ${context.tipoPaciente} con nivel de aptitud (${c.fitness.toInt()} pts)."
-
-        val recomendacionesFinales = c.recomendacionesIndices.mapIndexed { index, recIdx ->
+        val recomendaciones = c.recomendacionesIndices.mapIndexed { index, recIdx ->
             val plantilla = BANCO_RECOMENDACIONES[recIdx]
-            Recomendacion(
-                step = index + 1,
-                titulo = plantilla.titulo,
-                recomendacion = plantilla.recomendacion,
-                iconResId = plantilla.iconResId
-            )
+            Recomendacion(index + 1, plantilla.titulo, plantilla.recomendacion, plantilla.iconResId)
         }
 
-        return ResultadoEvolutivo(
-            prioridad = c.prioridad,
-            diagnosticoProbable = diagnosticoCompleto,
-            explicacionRiesgo = explicacionRiesgo,
-            recomendaciones = recomendacionesFinales
-        )
+        return ResultadoEvolutivo(c.prioridad, diagnostico, explicacionMedica, recomendaciones)
+    }
+
+    private fun redactarJustificacionClinica(c: Cromosoma, context: DecisionContext): String {
+        val sb = StringBuilder("Cuadro clínico derivado por el motor de triaje. ")
+
+        val sintomas = context.sintomas.joinToString(", ") { it.sin_description.lowercase() }
+        if (sintomas.isNotEmpty()) {
+            sb.append("El paciente manifiesta $sintomas. ")
+        }
+
+        if (!context.claseIA.isNullOrEmpty() && context.claseIA != "Error" && context.claseIA != "No se pudo determinar") {
+            sb.append("El análisis visual por IA detectó características compatibles con [${context.claseIA}]. ")
+        }
+
+        if (context.tipoPaciente != "ADULTO") {
+            val pacienteF = context.tipoPaciente.lowercase().replace("_", " ")
+            sb.append("Se han aplicado protocolos de protección debido a la condición de vulnerabilidad ($pacienteF). ")
+        }
+
+        val consciente = context.respuestasBasicas.getOrElse(0) { true }
+        val respira = context.respuestasBasicas.getOrElse(1) { true }
+        val sangra = context.respuestasBasicas.getOrElse(2) { false }
+        val esCritico = !consciente || !respira || sangra
+
+        if (esCritico) {
+            val alarmasClinicas = mutableListOf<String>()
+            if (!consciente) alarmasClinicas.add("pérdida de consciencia")
+            if (!respira) alarmasClinicas.add("alteración respiratoria severa o apnea")
+            if (sangra) alarmasClinicas.add("hemorragia activa grave")
+
+            sb.append("Alerta crítica detectada por: ${alarmasClinicas.joinToString(" y ")}. ")
+            sb.append("Se asigna Prioridad ${c.prioridad.nombre} por compromiso inminente de vida. Requiere soporte vital inmediato.")
+        } else {
+            val graves = context.preguntasDinamicas.count { (it.options.getOrNull(it.selectedOptionIndex) ?: "") == "Sí" }
+            sb.append("Se determina nivel de riesgo ${c.prioridad.nombre} al evaluar $graves factor(es) agravante(s) en la anamnesis.")
+        }
+
+        return sb.toString()
     }
 }
